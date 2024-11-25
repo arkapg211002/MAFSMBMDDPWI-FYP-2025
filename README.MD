@@ -110,3 +110,6 @@ streamlit run app.py
 - `video`: The uploaded file.
 - `audio`: Extracted from video.
 - `mental_health_issue`: Mental health category (Normal, Depression, Anxiety, Bipolar Disorder, PTSD).
+
+![Web App](https://github.com/arkapg211002/FYP/blob/main/App%20Images/01%20Interface.png)
+
