@@ -33,7 +33,13 @@ Mental health disorders affect millions of people globally. With the rise of soc
 - **Multilingual Support:** Analyze posts in non-English languages by translating them to English before processing.
 - **Mental Wellbeing:** Map the classified mental issues with wellbeing insights based on Ryff's Scale of Psychological Wellbeing.
 - **Visualization:** Generate confusion matrices and performance metrics for each model.
+<<<<<<< HEAD
 - **Ensemble Model:** Leveraged high accuracy of Logistic regression and XGBoost to create an ensemble model with accuracy of 99.59% (Used this model in the web application).
+||||||| 84a5052
+- **Ensemble Model:** Leveraged high accuracy of Logistic regression and XGBoost to create an ensemble model with accuracy of 99.92% (Used this model in the web application).
+=======
+- **Ensemble Model:** Leveraged high accuracy of Logistic regression, Naive Bayes, SVM, LSTM and XGBoost to create an ensemble model with accuracy of 99.92% (Used this model in the web application).
+>>>>>>> 844a25831082c230f60ca96a5513828c5983c93a
 - **Model Retraining:** Allow users with the option to retrain the existing model using the input data in the application along with the result obtained.
 
 ---
