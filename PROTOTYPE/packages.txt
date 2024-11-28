@@ -1,5 +1,0 @@
-ffmpeg 
-libsm6 
-libxext6
-tesseract-ocr
-portaudio19-dev
