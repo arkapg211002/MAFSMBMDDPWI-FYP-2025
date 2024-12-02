@@ -1,4 +1,5 @@
 
+import pickle
 import streamlit as st
 import joblib
 import pandas as pd
@@ -34,8 +35,11 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.ensemble import StackingClassifier
 
-from tensorflow.keras.models import load_model
-from tensorflow.keras.utils import pad_sequences
+from tensorflow.keras.models import load_model, Model, Sequential
+from tensorflow.keras.utils import pad_sequences, custom_object_scope, to_categorical
+from tensorflow.keras.layers import MultiHeadAttention, Input, Dense, Embedding, GlobalAveragePooling1D, LayerNormalization, Layer
+from tensorflow.keras.optimizers import Adam
+
 from xgboost import XGBClassifier
 
 from deepface import DeepFace
@@ -114,6 +118,17 @@ def load_lstm_model():
 def load_meta_learner_rf():
     return joblib.load('meta_learner_rf.pkl')
 
+@st.cache_resource
+def load_transformer_label_encoder():
+    return joblib.load('Tlabel_encoder.pkl')
+
+@st.cache_resource
+def load_transformer_vectorizer():
+    return joblib.load('Tvectorizer_layer.pkl')
+
+
+
+
 # Load all models and resources by calling the above functions
 lr_model = load_lr_model()
 lr_vectorizer = load_lr_vectorizer()
@@ -128,6 +143,51 @@ lstm_label_encoder = load_lstm_label_encoder()  # Optional: Only if separate fro
 lstm_tokenizer = load_lstm_tokenizer()
 lstm_model = load_lstm_model()
 meta_learner_rf = load_meta_learner_rf()
+
+t_label_encoder = load_transformer_label_encoder()
+t_vectorizer = load_transformer_vectorizer()
+
+# Define the custom layers
+class EmbeddingLayer(Layer):
+    def __init__(self, sequence_length, vocab_size, embed_dim, **kwargs):
+        super(EmbeddingLayer, self).__init__(**kwargs)
+        self.word_embedding = Embedding(input_dim=vocab_size, output_dim=embed_dim)
+        self.position_embedding = Embedding(input_dim=sequence_length, output_dim=embed_dim)
+
+    def call(self, tokens):
+        sequence_length = tf.shape(tokens)[-1]
+        positions = tf.range(start=0, limit=sequence_length, delta=1)
+        positions_encoding = self.position_embedding(positions)
+        words_encoding = self.word_embedding(tokens)
+        return positions_encoding + words_encoding
+
+
+class EncoderLayer(Layer):
+    def __init__(self, total_heads, total_dense_units, embed_dim, **kwargs):
+        super(EncoderLayer, self).__init__(**kwargs)
+        self.multihead = MultiHeadAttention(num_heads=total_heads, key_dim=embed_dim)
+        self.nnw = Sequential([Dense(total_dense_units, activation="relu"), Dense(embed_dim)])
+        self.normalize_layer = LayerNormalization()
+
+    def call(self, inputs):
+        attn_output = self.multihead(inputs, inputs)
+        normalize_attn = self.normalize_layer(inputs + attn_output)
+        nnw_output = self.nnw(normalize_attn)
+        final_output = self.normalize_layer(normalize_attn + nnw_output)
+        return final_output
+
+# Load the saved transformer model with custom objects
+custom_objects = {
+    "EmbeddingLayer": EmbeddingLayer,
+    "EncoderLayer": EncoderLayer
+}
+
+@st.cache_resource
+def load_transformer_model():
+    return load_model('Ttransformer_model.h5', custom_objects=custom_objects)
+
+transformer_model = load_transformer_model()
+
 
 # ------------- ENSEMBLE LEARNING REQUIREMENTS -----------------
 
@@ -287,6 +347,7 @@ def classify_text(text):
     nb_features = nb_vectorizer.transform([text])  # For Naive Bayes
     xgb_features = tfidf_vectorizer.transform([text])  # For XGBoost
     lstm_features = lstm_tokenizer.texts_to_sequences([text])  # For LSTM
+    transformer_features = t_vectorizer([text])  # For Transformer
 
     # Pad sequences for LSTM
     lstm_features = pad_sequences(lstm_features, maxlen=100, padding='post', truncating='post')
@@ -297,9 +358,10 @@ def classify_text(text):
     nb_proba = nb_model.predict_proba(nb_features)
     xgb_proba = xgb_model.predict_proba(xgb_features)
     lstm_proba = lstm_model.predict(lstm_features)
+    transformer_proba = transformer_model.predict(transformer_features)
 
     # Combine probabilities as input for the meta-learner
-    stacked_features = np.hstack((lr_proba, svm_proba, nb_proba, xgb_proba, lstm_proba))
+    stacked_features = np.hstack((lr_proba, svm_proba, nb_proba, xgb_proba, lstm_proba, transformer_proba))
 
     # Predict using the meta-learner
     final_prediction_proba = meta_learner_rf.predict_proba(stacked_features)
@@ -553,6 +615,15 @@ def retrain_model():
     with open('NBvectorizer.pkl', 'rb') as file:
         nb_vectorizer = pickle.load(file)
 
+    # Load the transformer model and associated files
+    with open('Tlabel_encoder.pkl', 'rb') as file:
+        t_label_encoder = pickle.load(file)
+
+    with open('Tvectorizer_layer.pkl', 'rb') as file:
+        t_vectorize_layer = pickle.load(file)
+
+    transformer_model = load_model('Ttransformer_model.h5', custom_objects=custom_objects)
+
     # Load the test dataset
     data = pd.read_csv('preprocessed_mental_health.csv')
 
@@ -576,6 +647,8 @@ def retrain_model():
     X_test_xgb = tfidf_vectorizer.transform(X_test)  # XGBoost vectorizer
     X_test_nb = nb_vectorizer.transform(X_test)  # Naive Bayes vectorizer
     X_test_lstm = lstm_tokenizer.texts_to_sequences(X_test)  # LSTM tokenizer
+    # Preprocess the text for the transformer model
+    X_test_transformer = t_vectorize_layer(X_test)
 
     # Pad sequences for LSTM
     X_test_lstm = pad_sequences(X_test_lstm, maxlen=100, padding='post', truncating='post')
@@ -586,6 +659,8 @@ def retrain_model():
     xgb_predictions_proba = xgb_model.predict_proba(X_test_xgb)  # XGBoost probabilities
     nb_predictions_proba = nb_model.predict_proba(X_test_nb)  # Naive Bayes probabilities
     lstm_predictions_proba = lstm_model.predict(X_test_lstm)  # LSTM probabilities
+    # Get probabilities from the transformer model
+    transformer_predictions_proba = transformer_model.predict(X_test_transformer)
 
     # Stack the predictions of all models to create the feature matrix for the meta-learner
     stacked_features = np.hstack((
@@ -593,8 +668,14 @@ def retrain_model():
         svm_predictions_proba,
         xgb_predictions_proba,
         nb_predictions_proba,
-        lstm_predictions_proba
+        lstm_predictions_proba,
+        transformer_predictions_proba
     ))
+
+    # Split data into training and test sets
+    X_train1, X_test1, y_train1, y_test1 = train_test_split(
+    stacked_features, y_test, test_size=0.2, random_state=42, stratify=y_test
+    )
 
     # Train Random Forest as the meta-learner
     meta_learner_rf = RandomForestClassifier(
@@ -607,17 +688,17 @@ def retrain_model():
 
       random_state=42            # For reproducibility
     )
-    meta_learner_rf.fit(stacked_features, y_test)
+    meta_learner_rf.fit(X_train1, y_train1)
 
     # Save the trained XGBoost meta-learner
     with open('meta_learner_rf.pkl', 'wb') as file:
         pickle.dump(meta_learner_rf, file)
 
     # Predict using the XGBoost meta-learner
-    final_predictions_lr = meta_learner_rf.predict(stacked_features)
+    final_predictions_lr = meta_learner_rf.predict(X_test1)
 
     # Evaluate the XGBoost ensemble model
-    accuracy_rf = accuracy_score(y_test, final_predictions_lr)
+    accuracy_rf = accuracy_score(y_test1, final_predictions_lr)
 
     return meta_learner_rf, accuracy_rf
 
@@ -663,6 +744,7 @@ def classify_text_retrain_model(text):
     nb_features = nb_vectorizer.transform([text])  # For Naive Bayes
     xgb_features = tfidf_vectorizer.transform([text])  # For XGBoost
     lstm_features = lstm_tokenizer.texts_to_sequences([text])  # For LSTM
+    transformer_features = t_vectorizer([text])  # For Transformer
 
     # Pad sequences for LSTM
     lstm_features = pad_sequences(lstm_features, maxlen=100, padding='post', truncating='post')
@@ -673,9 +755,10 @@ def classify_text_retrain_model(text):
     nb_proba = nb_model.predict_proba(nb_features)
     xgb_proba = xgb_model.predict_proba(xgb_features)
     lstm_proba = lstm_model.predict(lstm_features)
+    transformer_proba = transformer_model.predict(transformer_features)
 
     # Combine probabilities as input for the meta-learner
-    stacked_features = np.hstack((lr_proba, svm_proba, nb_proba, xgb_proba, lstm_proba))
+    stacked_features = np.hstack((lr_proba, svm_proba, nb_proba, xgb_proba, lstm_proba, transformer_proba))
 
     # Predict using the meta-learner
     final_prediction_proba = meta_learner_rf.predict_proba(stacked_features)
@@ -880,6 +963,7 @@ def classify_text_with_desc(text,text2):
     nb_features = nb_vectorizer.transform([text])  # For Naive Bayes
     xgb_features = tfidf_vectorizer.transform([text])  # For XGBoost
     lstm_features = lstm_tokenizer.texts_to_sequences([text])  # For LSTM
+    transformer_features = t_vectorizer([text])  # For Transformer
 
     # Pad sequences for LSTM
     lstm_features = pad_sequences(lstm_features, maxlen=100, padding='post', truncating='post')
@@ -890,9 +974,10 @@ def classify_text_with_desc(text,text2):
     nb_proba = nb_model.predict_proba(nb_features)
     xgb_proba = xgb_model.predict_proba(xgb_features)
     lstm_proba = lstm_model.predict(lstm_features)
+    transformer_proba = transformer_model.predict(transformer_features)
 
     # Combine probabilities as input for the meta-learner
-    stacked_features = np.hstack((lr_proba, svm_proba, nb_proba, xgb_proba, lstm_proba))
+    stacked_features = np.hstack((lr_proba, svm_proba, nb_proba, xgb_proba, lstm_proba, transformer_proba))
 
     # Predict using the meta-learner
     final_prediction_proba = meta_learner_rf.predict_proba(stacked_features)
@@ -918,6 +1003,7 @@ def classify_text_retrain_model_desc(text,text2):
     nb_features = nb_vectorizer.transform([text])  # For Naive Bayes
     xgb_features = tfidf_vectorizer.transform([text])  # For XGBoost
     lstm_features = lstm_tokenizer.texts_to_sequences([text])  # For LSTM
+    transformer_features = t_vectorizer([text])  # For Transformer
 
     # Pad sequences for LSTM
     lstm_features = pad_sequences(lstm_features, maxlen=100, padding='post', truncating='post')
@@ -928,9 +1014,10 @@ def classify_text_retrain_model_desc(text,text2):
     nb_proba = nb_model.predict_proba(nb_features)
     xgb_proba = xgb_model.predict_proba(xgb_features)
     lstm_proba = lstm_model.predict(lstm_features)
+    transformer_proba = transformer_model.predict(transformer_features)
 
     # Combine probabilities as input for the meta-learner
-    stacked_features = np.hstack((lr_proba, svm_proba, nb_proba, xgb_proba, lstm_proba))
+    stacked_features = np.hstack((lr_proba, svm_proba, nb_proba, xgb_proba, lstm_proba, transformer_proba))
 
     # Predict using the meta-learner
     final_prediction_proba = meta_learner_rf.predict_proba(stacked_features)
@@ -1240,6 +1327,7 @@ def run_app():
                         nb_features = nb_vectorizer.transform([text])  # For Naive Bayes
                         xgb_features = tfidf_vectorizer.transform([text])  # For XGBoost
                         lstm_features = lstm_tokenizer.texts_to_sequences([text])  # For LSTM
+                        transformer_features = t_vectorizer([text])  # For Transformer
 
                         # Pad sequences for LSTM
                         lstm_features = pad_sequences(lstm_features, maxlen=100, padding='post', truncating='post')
@@ -1250,10 +1338,11 @@ def run_app():
                         nb_proba = nb_model.predict_proba(nb_features)
                         xgb_proba = xgb_model.predict_proba(xgb_features)
                         lstm_proba = lstm_model.predict(lstm_features)
+                        transformer_proba = transformer_model.predict(transformer_features)
 
                         # Combine probabilities as input for the meta-learner
-                        stacked_features = np.hstack((lr_proba, svm_proba, nb_proba, xgb_proba, lstm_proba))
-
+                        stacked_features = np.hstack((lr_proba, svm_proba, nb_proba, xgb_proba, lstm_proba, transformer_proba))
+                        
                         # Predict using the meta-learner
                         final_prediction_proba = meta_learner_rf.predict_proba(stacked_features)
                         final_prediction = meta_learner_rf.predict(stacked_features)
@@ -1272,7 +1361,7 @@ def run_app():
                         top_issue = response
 
                     # Display results
-                    st.success(f"The most frequently detected mental health concern from all the text obtained is: {top_issue} appearing in {top_percentage:.2f}% of analyzed text.")
+                    st.success(f"The most frequently detected mental health concern from all the text obtained is: {top_issue} with a probability of {top_percentage:.2f}% from the analyzed text.")
                     issue_distribution = pd.DataFrame(issue_counts.items(), columns=['Mental Health Issue', 'Count'])
                     st.write("Mental health issue distribution across posts:")
                     st.write(issue_distribution)
@@ -1310,6 +1399,7 @@ def run_app():
                         nb_features = nb_vectorizer.transform([text])  # For Naive Bayes
                         xgb_features = tfidf_vectorizer.transform([text])  # For XGBoost
                         lstm_features = lstm_tokenizer.texts_to_sequences([text])  # For LSTM
+                        transformer_features = t_vectorizer([text])  # For Transformer
 
                         # Pad sequences for LSTM
                         lstm_features = pad_sequences(lstm_features, maxlen=100, padding='post', truncating='post')
@@ -1320,9 +1410,10 @@ def run_app():
                         nb_proba = nb_model.predict_proba(nb_features)
                         xgb_proba = xgb_model.predict_proba(xgb_features)
                         lstm_proba = lstm_model.predict(lstm_features)
+                        transformer_proba = transformer_model.predict(transformer_features)
 
                         # Combine probabilities as input for the meta-learner
-                        stacked_features = np.hstack((lr_proba, svm_proba, nb_proba, xgb_proba, lstm_proba))
+                        stacked_features = np.hstack((lr_proba, svm_proba, nb_proba, xgb_proba, lstm_proba, transformer_proba))
 
                         # Predict using the meta-learner
                         final_prediction_proba = meta_learner_rf.predict_proba(stacked_features)
@@ -1342,7 +1433,7 @@ def run_app():
                         top_issue = response
 
                     # Display results
-                    st.success(f"The most frequently detected mental health concern from all the text obtained is: {top_issue} appearing in {top_percentage:.2f}% of analyzed text.")
+                    st.success(f"The most frequently detected mental health concern from all the text obtained is: {top_issue} with a probability of {top_percentage:.2f}% from the analyzed text.")
                     issue_distribution = pd.DataFrame(issue_counts.items(), columns=['Mental Health Issue', 'Count'])
                     st.write("Mental health issue distribution across posts:")
                     st.write(issue_distribution)
@@ -1424,6 +1515,7 @@ def run_app():
                             nb_features = nb_vectorizer.transform([text])  # For Naive Bayes
                             xgb_features = tfidf_vectorizer.transform([text])  # For XGBoost
                             lstm_features = lstm_tokenizer.texts_to_sequences([text])  # For LSTM
+                            transformer_features = t_vectorizer([text])  # For Transformer
 
                             # Pad sequences for LSTM
                             lstm_features = pad_sequences(lstm_features, maxlen=100, padding='post', truncating='post')
@@ -1434,9 +1526,10 @@ def run_app():
                             nb_proba = nb_model.predict_proba(nb_features)
                             xgb_proba = xgb_model.predict_proba(xgb_features)
                             lstm_proba = lstm_model.predict(lstm_features)
+                            transformer_proba = transformer_model.predict(transformer_features)
 
                             # Combine probabilities as input for the meta-learner
-                            stacked_features = np.hstack((lr_proba, svm_proba, nb_proba, xgb_proba, lstm_proba))
+                            stacked_features = np.hstack((lr_proba, svm_proba, nb_proba, xgb_proba, lstm_proba, transformer_proba))
 
                             # Predict using the meta-learner
                             final_prediction_proba = meta_learner_rf.predict_proba(stacked_features)
@@ -1458,7 +1551,7 @@ def run_app():
                     if response != "" and len(response.split()) == 1 and response != top_issue:
                         top_issue = response
 
-                    st.success(f"The most frequently detected mental health concern obtained from all the text obtained is: {top_issue}, appearing in {top_percentage:.2f}% of analyzed text.")
+                    st.success(f"The most frequently detected mental health concern obtained from all the text obtained is: {top_issue}, with a probability of {top_percentage:.2f}% from the analyzed text.")
                     issue_distribution = pd.DataFrame(issue_counts.items(), columns=['Mental Health Issue', 'Count'])
                     st.write("Mental health issue distribution across posts:")
                     st.write(issue_distribution)
@@ -1535,6 +1628,7 @@ def run_app():
                             nb_features = nb_vectorizer.transform([text])  # For Naive Bayes
                             xgb_features = tfidf_vectorizer.transform([text])  # For XGBoost
                             lstm_features = lstm_tokenizer.texts_to_sequences([text])  # For LSTM
+                            transformer_features = t_vectorizer([text])  # For Transformer
 
                             # Pad sequences for LSTM
                             lstm_features = pad_sequences(lstm_features, maxlen=100, padding='post', truncating='post')
@@ -1545,9 +1639,10 @@ def run_app():
                             nb_proba = nb_model.predict_proba(nb_features)
                             xgb_proba = xgb_model.predict_proba(xgb_features)
                             lstm_proba = lstm_model.predict(lstm_features)
+                            transformer_proba = transformer_model.predict(transformer_features)
 
                             # Combine probabilities as input for the meta-learner
-                            stacked_features = np.hstack((lr_proba, svm_proba, nb_proba, xgb_proba, lstm_proba))
+                            stacked_features = np.hstack((lr_proba, svm_proba, nb_proba, xgb_proba, lstm_proba, transformer_proba))
 
                             # Predict using the meta-learner
                             final_prediction_proba = meta_learner_rf.predict_proba(stacked_features)
@@ -1569,7 +1664,7 @@ def run_app():
                     if response != "" and len(response.split()) == 1 and response != top_issue:
                         top_issue = response
 
-                    st.success(f"The most frequently detected mental health concern from all the text obtained is: {top_issue}, appearing in {top_percentage:.2f}% of analyzed text.")
+                    st.success(f"The most frequently detected mental health concern from all the text obtained is: {top_issue}, with a probability of {top_percentage:.2f}% from the analyzed text.")
                     issue_distribution = pd.DataFrame(issue_counts.items(), columns=['Mental Health Issue', 'Count'])
                     st.write("Mental health issue distribution across posts:")
                     st.write(issue_distribution)
