@@ -28,3 +28,4 @@ deepface
 tf_keras
 transformers
 torch
+nltk
