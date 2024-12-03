@@ -1,0 +1,192 @@
+\documentclass[a4paper, 12pt]{article} 
+
+%load any additional packages
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[numbers]{natbib}
+\usepackage{multicol}
+\usepackage{setspace} 
+\usepackage{fancyhdr}
+\usepackage{times}
+\usepackage{tocloft}
+\usepackage{geometry}
+\usepackage{textcomp}
+\usepackage{comment}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{color}
+\usepackage{tcolorbox}
+\usepackage{listings}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{xcolor}
+\usepackage{tocloft}
+\usepackage{titling}
+\definecolor{myblue}{RGB}{0, 0, 255}
+
+
+% Set basic style for listings
+\lstset{basicstyle=\ttfamily\small\color{black}, 
+        breaklines=true % Allow line breaks
+        }
+
+\renewcommand{\contentsname}{%
+  \hfill\bfseries\Large\color{myblue}\underline{Table of Content}\hfill}
+
+% Redefine \section to include color
+\usepackage{titlesec}
+\titleformat{\section}
+  {\color{blue}\normalfont\Large\bfseries} % Format section headings
+  {\thesection}{1em}{}
+
+
+\renewcommand{\headrulewidth}{0pt}% for removing the line under header 
+\fancyhead{} %remove section number from header 
+%\clearpage
+
+\usepackage[hidelinks]{hyperref}
+\usepackage{siunitx} % Required for alignment
+\sisetup{
+  round-mode          = places, % Rounds numbers
+  round-precision     = 2, % to 2 places
+}
+\geometry{a4paper,total={175mm,257mm},left=25mm,right=25mm,top=30mm, bottom=30mm}
+\hypersetup{
+    colorlinks=true,    % Enable colored links
+    linkcolor=black,     % Color for internal links
+    filecolor=magenta,  % Color for file links
+    urlcolor=blue,       % Color for URLs
+    citecolor=blue      % colour for cite  
+}
+% Set citation style to square brackets
+\setcitestyle{square}
+% \setcounter{chapter}{1}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}} % Default dots
+
+% Define a custom command to add section numbers
+\newcommand{\sectionnumber}{\arabic{section}}
+
+
+% Add project title here
+\def\mytitle{\fontsize{28}{30}\selectfont{Analyzing Social Media Posts for Mental Health Disorder Detection}}
+
+% Add student Degree
+\def\mydegree{Bachelor of Technology}
+% Add student \textbf{name}
+\def\mysupervisor{Nairanjana Chowdhury}
+% Supervisor designation : Assistant Professor, Associate Professor, Professor
+\def\mysupervisordesig{Professor}
+
+% Add student names and roll no
+\def\mynameone{SOUMYADEEP NANDY}
+\def\myrollnoone{13000121033}
+\def\mynametwo{PRITHWISH SARKAR}
+\def\myrollnotwo{13000121037}
+\def\mynamethree{SAGNIK MUKHOPADHYAY}
+\def\myrollnothree{13000121040}
+\def\mynamefour{ARKAPRATIM GHOSH}
+\def\myrollnofour{13000121058}
+
+% Add student department
+\def\mydep{Computer Science and Engineering}
+\def\myHODname{Dr. Tapan Chowdhury}
+% HOD designation : Assistant Professor, Associate Professor, Professor
+\def\myHODdesig{Professor}
+% Add the date of submission
+\def\mydegreedate{\today}
+
+\begin{document}
+ \baselineskip=18pt plus1pt
+ \setcounter{secnumdepth}{4}
+%  \setcounter{secnumdepth}{3}
+ \setcounter{tocdepth}{4}
+ \pagenumbering{roman}
+ \pagenumbering{roman}
+
+ \graphicspath{ {./Images/} }
+ %Front Matter
+ \include{./FrontMatter/titlePage}
+ \include{./FrontMatter/approval}
+ %\include{./FrontMatter/Certificate}
+ \include{./FrontMatter/acknowledgements}
+% 
+ %\include{./FrontMatter/dedication}
+ % \include{./FrontMatter/abstract}
+%
+\pagestyle{fancy}
+\fancyhead[C]{ASMPFMHDD}
+\fancyfoot[L]{ \footnotesize ASMPFMHDD-v3.0}
+\vspace{-3\baselineskip}
+\begin{spacing}{0.9}
+ { \tableofcontents}
+  %\addtocontents{toc}{~\vspace{-3\baselineskip}}
+\end{spacing}
+
+\vspace{2em}
+
+\pagebreak
+\listoffigures
+\pagebreak
+ %Main material
+ \clearpage
+ \pagenumbering{arabic}
+
+ % \include{./Chapters/1_introduction} 
+ % \include{./Chapters/2_problem_definition}  \include{./Chapters/3_related_studies}
+ % \include{./Chapters/4_project_plan} 
+ % \include{./Chapters/5_requirement_analysis} \include{./Chapters/6_design} 
+ % \include{./Chapters/7_test_plan} 
+ % \include{./Chapters/8_conclusion}
+
+ % \include{./Chapters/content}
+
+ % ---------------------- SEPERATE FILES FOR CONTENT----
+
+\input{Content/01 Abstract}
+\input{Content/02 Introduction}
+\input{Content/03 Related Studies.tex}
+\input{Content/04 Problem Definition and Preliminaries.tex}
+\input{Content/05 Proposed Solution.tex}
+\input{Content/06 Project Planning.tex}
+\input{Content/07 Requirement Analysis.tex}
+\input{Content/08 Design.tex}
+\input{Content/09 Implementation.tex}
+\input{Content/10 Result and Analysis.tex}
+\input{Content/11 Conclusion.tex}
+\input{Content/12 References.tex}
+\input{Chapters/appendix.tex}
+
+
+ % ---------------------- SEPERATE FILES FOR CONTENT--------------
+ 
+ %\include{./Chapters/appendix}
+% \addcontentsline{toc}{section}{Bibliography}
+% \bibliographystyle{IEEEtran}
+% \bibliography{Content/references}
+ 
+%TODO: remove the following after your report is completed
+% by commenting the next line
+%%\include{./instructions}
+
+ % Comment Out 
+% \include{./instructions} 
+ 
+ 
+ %Bibliography
+
+%  \begin{thebibliography}{9}
+% \bibitem{knuth_texbook}
+% Donald E. Knuth (1986) \emph{The \TeX{} Book}, Addison-Wesley Professional.
+
+% \bibitem{lamport94}
+% Leslie Lamport (1994) \emph{\LaTeX: a document preparation system}, Addison
+% Wesley, Massachusetts, 2nd ed.
+% \end{thebibliography}
+ 
+
+% \include{./Chapters/9_app1}
+% \include{./Chapters/10_app2}
+ 
+\end{document}
