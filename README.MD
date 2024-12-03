@@ -98,6 +98,7 @@ streamlit run app.py
 
 ### Deep Learning Models:
 - LSTM for text classification.
+- Custom Transformer Model
 
 ## Dataset Information
 
