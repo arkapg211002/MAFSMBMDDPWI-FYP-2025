@@ -1,0 +1,236 @@
+% ------------------------ Introduction -------------------------------------
+
+\section{Introduction}
+
+\begin{comment}
+    Briefly introduce the project's overall topic and purpose.
+    \vspace{.1in}
+    
+    \noindent
+    Provide specifications of Technical domain (Hardware, Operating System, Software) and Business domain.
+    \vspace{.1in}
+    
+    \noindent
+    Provide \textbf{Glossary} / Keywords in a tabular format.
+\end{comment}
+
+% Real Input
+
+\subsection{Project Overview}
+\vspace{.1in}
+\noindent
+Mental health has become a critical global issue, with millions of people affected by various mental disorders, including depression, anxiety, and others. With the increasing use of social media, these platforms have emerged as spaces where people often express their emotions and struggles, sometimes unknowingly revealing signs of mental health challenges. This project focuses on analyzing social media posts to detect mental health disorders using advanced machine learning techniques. By examining language patterns and contextual usage in text data, this project aims to classify posts that potentially indicate mental health issues. Such detection can facilitate early intervention and help direct individuals to appropriate mental health services.
+
+\subsection{Project Purpose}
+\vspace{.1in}
+\noindent
+The main goal of this project is to leverage machine learning and deep learning to identify the best model and create a web applicatoin capable of identifying signs of mental health disorders from text, images and social media posts by giving username as input. This aligns with a broader goal of using technology to address public health concerns by enabling early detection through data analysis. Specifically, we use classification models such as Logistic Regression and XGboost to predict mental health issues based on text patterns. The project also addresses the technical challenges of processing large datasets and optimizing algorithms for accurate classification.
+
+\subsection{Technical Domain Specifications}
+\vspace{.1in}
+This project falls within the intersection of natural language processing (NLP) and machine learning (ML), leveraging techniques such as text vectorization, and classification algorithms. Here are the key technical domain specifications:
+
+\begin{itemize}
+    
+    \item \textbf{Hardware} : 
+    \noindent
+    The project does not require specialized hardware beyond a standard machine with adequate processing power. However, for larger datasets or complex model training, a machine equipped with a GPU (Graphics Processing Unit) could significantly reduce processing time. The project can be run on any system with at least 8GB of RAM and a multi-core processor.
+
+    \item \textbf{Operating System} : 
+    \noindent
+    The project is cross-platform and can be developed and executed on any modern operating system, including:
+        \begin{itemize}
+            \item Windows 10/11
+            \item macOS
+            \item 
+            \noindent
+            Linux distributions (Ubuntu, Linux Mint, etc.) A Linux-based system is often preferred in machine learning projects due to its stability and support for tools like TensorFlow, PyTorch, and other libraries used for model training.
+        \end{itemize}
+
+    \item  \textbf{Software} :
+    \noindent
+        \begin{itemize}
+            \item \textbf{Programming Languages} : 
+            \noindent
+            Python 3.x will be the primary programming language, given its extensive libraries for machine learning, data analysis, and NLP.
+
+            \item \textbf{Libraries / Frameworks} :
+            \noindent
+                \begin{itemize}
+                    
+                    \item \textbf{Scikit-learn} :
+                    \noindent
+                    Used for machine learning algorithms (k-NN, SVM) and model evaluation.
+
+                    \item \textbf{Pandas} :
+                    \noindent
+                    For data manipulation and preprocessing.
+
+                    \item \textbf{NumPy} :
+                    \noindent
+                    To handle large arrays and matrices, which are crucial for efficient numerical computations.
+
+                    \item \textbf{NLTK and spaCy} :
+                    \noindent
+                    For text preprocessing and natural language understanding.
+
+                    \item \textbf{Matplotlib and Seaborn} :
+                    \noindent
+                    For data visualization.
+                    
+                \end{itemize}
+
+            \item \textbf{Development Environment} :
+            \noindent
+                \begin{itemize}
+                    
+                    \item \textbf{Jupyter Notebook} :
+                    \noindent
+                    For interactive development, experimentation, and visualization.
+
+                    \item \textbf{Anaconda} :
+                    \noindent
+                    A distribution that simplifies package management and deployment.
+
+                    \item \textbf{Google Colab} :
+                    \noindent
+                    For cloud-based execution when working with larger datasets or GPU-based model training.
+                
+                \end{itemize}
+                
+        \end{itemize}
+    
+\end{itemize}
+
+\subsection{Business Domain Specifications}
+\noindent
+From a business perspective, this project holds significant value across various sectors, particularly those that intersect with mental health monitoring, public health awareness, and social media governance. With the increasing prevalence of mental health issues globally, organizations within these industries are searching for innovative solutions to mitigate the growing mental health crisis. Leveraging machine learning for early detection of mental health disorders from social media data can revolutionize how mental health is addressed at both individual and societal levels. Below is a detailed exploration of how this project can impact different business domains:
+
+\begin{itemize}
+    
+    \item \textbf{Mental Health Services} :
+    \noindent
+    Mental health service providers—such as hospitals, therapy centers, and private practices—can greatly benefit from machine learning models capable of identifying early signs of mental health issues from social media data. In the traditional mental health setting, early detection of disorders like depression or anxiety often relies on self-reporting or clinical assessments, which may come too late in the progression of the disorder. By analyzing patterns in social media posts, these services can adopt a more proactive approach, reaching out to potential patients earlier in their mental health journey.
+
+    \item \textbf{Social Media Platforms} :
+    \noindent
+    Social media platforms like Twitter, Facebook, Instagram, and others play an integral role in the public’s expression of thoughts and feelings, including mental health struggles. These platforms face increasing pressure to safeguard the well-being of their users. This project’s machine learning models can enable these companies to offer valuable services to users while adhering to ethical standards.
+
+    \item \textbf{Public Health Organizations} :
+    \noindent
+    Public health organizations are tasked with monitoring and improving the mental well-being of the population on a large scale. For these organizations, access to real-time data from social media can provide a comprehensive view of the mental health landscape, identifying emerging trends and enabling data-driven interventions. Understanding how mental health is being discussed online can help public health organizations create more effective mental health awareness campaigns. Tailored messaging based on the language patterns identified by the model can lead to better engagement with individuals suffering from mental health issues.
+    
+\end{itemize}
+
+\subsection{Glossary / Keywords}
+\noindent
+
+\begin{center}
+
+\begin{tabular}{|p{4cm}|p{10cm}|}
+  \hline
+  \multicolumn{1}{|c|}{\textbf{Term}} & \multicolumn{1}{c|}{\textbf{Definition}} \\
+  
+  \hline
+  Machine Learning (ML) & A subset of artificial intelligence (AI) that enables computers to learn from data and make predictions or decisions without explicit programming. \\
+
+  \hline 
+  Natural Language Processing (NLP) & A branch of artificial intelligence focused on the interaction between computers and humans through natural language, including tasks like text analysis. \\
+
+  \hline 
+  Support Vector Machines (SVM) & A supervised learning algorithm used for classification or regression tasks, focusing on finding a hyperplane that best separates different classes. \\
+
+  \hline 
+  Vectorization & The process of converting textual data into numerical form (such as a vector) so that it can be used as input for machine learning models. \\
+
+  \hline 
+  Classifier & A machine learning model or algorithm that categorizes or labels data points into predefined classes. \\
+
+  \hline
+  Mental Health Disorder & A wide range of conditions that affect mood, thinking, and behavior, including depression, anxiety, schizophrenia, etc. \\
+
+  \hline
+  Data Preprocessing & The process of preparing raw data for analysis by cleaning, normalizing, and transforming it into a usable format for machine learning models. \\
+
+  \hline 
+  Cross-validation & A model validation technique used to assess how well a model performs by dividing data into training and testing sets multiple times for better accuracy. \\
+
+  \hline
+  Precision & In the context of classification, precision refers to the accuracy of positive predictions, calculated as the ratio of true positives to the sum of true and false positives. \\
+
+  \hline
+  Recall & In classification, recall measures the ability of a model to identify all relevant instances within a dataset, calculated as the ratio of true positives to the sum of true positives and false negatives. \\
+  
+  \hline
+  PRAW & PRAW (Python Reddit API Wrapper) is a Python library that provides a simple interface to interact with Reddit's API, allowing developers to easily access, retrieve, and analyze Reddit data, such as posts, comments, and user information. \\
+
+  \hline
+  TesseractOCR & TesseractOCR is an open-source Optical Character Recognition (OCR) engine that extracts text from images with high accuracy; it is widely used for various applications like scanning documents and digitalizing printed text. \\
+  \hline
+
+\end{tabular}
+
+\pagebreak
+
+\begin{tabular}{|p{4cm}|p{10cm}|}
+  \hline
+  \multicolumn{1}{|c|}{\textbf{Term}} & \multicolumn{1}{c|}{\textbf{Definition}} \\
+
+  \hline
+  Depression & There is a difference between depression and mood swings or short-lived emotional reactions to daily experiments; A mental state causing painful symptoms adversely disrupts normal activities (e.g., sleeping). \\
+
+  \hline
+  Anxiety & Several behavioral disturbances are associated with anxiety disorders, including excessive fear and worry. Severe symptoms cause significant impairment in functioning cause considerable distress. Anxiety disorders come in many forms, such as social anxiety, generalized anxiety, panic, etc. \\
+
+  \hline
+  Bipolar Disorder & An alternating pattern of depression and manic symptoms is associated with bipolar disorder. An individual experiencing a depressive episode may feel sad, irritable, empty, or lose interest in daily activities. Emotions of euphoria or irritability, excessive energy, and increased talkativeness can all be signs of manic depression. Increased self-esteem, decreased sleep need, disorientation, and reckless behavior may also be signs of manic depression. \\
+
+  \hline
+  Post-Traumatic Stress Disorder (PTSD) & In PTSD, persistent mental and emotional stress can occur after an injury or severe psychological shock, characterized by sleep disturbances, constant vivid memories, and dulled response to others and the outside world. People who re-experience symptoms may have difficulties with their everyday routines and experience significant impairment in their performance. \\
+
+  \hline
+  DeepFace & DeepFace is a Python library for deep learning-based facial recognition and attribute analysis. It supports several pretrained models and simplifies face recognition tasks, making it suitable for various applications in image analysis. \\
+
+  \hline
+  Transformers Module & The Transformers module in Python, developed by Hugging Face, is a library for natural language processing (NLP) tasks like text classification, translation, and summarization, using state-of-the-art models like BERT and GPT. \\
+
+  \hline
+  Gemini 1.5 Flash & Gemini 1.5 Flash is a cutting-edge AI model developed by Google, capable of performing advanced generative and analytical tasks across text, image, and other modalities. \\
+
+  \hline
+  FFmpeg & FFmpeg is a multimedia framework used for encoding, decoding, transcoding, streaming, and manipulating audio and video files, supporting a wide range of formats and codecs. \\
+
+  \hline
+  Hyperparameter Tuning & Hyperparameter tuning involves selecting the best parameters for a machine learning model to optimize its performance on a given task, using methods like grid search or random search. \\
+
+  \hline
+  Logistic Regression & Logistic Regression is a statistical method used for binary and multiclass classification tasks by modeling the relationship between input variables and probabilities using a sigmoid function. \\
+  \hline
+\end{tabular}
+
+\begin{tabular}{|p{4cm}|p{10cm}|}
+    \hline
+    \multicolumn{1}{|c|}{\textbf{Term}} & \multicolumn{1}{c|}{\textbf{Definition}} \\
+  \hline
+  K-Nearest Neighbors (KNN) & KNN is a simple, instance-based machine learning algorithm used for classification and regression tasks, predicting outcomes based on the majority class of its k nearest neighbors. \\
+
+  \hline
+  Naive Bayes & Naive Bayes is a probabilistic classification algorithm based on Bayes' Theorem, assuming independence between features, making it efficient for text classification and other applications. \\
+
+  \hline
+  Random Forest & Random Forest is an ensemble machine learning algorithm that combines multiple decision trees to improve accuracy and prevent overfitting, commonly used for classification and regression tasks. \\
+
+  \hline
+  XGBoost & XGBoost (Extreme Gradient Boosting) is a powerful ensemble machine learning algorithm based on decision trees, designed for speed and performance in classification and regression tasks. \\
+
+  \hline
+  Long Short-Term Memory (LSTM) & LSTM is a type of recurrent neural network (RNN) architecture capable of learning and remembering patterns over long sequences of data, widely used in time-series analysis and NLP. \\
+  \hline
+
+\end{tabular}
+
+  
+\end{center}
+
+
+% ------------------------------ Introduction Ends ---------------------------
