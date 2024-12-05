@@ -29,3 +29,6 @@ tf_keras
 transformers
 torch
 nltk
+plotly
+matplotlib
+scipy
