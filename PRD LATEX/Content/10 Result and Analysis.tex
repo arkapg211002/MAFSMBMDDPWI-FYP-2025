@@ -442,6 +442,7 @@ The LSTM model achieved an accuracy of 84.91\%, indicating strong performance. T
 
 \subsection{Results of Hyperparameter Tuning}
 
+\subsubsection{Logistic Regression}
 \begin{center}
     \textbf{Hyperparameter Tuning on Logistic Regression} \\[0.5em]
     \begin{tabular}{|l|c|}
@@ -452,6 +453,23 @@ The LSTM model achieved an accuracy of 84.91\%, indicating strong performance. T
         C                              & 1              \\ \hline
     \end{tabular}
 \end{center}
+
+\begin{center}
+    \textbf{Classification Report} \\[0.5em]
+    \begin{tabular}{|l|c|c|c|c|}
+        \hline
+        \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
+        Anxiety        & 0.83               & 0.77            & 0.80              & 379             \\ \hline
+        Bipolar        & 0.74               & 0.55            & 0.64              & 384             \\ \hline
+        Depression     & 0.76               & 0.76            & 0.76              & 373             \\ \hline
+        Normal         & 0.92               & 0.99            & 0.95              & 2183            \\ \hline
+        PTSD           & 0.87               & 0.77            & 0.82              & 394             \\ \hline
+        \textbf{Accuracy} & \multicolumn{4}{|c|}{87.72\%} \\ \hline
+        \textbf{Macro Avg} & 0.83            & 0.77            & 0.79              & 3713            \\ \hline
+        \textbf{Weighted Avg} & 0.87         & 0.88            & 0.87              & 3713            \\ \hline
+    \end{tabular}
+\end{center}
+
 
 \begin{center}
     \textbf{ROC Curve Areas for Each Class} \\[0.5em]
@@ -468,14 +486,14 @@ The LSTM model achieved an accuracy of 84.91\%, indicating strong performance. T
 
 \begin{figure}[h!]  
     \centering
-    \includegraphics[width=0.7\textwidth]{Images/HP LR CM.png}  
+    \includegraphics[width=0.9\textwidth]{Images/HP LR CM.png}  
     \caption{Classification Matrix after Hyperparameter Tuning (Logistic Regression)}
     \label{LSTMROC2}  % Label for referencing the figure
 \end{figure}
 
 \begin{figure}[h!]  
     \centering
-    \includegraphics[width=0.7\textwidth]{Images/HP LR ROC.png}  
+    \includegraphics[width=0.9\textwidth]{Images/HP LR ROC.png}  
     \caption{ROC AUC after Hyperparamter Tuning (Logistic Regression)}
     \label{LSTMROC3}  % Label for referencing the figure
 \end{figure}
@@ -483,8 +501,10 @@ The LSTM model achieved an accuracy of 84.91\%, indicating strong performance. T
 \noindent
 The results of hyperparameter tuning on the Logistic Regression model show that the best hyperparameters were a solver of \texttt{liblinear}, a penalty of \texttt{l2}, and a regularization parameter (\texttt{C}) of 1. The model achieved an overall accuracy of 87.72\%, with high performance across most classes. The classification report reveals that the model performs well on \texttt{normal} class with an accuracy of 92\% in predicting this class, whereas performance on \texttt{bipolar} is slightly lower \(64\% F1-score\). The ROC AUC scores indicate that the model is highly effective in distinguishing between different classes, with \texttt{normal} achieving a near-perfect AUC of 0.99, followed closely by \texttt{depression} at 0.96. These results suggest that the model is well-tuned, particularly for classes like \texttt{normal} and \texttt{anxiety}.
 
-% ----------- knn hpt
+\pagebreak
 
+% ----------- knn hpt
+\subsubsection{K-Nearest Neighbours}
 \begin{center}
     \textbf{Hyperparameter Tuning on k-NN} \\[0.5em]
     \begin{tabular}{|l|c|}
@@ -493,6 +513,22 @@ The results of hyperparameter tuning on the Logistic Regression model show that 
         Weights                       & distance       \\ \hline
         n\_neighbors                  & 10             \\ \hline
         Metric                        & euclidean      \\ \hline
+    \end{tabular}
+\end{center}
+
+\begin{center}
+    \textbf{Classification Report} \\[0.5em]
+    \begin{tabular}{|l|c|c|c|c|}
+        \hline
+        \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
+        Anxiety        & 0.73               & 0.23            & 0.35              & 379             \\ \hline
+        Bipolar        & 0.18               & 0.60            & 0.27              & 384             \\ \hline
+        Depression     & 0.47               & 0.40            & 0.43              & 373             \\ \hline
+        Normal         & 0.74               & 0.65            & 0.69              & 2183            \\ \hline
+        PTSD           & 0.83               & 0.10            & 0.18              & 394             \\ \hline
+        \textbf{Accuracy} & \multicolumn{4}{|c|}{52.03\%} \\ \hline
+        \textbf{Macro Avg} & 0.59            & 0.40            & 0.39              & 3713            \\ \hline
+        \textbf{Weighted Avg} & 0.66         & 0.52            & 0.53              & 3713            \\ \hline
     \end{tabular}
 \end{center}
 
@@ -527,7 +563,7 @@ The results of hyperparameter tuning on the Logistic Regression model show that 
 The results of hyperparameter tuning on the k-Nearest Neighbors (k-NN) model show that the best hyperparameters were \texttt{weights} set to \texttt{distance}, \texttt{n\_neighbors} set to 10, and \texttt{metric} set to \texttt{euclidean}. Despite these optimizations, the model achieved an overall accuracy of 52.03\%, which is relatively low. The classification report indicates that the model struggled to effectively predict the \texttt{anxiety} and \texttt{PTSD} classes, with particularly low recall values (0.23 and 0.10, respectively). However, it performed reasonably well on the \texttt{normal} class with an F1-score of 0.69. The ROC AUC scores reflect this by showing relatively poor performance for \texttt{bipolar} (0.67) and \texttt{PTSD} (0.71), while \texttt{normal} and \texttt{depression} had slightly better values at 0.79 each. These results suggest that k-NN is not the best model for this dataset, as it fails to consistently classify the minority classes effectively. 
 
 \pagebreak
-
+\subsubsection{Support Vector Machine}
 \begin{center}
     \textbf{Hyperparameter Tuning on SVM} \\[0.5em]
     \begin{tabular}{|l|c|}
@@ -538,6 +574,23 @@ The results of hyperparameter tuning on the k-Nearest Neighbors (k-NN) model sho
         C                              & 1              \\ \hline
     \end{tabular}
 \end{center}
+
+\begin{center}
+    \textbf{Classification Report} \\[0.5em]
+    \begin{tabular}{|l|c|c|c|c|}
+        \hline
+        \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
+        Anxiety        & 0.72               & 0.76            & 0.74              & 379             \\ \hline
+        Bipolar        & 0.62               & 0.61            & 0.61              & 384             \\ \hline
+        Depression     & 0.74               & 0.71            & 0.72              & 373             \\ \hline
+        Normal         & 0.94               & 0.95            & 0.95              & 2183            \\ \hline
+        PTSD           & 0.78               & 0.74            & 0.76              & 394             \\ \hline
+        \textbf{Accuracy} & \multicolumn{4}{|c|}{85.13\%} \\ \hline
+        \textbf{Macro Avg} & 0.76            & 0.75            & 0.76              & 3713            \\ \hline
+        \textbf{Weighted Avg} & 0.85         & 0.85            & 0.85              & 3713            \\ \hline
+    \end{tabular}
+\end{center}
+
 
 \begin{center}
     \textbf{ROC Curve Areas for Each Class} \\[0.5em]
@@ -554,14 +607,14 @@ The results of hyperparameter tuning on the k-Nearest Neighbors (k-NN) model sho
 
 \begin{figure}[h!]  
     \centering
-    \includegraphics[width=0.7\textwidth]{Images/HP SVM CM.png}  
+    \includegraphics[width=0.9\textwidth]{Images/HP SVM CM.png}  
     \caption{Classification Matrix after Hyperparameter Tuning (SVM)}
     \label{LSTMROC6}  % Label for referencing the figure
 \end{figure}
 
 \begin{figure}[h!]  
     \centering
-    \includegraphics[width=0.7\textwidth]{Images/HP SVM ROC.png}  
+    \includegraphics[width=0.9\textwidth]{Images/HP SVM ROC.png}  
     \caption{ROC AUC after Hyperparameter Tuning (SVM)}
     \label{LSTMROC}  % Label for referencing the figure
 \end{figure}
@@ -571,13 +624,29 @@ The results of hyperparameter tuning on the Support Vector Machine (SVM) model r
 
 
 \pagebreak
-
+\subsubsection{Naive Bayes}
 \begin{center}
     \textbf{Hyperparameter Tuning on Naive Bayes} \\[0.5em]
     \begin{tabular}{|l|c|}
         \hline
         \textbf{Best Hyperparameters}  & \textbf{Value} \\ \hline
         Alpha                         & 0.2914180608409973 \\ \hline
+    \end{tabular}
+\end{center}
+
+\begin{center}
+    \textbf{Classification Report} \\[0.5em]
+    \begin{tabular}{|l|c|c|c|c|}
+        \hline
+        \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
+        Anxiety        & 0.69               & 0.76            & 0.72              & 379             \\ \hline
+        Bipolar        & 0.75               & 0.55            & 0.64              & 384             \\ \hline
+        Depression     & 0.60               & 0.83            & 0.70              & 373             \\ \hline
+        Normal         & 0.96               & 0.91            & 0.94              & 2183            \\ \hline
+        PTSD           & 0.73               & 0.79            & 0.76              & 394             \\ \hline
+        \textbf{Accuracy} & \multicolumn{4}{|c|}{83.95\%} \\ \hline
+        \textbf{Macro Avg} & 0.75            & 0.77            & 0.75              & 3713            \\ \hline
+        \textbf{Weighted Avg} & 0.85         & 0.84            & 0.84              & 3713            \\ \hline
     \end{tabular}
 \end{center}
 
@@ -596,28 +665,70 @@ The results of hyperparameter tuning on the Support Vector Machine (SVM) model r
 
 \begin{figure}[h!]  
     \centering
-    \includegraphics[width=0.7\textwidth]{Images/HP NB CM.png}  
+    \includegraphics[width=0.9\textwidth]{Images/HP NB CM.png}  
     \caption{Classification Matrix after Hyperparameter Tuning (Naive Bayes)}
     \label{LSTMROC7}  % Label for referencing the figure
 \end{figure}
 
 \begin{figure}[h!]  
     \centering
-    \includegraphics[width=0.7\textwidth]{Images/HP NB ROC.png}  
+    \includegraphics[width=0.9\textwidth]{Images/HP NB ROC.png}  
     \caption{ROC AUC after Hyperparameter Tuning (Naive Bayes)}
     \label{LSTMROC8}  % Label for referencing the figure
 \end{figure}
 
 \noindent
-The results of hyperparameter tuning on the Naive Bayes model show that the best hyperparameter was \texttt{alpha} set to 0.2914. With this optimal value, the model achieved an accuracy of 83.95\%. The classification report reveals that the \texttt{normal} class performed the best, with a high F1-score of 0.94, followed by \texttt{PTSD} at 0.76. The \texttt{anxiety} class achieved a solid F1-score of 0.72, while \texttt{bipolar} and \texttt{depression} had lower scores. The ROC AUC curve areas demonstrate strong performance across all classes, with \texttt{normal} reaching a perfect 0.99 and the other classes scoring above 0.90. Overall, the Naive Bayes model performed well, especially in identifying \texttt{normal} and \texttt{PTSD}, making it a good candidate for mental health issue classification.
+The results of hyperparameter tuning on the Naive Bayes model show that the best hyperparameter was \texttt{alpha} set to 0.2914. With this optimal value, the model achieved an accuracy of 83.95\%. The classification report reveals that the \texttt{normal} class performed the best, with a high F1-score of 0.94, followed by \texttt{PTSD} at 0.76. The \texttt{anxiety} class achieved a solid F1-score of 0.72, while \texttt{bipolar} and \texttt{depression} had lower scores. The ROC AUC curve areas demonstrate strong performance across all classes, with \texttt{normal} reaching a perfect 0.99 and the other classes scoring above 0.90. Overall, the Naive Bayes model performed well, especially in identifying \texttt{normal} and \texttt{PTSD}, making it a good candidate for mental health issue classification. After performing hyperparameter tuning using RandomizedSearchCV, Logistic Regression emerged as the best-performing model for mental health classification. The model achieved an accuracy of 87.72\%, demonstrating its strong ability to correctly classify mental health issues based on text data. The best hyperparameters found during tuning were \texttt{'solver': 'liblinear', 'penalty': 'l2', 'C': 1}, which contributed to the model's robustness and efficiency. In terms of classification performance, Logistic Regression showed a high recall and precision, especially for classes like \textit{normal}, with a recall of 0.99, indicating its proficiency in identifying the most prevalent class in the dataset. 
 
+% -------------- Adding transformer
+\subsection{Transformer based model}
+\begin{center}
+    \textbf{Classification Report} \\[0.5em]
+    \begin{tabular}{|l|c|c|c|c|}
+        \hline
+        \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
+        Anxiety        & 0.75               & 0.78            & 0.76              & 379             \\ \hline
+        Bipolar        & 0.76               & 0.69            & 0.73              & 384             \\ \hline
+        Depression     & 0.82               & 0.72            & 0.77              & 373             \\ \hline
+        Normal         & 0.95               & 0.97            & 0.96              & 2183            \\ \hline
+        PTSD           & 0.79               & 0.80            & 0.79              & 394             \\ \hline
+        \textbf{Accuracy} & \multicolumn{4}{|c|}{88.5\%} \\ \hline
+        \textbf{Macro Avg} & 0.81            & 0.79            & 0.80              & 3713            \\ \hline
+        \textbf{Weighted Avg} & 0.88         & 0.88            & 0.88              & 3713            \\ \hline
+    \end{tabular}
+\end{center}
 
+\begin{center}
+    \textbf{ROC Curve Areas for Each Class} \\[0.5em]
+    \begin{tabular}{|l|c|}
+        \hline
+        \textbf{Class}  & \textbf{ROC AUC} \\ \hline
+        Anxiety         & 0.97            \\ \hline
+        Bipolar         & 0.94            \\ \hline
+        Depression      & 0.98            \\ \hline
+        Normal          & 0.99            \\ \hline
+        PTSD            & 0.97            \\ \hline
+    \end{tabular}
+\end{center}
+
+\begin{figure}[h!]  
+    \centering
+    \includegraphics[width=0.75\textwidth]{Images/T CM.png}  
+    \caption{Confusion Matrix for Transformer based Model}
+    \label{dfdl145}  % Label for referencing the figure
+\end{figure}
+
+\begin{figure}[h!]  
+    \centering
+    \includegraphics[width=0.75\textwidth]{Images/T ROC.png}  
+    \caption{ROC AUC for Transformer based Model}
+    \label{dfdl145}  % Label for referencing the figure
+\end{figure}
+
+\noindent 
+The classification report and ROC AUC scores for your transformer-based model demonstrate strong performance across all classes, reflecting its ability to effectively handle the nuances of mental health text. The model achieved high precision, recall, and F1-scores, particularly for the "Normal" and "Anxiety" classes, where the precision and recall values were very high. This indicates that the model is good at identifying these conditions with minimal false positives and negatives. The high ROC AUC scores, ranging from 0.94 to 0.99 for each class, further highlight the model's ability to distinguish between different mental health conditions, with "Normal" and "Anxiety" showing particularly strong discriminatory power. The transformer-based architecture has likely contributed to these results by enabling the model to capture the complex relationships and contextual cues present in the text, which traditional models might struggle to identify. The pre-training on large datasets and fine-tuning for specific tasks has likely improved the model's ability to generalize across various mental health issues, contributing to the high accuracy of 88.5\%. This model's ability to balance performance across both major and minor classes is reflected in its macro and weighted averages, which show that it handles the class imbalance well and performs effectively on all categories. The transformer model's ability to process long-range dependencies and understand contextual relationships in the text has clearly enhanced its ability to classify mental health issues accurately, resulting in improved overall performance.
 
 \pagebreak
-
-\noindent
-After performing hyperparameter tuning using RandomizedSearchCV, Logistic Regression emerged as the best-performing model for mental health classification. The model achieved an accuracy of 87.72\%, demonstrating its strong ability to correctly classify mental health issues based on text data. The best hyperparameters found during tuning were \texttt{'solver': 'liblinear', 'penalty': 'l2', 'C': 1}, which contributed to the model's robustness and efficiency. In terms of classification performance, Logistic Regression showed a high recall and precision, especially for classes like \textit{normal}, with a recall of 0.99, indicating its proficiency in identifying the most prevalent class in the dataset. Furthermore, the ROC AUC scores for each class were impressive, with values close to or exceeding 0.90, which suggests excellent model discrimination between classes. Overall, Logistic Regression's combination of high accuracy, solid precision-recall balance, and optimal hyperparameters makes it the most suitable model for this task.
-
 
 \begin{figure}[h!]  
     \centering
@@ -633,6 +744,7 @@ After performing hyperparameter tuning using RandomizedSearchCV, Logistic Regres
     \label{dfdl123}  % Label for referencing the figure
 \end{figure}
 
+\vspace{1em}
 
 \noindent 
 K-Nearest Neighbors (KNN) performs significantly poorly on this dataset compared to other algorithms, both before and after hyperparameter tuning. The dataset used, which includes Reddit posts with corresponding mental health labels, presents challenges for KNN due to its reliance on distance-based metrics. Specifically, KNN uses the distance between data points to classify them, but this approach is sensitive to the scale and distribution of features. In the case of text data, the feature space can be sparse and high-dimensional, making it difficult for KNN to find meaningful relationships between the posts and their associated mental health labels. After hyperparameter tuning, KNN was optimized with parameters such as \textbf{weights='distance'}, \textbf{n\_neighbors=10}, and \textbf{metric='euclidean'}, yet its performance remains suboptimal. This suggests that KNN struggles with the complexities inherent in text classification tasks, where the relationships between features (such as words or phrases in a Reddit post) are often non-linear and context-dependent. Despite tuning, the algorithm's performance metrics—accuracy, precision, recall, and F1-score—remain notably lower than those of other algorithms like Logistic Regression, Naive Bayes, or SVM. Additionally, KNN's inability to capture these subtleties in language means it performs poorly, particularly in distinguishing between categories like anxiety, bipolar disorder, or PTSD, where the text patterns may be more nuanced. Overall, KNN's reliance on proximity without considering the richer context of textual data likely contributes to its lower performance on this mental health classification task. Other algorithms, particularly those that are more suited for high-dimensional and sparse data (like Logistic Regression or SVM), show much better results as they can better account for the underlying patterns in the Reddit posts.
@@ -691,6 +803,22 @@ Ultimately, the combination of \textbf{BoW} and \textbf{TFIDF} strikes a balance
 
 \subsection{Results from Ensemble Model Training and Testing}
 \subsubsection{Ensemble Model 1}
+
+\begin{center}
+    \textbf{Cross-Validation Accuracy Scores} \\[0.5em]
+    \begin{tabular}{|c|c|}
+        \hline
+        \textbf{Cross-Validation Accuracy Scores} & \textbf{Value} \\ \hline
+        1 & 0.96364126 \\ \hline
+        2 & 0.95744681 \\ \hline
+        3 & 0.96175599 \\ \hline
+        4 & 0.95933208 \\ \hline
+        5 & 0.96202532 \\ \hline
+        \textbf{Mean Validation Accuracy} & \textbf{96.08\%} \\ \hline
+    \end{tabular}
+\end{center}
+
+
 \begin{center}
     \textbf{Classification Report for Ensemble Model1} \\[0.5em]
     \begin{tabular}{|c|c|c|c|c|}
@@ -753,7 +881,24 @@ This ensemble model, combining Logistic Regression and XGBoost, is highly effect
     \label{dfdl1244883}  % Label for referencing the figure
 \end{figure}
 
+\pagebreak
+
 \subsubsection{Ensemble Model 2}
+
+\begin{center}
+    \textbf{Cross-Validation Accuracy Scores} \\[0.5em]
+    \begin{tabular}{|c|c|}
+        \hline
+        \textbf{Cross-Validation Accuracy Scores} & \textbf{Value} \\ \hline
+        1 & 0.980878 \\ \hline
+        2 & 0.97629949 \\ \hline
+        3 & 0.98249394 \\ \hline
+        4 & 0.97522219 \\ \hline
+        5 & 0.97710746 \\ \hline
+        \textbf{Mean Validation Accuracy} & \textbf{97.84\%} \\ \hline
+    \end{tabular}
+\end{center}
+
 
 \begin{center}
     \textbf{Classification Report for Ensemble Model2} \\[0.5em]
@@ -765,7 +910,7 @@ This ensemble model, combining Logistic Regression and XGBoost, is highly effect
         \textbf{Depression} & 0.98 & 0.96 & 0.97 & 392  \\ \hline
         \textbf{Normal}     & 0.99 & 0.99 & 0.99 & 2136 \\ \hline
         \textbf{PTSD}       & 0.97 & 0.98 & 0.98 & 397  \\ \hline
-        \textbf{Accuracy}   & \multicolumn{4}{|c|}{\textbf{97.84\%}} \\ \hline
+        \textbf{Accuracy}   & \multicolumn{4}{|c|}{\textbf{97.93\%}} \\ \hline
         \textbf{Macro avg}  & 0.97 & 0.97 & 0.97 & 3713 \\ \hline
         \textbf{Weighted avg} & 0.98 & 0.98 & 0.98 & 3713 \\ \hline
     \end{tabular}
@@ -853,6 +998,8 @@ While using models like XGBoost, SVM, Naive Bayes, and LSTM as meta-learners in 
     \end{tabular}
 \end{center}
 
+\pagebreak
+
 \begin{center}
     \textbf{ROC AUC Scores} \\[0.5em]
     \begin{tabular}{|c|c|}
@@ -889,7 +1036,7 @@ While using models like XGBoost, SVM, Naive Bayes, and LSTM as meta-learners in 
 \noindent
 The confusion matrix for the Random Forest model shows the performance of the classifier for each of the five mental health issues. For anxiety, there were 389 true positives, 2 false positives, 4 false negatives, and 2 misclassifications into other classes, demonstrating the model's high precision and recall for this category. Similarly, the bipolar disorder class had 351 true positives, 1 false positive, and 28 misclassifications into other classes, indicating strong but slightly lower recall compared to other categories. Depression exhibited robust performance with 377 true positives, only 6 misclassifications into other classes, and minimal false negatives. The normal class had an outstanding result with 2127 true positives, 8 false positives, and only 1 false negative, highlighting the model’s exceptional accuracy for the majority class. For the PTSD class, there were 386 true positives, 5 misclassifications into other classes, and minimal false positives and negatives, showcasing excellent performance. Overall, the confusion matrix indicates that the Random Forest model is highly effective across all classes, with very few errors. The consistent performance across all classes underscores the model's ability to distinguish between different mental health conditions with high accuracy and reliability. Random Forest is particularly effective at mitigating overfitting because it uses techniques like bootstrapping and random feature selection when constructing decision trees. This ensures that individual trees focus on different aspects of the data, reducing the risk of over-reliance on noise or specific patterns that might lead to overfitting. In contrast, linear models like Logistic Regression are inherently more sensitive to overfitting in high-dimensional spaces or when the data contains multicollinearity. Logistic Regression assumes a linear relationship between features and the target variable, making it less flexible in capturing complex patterns and more prone to memorizing specific data points, especially when regularization techniques are not carefully tuned. Despite experimenting with alternative configurations, such as N-Gram for XGBoost or TF-IDF for SVM, the selected ensemble model remains one of the optimal choices. The minor accuracy gains offered by the selected model are complemented by its computational efficiency, making it a practical solution for deployment. Random Forest’s robust handling of overfitting and ability to generalize effectively across different inputs further solidify its suitability as the meta-learner, ensuring the web application remains both efficient and reliable in its predictive capabilities.
 
-\pagebreak
+
 \subsubsection{Ensemble Model 4}
 
 \begin{center}
@@ -1034,7 +1181,7 @@ Bagging classifiers, while highly effective at improving predictive accuracy, ha
 \noindent
 The Blending Meta-Learner model exhibits strong performance with a test accuracy of 97.17\%. The classification report highlights solid precision, recall, and F1-scores across all classes, confirming the model's ability to accurately classify mental health conditions. For anxiety, the precision, recall, and F1-score are 0.96, 0.95, and 0.96 respectively, indicating high accuracy in classifying anxiety. The bipolar class shows a precision of 0.94 and recall of 0.89, with an F1-score of 0.92. Depression has an excellent performance with precision, recall, and F1-score of 0.96, 0.95, and 0.95, respectively. The normal class shows near-perfect classification with precision of 0.98, recall of 0.99, and F1-score of 0.99, highlighting the model's ability to accurately predict the majority class. PTSD shows a precision of 0.97, recall of 0.97, and F1-score of 0.97, reflecting strong performance. The accuracy across all classes is 97\%, with the macro average F1-score being 0.96, and the weighted average F1-score being 0.97. The confusion matrix reveals minimal misclassifications, with anxiety, bipolar, and depression showing only a few misclassified instances, and the normal class showing very few errors. The ROC AUC scores indicate excellent model performance in distinguishing between classes, with perfect scores of 1.00 for anxiety, depression, normal, and PTSD, and a score of 0.99 for bipolar. Cross-validation results show consistency, with accuracies ranging from 96.77\% to 97.31\% and a mean validation accuracy of 96.98\%. The standard deviation of validation accuracy is 0.25\%, demonstrating the stability of the model across different folds. These results emphasize the effectiveness and reliability of the Blending Meta-Learner in predicting mental health conditions with minimal misclassifications and high consistency. However, despite these impressive results, stacking ensemble using Random Forest as the meta-learner is often preferred over this Blending model. The main reason for this is that stacking tends to be more effective in generalizing to unseen data because it leverages multiple models for training the meta-learner, which reduces the risk of overfitting. In contrast, Blending may result in overfitting as it typically uses a simpler approach of directly training the meta-learner on the predictions from base models without incorporating a cross-validation step.
 
-\pagebreak
+
 
 \subsubsection{Ensemble Model 6}
 
@@ -1108,8 +1255,6 @@ The Weighted Voting model achieved an accuracy of 95.15\% on the test set, showc
 \noindent
 While the Weighted Voting ensemble model shows a respectable accuracy of 94.93\% and performs well across all classes, it is not preferred over other models like the Stacking ensemble with Random Forest as the meta-learner. The primary reason for this is that the Weighted Voting model does not fully take advantage of the strength of individual base models in the same way as the Stacking ensemble does. In Weighted Voting, the predictions of base models are combined based on their weighted contribution, but this method does not allow for the optimal learning of inter-model relationships that Stacking does. In the Stacking model, the Random Forest meta-learner is specifically designed to handle interactions between different base models, learning how to combine their strengths in a way that minimizes overfitting while maintaining high accuracy. In contrast, Weighted Voting simply assigns a weight to each model based on its performance, without a deeper mechanism to adjust for overfitting or to learn from the diversity of base models. This lack of fine-tuning in model interaction limits its ability to generalize as effectively as Stacking. Furthermore, the Weighted Voting model's performance may suffer when dealing with more complex relationships between features, as it relies on the simplicity of averaging the weighted predictions. While it is computationally efficient, it does not provide the robustness that Stacking offers through a more sophisticated meta-learning approach. As a result, despite the relatively high accuracy, the Weighted Voting ensemble model is considered less optimal for the given task when compared to more powerful models like Stacking.
 
-
-\pagebreak
 
 \subsubsection{Ensemble Model 7}
 
@@ -1193,7 +1338,7 @@ Below is a comparison of all the ensemble models for reference
 
 \begin{figure}[h!]  
     \centering
-    \includegraphics[width=1.0\textwidth]{Images/EM COMPARE.png}  
+    \includegraphics[width=0.77\textwidth]{Images/EM COMPARE.png}  
     \caption{Comparison of all Ensemble Models}
     \label{lstm arch}  % Label for referencing the figure
 \end{figure}
