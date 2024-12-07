@@ -665,96 +665,12 @@ def update_dataset(new_text, mental_health_issue):
 
 # ---------------- CHANGED AS PER ENSEMBLE MODEL -----------------
 def retrain_model():
-    # lr_model = None
-    # svm_model = None
-    # xgb_model = None
-    # lstm_model = None
-    # transformer_model = None
-    # lr_vectorizer = None
-    # svm_vectorizer = None
-    # xgb_vectorizer = None
-    # lstm_tokenizer = None
-    # t_vectorizer = None
-    # label_encoder = None
-    # tfidf_vectorizer = None
-    # t_label_encoder = None
-    # t_vectorize_layer = None
-    # nb_model = None
-    # nb_vectorizer = None
-
-    # custom_objects = {
-    #     "EmbeddingLayer": EmbeddingLayer,
-    #     "EncoderLayer": EncoderLayer
-    # }
-
-    # Initialize Streamlit progress bar
     progress = st.progress(0)
     progress_step = 0
 
     # Use an expander to group status messages
     with st.expander("Detailed Status", expanded=False):
         try:
-            # st.info("Loading models and vectorizers...")
-
-            # Load Logistic Regression model and vectorizer
-            # with open('LRmodel.pkl', 'rb') as file:
-            #    lr_model = pickle.load(file)
-
-            # with open('LRvectorizer.pkl', 'rb') as file:
-            #     lr_vectorizer = pickle.load(file)
-            # st.success("Logistic Regression model loaded successfully!")
-            # progress_step += 10
-            # progress.progress(progress_step)
-
-            # Load SVM model and vectorizer
-            # with open('SVMmodel.pkl', 'rb') as file:
-            #     svm_model = pickle.load(file)
-
-            # with open('SVMvectorizer.pkl', 'rb') as file:
-            #     svm_vectorizer = pickle.load(file)
-            # st.success("SVM model loaded successfully!")
-            # progress_step += 10
-            # progress.progress(progress_step)
-
-            # Load XGBoost model, vectorizer, and label encoder
-            # with open('xgb_model.pkl', 'rb') as file:
-            #     xgb_model = pickle.load(file)
-
-            # with open('tfidf_vectorizer.pkl', 'rb') as file:
-            #     tfidf_vectorizer = pickle.load(file)
-
-            # with open('label_encoder.pkl', 'rb') as file:
-            #     label_encoder = pickle.load(file)
-            # st.success("XGBoost model loaded successfully!")
-            # progress_step += 10
-            # progress.progress(progress_step)
-
-            # Load Naive Bayes model and vectorizer
-            # with open('NBmodel.pkl', 'rb') as file:
-            #     nb_model = pickle.load(file)
-
-            # with open('NBvectorizer.pkl', 'rb') as file:
-            #     nb_vectorizer = pickle.load(file)
-            # st.success("Naive Bayes model loaded successfully!")
-
-            # Load LSTM model, tokenizer, and label encoder
-            # lstm_model = load_model('lstm_model.h5')
-
-            # with open('LSTM_tokenizer.pkl', 'rb') as file:
-            #     lstm_tokenizer = pickle.load(file)
-            # st.success("LSTM model loaded successfully!")
-
-
-            # Load the transformer model and associated files
-            # with open('Tlabel_encoder.pkl', 'rb') as file:
-            #     t_label_encoder = pickle.load(file)
-
-            # with open('Tvectorizer_layer.pkl', 'rb') as file:
-            #      t_vectorize_layer = pickle.load(file)
-
-            # transformer_model = load_model('Ttransformer_model.h5', custom_objects=custom_objects)
-            # st.success("Transformer model loaded successfully!")
-
             # Load and process the dataset
             data = pd.read_csv('preprocessed_mental_health.csv')
 
@@ -1414,7 +1330,6 @@ def classify_alltext(text):
 
     return top_issue
 
-
 # Define the Streamlit app
 def run_app():
     st.title("Mental Health Disorder Detection")
@@ -1607,9 +1522,7 @@ def run_app():
                 all_text = text_posts + image_texts
                 if all_text:
                     predictions = []
-                    probabilities = []
-                    issue_probabilities = defaultdict(float)  # To store the sum of probabilities for each issue
-
+                  
                     for text in all_text:
                         # Preprocess the input for each base model
                         lr_features = lr_vectorizer.transform([text])  # For Logistic Regression
@@ -1672,8 +1585,6 @@ def run_app():
                 all_text = text_posts + image_texts
                 if all_text:
                     predictions = []
-                    probabilities = []
-                    issue_probabilities = defaultdict(float)  # To store the sum of probabilities for each issue
 
                     for text in all_text:
                         # Preprocess the input for each base model
@@ -1705,10 +1616,6 @@ def run_app():
 
                         # Append the prediction
                         predictions.append(decoded_prediction)
-                        probabilities.append(final_prediction_proba.max())  # Highest probability
-
-                        # Add the probability to the sum for the respective issue
-                        issue_probabilities[decoded_prediction] += final_prediction_proba.max()
 
                     # Count the most common mental health issue
                     issue_counts = Counter(predictions)
@@ -1799,9 +1706,7 @@ def run_app():
 
                 if all_text:
                     predictions = []
-                    probabilities = []
-                    issue_probabilities = defaultdict(float)  # To store the sum of probabilities for each issue
-
+                    
                     for text in all_text:
                         try:
                             # Preprocess the input for each base model
@@ -1833,10 +1738,7 @@ def run_app():
 
                             # Append the prediction
                             predictions.append(decoded_prediction)
-                            probabilities.append(final_prediction_proba.max())  # Highest probability
-
-                            # Add the probability to the sum for the respective issue
-                            issue_probabilities[decoded_prediction] += final_prediction_proba.max()
+                            
                         except Exception as e:
                             st.write(f"Error processing text: {text[:50]}... - {e}")
                             continue
@@ -1923,9 +1825,7 @@ def run_app():
 
                 if all_text:
                     predictions = []
-                    probabilities = []
-                    issue_probabilities = defaultdict(float)  # To store the sum of probabilities for each issue
-
+                   
                     for text in all_text:
                         try:
                             # Preprocess the input for each base model
@@ -1957,10 +1857,7 @@ def run_app():
 
                             # Append the prediction
                             predictions.append(decoded_prediction)
-                            probabilities.append(final_prediction_proba.max())  # Highest probability
-
-                            # Add the probability to the sum for the respective issue
-                            issue_probabilities[decoded_prediction] += final_prediction_proba.max()
+                           
                         except Exception as e:
                             st.write(f"Error processing text: {text[:50]}... - {e}")
                             continue
