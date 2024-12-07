@@ -1,4 +1,3 @@
-
 import pickle
 import streamlit as st
 import joblib
@@ -18,14 +17,11 @@ import tempfile
 import os
 from pydub import AudioSegment
 import subprocess
-
 import tweepy
-
 import re
 import librosa
 import librosa.display
 import tensorflow as tf
-
 import xgboost as xgb
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer
@@ -43,7 +39,8 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import matplotlib.pyplot as plt
-import plotly.express as px 
+import plotly.express as px
+import networkx as nx
 
 from tensorflow.keras.models import load_model, Model, Sequential
 from tensorflow.keras.utils import pad_sequences, custom_object_scope, to_categorical
@@ -57,7 +54,6 @@ from transformers import VisionEncoderDecoderModel, ViTImageProcessor, AutoToken
 from transformers import pipeline
 
 import pytesseract
-
 # Configure Tesseract and FFMPEG
 pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
 os.environ["FFMPEG_BINARY"] = "/usr/bin/ffmpeg"
@@ -71,7 +67,6 @@ def load_whisper_model():
 whisper_model = load_whisper_model()
 
 # ------------- ENSEMBLE LEARNING REQUIREMENTS -----------------
-
 # Define functions to load each model and resource with caching
 @st.cache_resource
 def load_lr_model():
@@ -150,6 +145,7 @@ meta_learner_rf = load_meta_learner_rf()
 
 t_label_encoder = load_transformer_label_encoder()
 t_vectorizer = load_transformer_vectorizer()
+t_vectorize_layer = load_transformer_vectorizer()
 
 # Define the custom layers
 class EmbeddingLayer(Layer):
@@ -190,7 +186,6 @@ def load_transformer_model():
     return load_model('Ttransformer_model.h5', custom_objects=custom_objects)
 
 transformer_model = load_transformer_model()
-
 # ------------- ENSEMBLE LEARNING REQUIREMENTS -----------------
 
 # Initialize Reddit API
@@ -346,8 +341,56 @@ def fetch_user_images_and_extract_text(username):
     except Exception as e:
         st.error(f"Error fetching images: {e}")
         return []
-
 # ---------------- CHANGED AS PER ENSEMBLE MODEL -----------------
+
+# ---------------- KNOWLEDGE GRAPH -------------------------------
+def create_knowledge_graph(input_text, classifications, probabilities):
+    """
+    Create and display a knowledge graph for mental health issues and probabilities.
+
+    Args:
+        input_text (str): Input text for classification.
+        classifications (list): List of mental health concerns predicted by models.
+        probabilities (list): Corresponding probabilities for each classification.
+    """
+    # Initialize a directed graph
+    graph = nx.DiGraph()
+
+    # Add the central node (input text)
+    graph.add_node("Input Text", size=1500, color="#ADD8E6")  # Light blue for the central node
+
+    # Normalize probabilities for better edge length scaling
+    max_prob = max(probabilities)
+    min_prob = min(probabilities)
+    prob_scaled = [(1 - (p - min_prob) / (max_prob - min_prob)) + 0.1 for p in probabilities]  # Invert probabilities for distances
+
+    # Add nodes for classifications and connect them to the input text
+    for classification, probability, scaled_prob in zip(classifications, probabilities, prob_scaled):
+        prob_percentage = f"{probability * 100:.2f}%"
+        graph.add_node(classification, size=1000, color="#E6E6FA")  # Light lavender for classification nodes
+        graph.add_edge("Input Text", classification, weight=scaled_prob, label=prob_percentage)
+
+    # Extract node colors and sizes
+    node_colors = [data["color"] for _, data in graph.nodes(data=True)]
+    node_sizes = [data["size"] for _, data in graph.nodes(data=True)]
+
+    # Compute positions using spring layout, scaling edge lengths with inverted probabilities
+    pos = nx.spring_layout(graph, seed=42, weight='weight')
+
+    # Draw the graph
+    plt.figure(figsize=(12, 8))
+    nx.draw(
+        graph, pos, with_labels=True, node_size=node_sizes, node_color=node_colors,
+        font_size=10, font_weight="bold", edge_color="gray"
+    )
+
+    # Add edge labels for probabilities
+    edge_labels = nx.get_edge_attributes(graph, "label")
+    nx.draw_networkx_edge_labels(graph, pos, edge_labels=edge_labels, font_color="red")
+
+    # Display the plot in Streamlit
+    st.pyplot(plt)
+# ---------------- KNOWLEDGE GRAPH -------------------------------
 
 # Function to classify text and display result
 def classify_text(text):
@@ -381,18 +424,36 @@ def classify_text(text):
     top_issue = label_encoder.inverse_transform(final_prediction)[0]
     top_probability = final_prediction_proba[0].max()
 
+    probabilities = final_prediction_proba[0]
     response = get_actual_issue(text,top_issue)
     if response != "" and len(response.split()) == 1 and response != top_issue:
+        # Find the probability of the response (new top issue)
+        response_index = np.where(label_encoder.classes_ == response)[0][0]
+        response_probability = probabilities[response_index]
+
+        # Find the index of the current top issue
+        top_issue_index = np.where(label_encoder.classes_ == top_issue)[0][0]
+
+        # Swap the probabilities
+        probabilities[top_issue_index] = response_probability
+        probabilities[response_index] = top_probability
+
+        # Update the top issue to the response
         top_issue = response
 
     # Display the results
     st.success(f"The most likely mental health concern from the text provided is: {top_issue} with a probability of {top_probability:.2%}")
 
+    # Collect classifications and probabilities for the knowledge graph
+    classifications = label_encoder.classes_
+
+    # Show the knowledge graph
+    create_knowledge_graph(text, classifications, probabilities)
+
     # Pass to a custom insight function if needed
     get_wellbeing_insight(text, top_issue)
 
 # ---------------- CHANGED AS PER ENSEMBLE MODEL -----------------
-
 # Function to get wellbeing insights from Gemini model
 def get_wellbeing_insight(text, top_issue):
     try:
@@ -508,7 +569,6 @@ def analyze_audio_mood(video_path):
         mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=13)
 
         # Divide the MFCC array into 4 frequency bands and calculate scalar mean for each band
-
         # Low Frequencies: MFCC 0, 1, 2
         low_freq_mfcc = np.mean(mfcc[0:3], axis=1)
         mean_low = np.mean(low_freq_mfcc)  # Scalar mean for low frequencies
@@ -526,22 +586,16 @@ def analyze_audio_mood(video_path):
         mean_high = np.mean(high_freq_mfcc)  # Scalar mean for high frequencies
 
         # Now use these scalar means for classification
-
         if mean_high <= mean_low and mean_high <= mean_mid_low and mean_high <= mean_mid_high:
             return "Audio sounds normal, with no dominant emotion detected"
-
         elif mean_mid_high <= mean_low and mean_mid_high <= mean_mid_low and mean_mid_high <= mean_high:
             return "Audio sounds neutral, calm, or peaceful"
-
         elif mean_mid_low <= mean_low and mean_mid_low <= mean_mid_high and mean_mid_low <= mean_high:
             return "Audio sounds slightly melancholic or neutral"
-
         elif mean_low <= mean_mid_low and mean_low <= mean_mid_high and mean_low <= mean_high:
             return "Audio sounds calm or melancholic, with less intensity"
-
         elif mean_high > mean_low and mean_high > mean_mid_low and mean_high <= mean_mid_high:
             return "Audio sounds depressive or anxious in nature"
-
         else :
             return "Audio sounds upbeat and energetic (Happy)"
 
@@ -549,7 +603,6 @@ def analyze_audio_mood(video_path):
         return f"Error analyzing audio mood: {str(e)}"
 
 # ----------------- Adding Retrain Model functionality
-
 # File path for dataset
 dataset_path = 'preprocessed_mental_health.csv'
 
@@ -565,25 +618,18 @@ negative_words = {"not", "no", "nor", "never", "nothing", "nowhere", "neither", 
 def clean_text(text):
     # Remove URLs
     text = re.sub(r'http\S+', '', text)
-
     # Remove mentions (@username)
     text = re.sub(r'@\w+', '', text)
-
     # Remove special characters, numbers, and punctuations
     text = re.sub(r'[^a-zA-Z\s]', '', text)
-
     # Convert text to lowercase
     text = text.lower()
-
     # Tokenize the text
     tokens = word_tokenize(text)
-
     # Remove stopwords, but keep negative words
     tokens = [word for word in tokens if word not in stopwords.words('english') or word in negative_words]
-
     # Join the tokens back into a single string
     clean_text = ' '.join(tokens)
-
     return clean_text
 
 def update_dataset(new_text, mental_health_issue):
@@ -618,29 +664,28 @@ def update_dataset(new_text, mental_health_issue):
     dataset.to_csv(dataset_path, index=False)
 
 # ---------------- CHANGED AS PER ENSEMBLE MODEL -----------------
-
 def retrain_model():
-    lr_model = None
-    svm_model = None
-    xgb_model = None
-    lstm_model = None
-    transformer_model = None
-    lr_vectorizer = None
-    svm_vectorizer = None
-    xgb_vectorizer = None
-    lstm_tokenizer = None
-    t_vectorizer = None
-    label_encoder = None
-    tfidf_vectorizer = None
-    t_label_encoder = None
-    t_vectorize_layer = None
-    nb_model = None
-    nb_vectorizer = None
+    # lr_model = None
+    # svm_model = None
+    # xgb_model = None
+    # lstm_model = None
+    # transformer_model = None
+    # lr_vectorizer = None
+    # svm_vectorizer = None
+    # xgb_vectorizer = None
+    # lstm_tokenizer = None
+    # t_vectorizer = None
+    # label_encoder = None
+    # tfidf_vectorizer = None
+    # t_label_encoder = None
+    # t_vectorize_layer = None
+    # nb_model = None
+    # nb_vectorizer = None
 
-    custom_objects = {
-        "EmbeddingLayer": EmbeddingLayer,
-        "EncoderLayer": EncoderLayer
-    }
+    # custom_objects = {
+    #     "EmbeddingLayer": EmbeddingLayer,
+    #     "EncoderLayer": EncoderLayer
+    # }
 
     # Initialize Streamlit progress bar
     progress = st.progress(0)
@@ -649,68 +694,66 @@ def retrain_model():
     # Use an expander to group status messages
     with st.expander("Detailed Status", expanded=False):
         try:
-            st.info("Loading models and vectorizers...")
+            # st.info("Loading models and vectorizers...")
 
             # Load Logistic Regression model and vectorizer
-            with open('LRmodel.pkl', 'rb') as file:
-                lr_model = pickle.load(file)
+            # with open('LRmodel.pkl', 'rb') as file:
+            #    lr_model = pickle.load(file)
 
-            with open('LRvectorizer.pkl', 'rb') as file:
-                lr_vectorizer = pickle.load(file)
-            st.success("Logistic Regression model loaded successfully!")
-            progress_step += 10
-            progress.progress(progress_step)
+            # with open('LRvectorizer.pkl', 'rb') as file:
+            #     lr_vectorizer = pickle.load(file)
+            # st.success("Logistic Regression model loaded successfully!")
+            # progress_step += 10
+            # progress.progress(progress_step)
 
             # Load SVM model and vectorizer
-            with open('SVMmodel.pkl', 'rb') as file:
-                svm_model = pickle.load(file)
+            # with open('SVMmodel.pkl', 'rb') as file:
+            #     svm_model = pickle.load(file)
 
-            with open('SVMvectorizer.pkl', 'rb') as file:
-                svm_vectorizer = pickle.load(file)
-            st.success("SVM model loaded successfully!")
-            progress_step += 10
-            progress.progress(progress_step)
+            # with open('SVMvectorizer.pkl', 'rb') as file:
+            #     svm_vectorizer = pickle.load(file)
+            # st.success("SVM model loaded successfully!")
+            # progress_step += 10
+            # progress.progress(progress_step)
 
             # Load XGBoost model, vectorizer, and label encoder
-            with open('xgb_model.pkl', 'rb') as file:
-                xgb_model = pickle.load(file)
+            # with open('xgb_model.pkl', 'rb') as file:
+            #     xgb_model = pickle.load(file)
 
-            with open('tfidf_vectorizer.pkl', 'rb') as file:
-                tfidf_vectorizer = pickle.load(file)
+            # with open('tfidf_vectorizer.pkl', 'rb') as file:
+            #     tfidf_vectorizer = pickle.load(file)
 
-            with open('label_encoder.pkl', 'rb') as file:
-                label_encoder = pickle.load(file)
-            st.success("XGBoost model loaded successfully!")
-            progress_step += 10
-            progress.progress(progress_step)
+            # with open('label_encoder.pkl', 'rb') as file:
+            #     label_encoder = pickle.load(file)
+            # st.success("XGBoost model loaded successfully!")
+            # progress_step += 10
+            # progress.progress(progress_step)
 
             # Load Naive Bayes model and vectorizer
-            with open('NBmodel.pkl', 'rb') as file:
-                nb_model = pickle.load(file)
+            # with open('NBmodel.pkl', 'rb') as file:
+            #     nb_model = pickle.load(file)
 
-            with open('NBvectorizer.pkl', 'rb') as file:
-                nb_vectorizer = pickle.load(file)
-            st.success("Naive Bayes model loaded successfully!")
-            
+            # with open('NBvectorizer.pkl', 'rb') as file:
+            #     nb_vectorizer = pickle.load(file)
+            # st.success("Naive Bayes model loaded successfully!")
 
             # Load LSTM model, tokenizer, and label encoder
-            lstm_model = load_model('lstm_model.h5')
+            # lstm_model = load_model('lstm_model.h5')
 
-            with open('LSTM_tokenizer.pkl', 'rb') as file:
-                lstm_tokenizer = pickle.load(file)
-            st.success("LSTM model loaded successfully!")
-            
+            # with open('LSTM_tokenizer.pkl', 'rb') as file:
+            #     lstm_tokenizer = pickle.load(file)
+            # st.success("LSTM model loaded successfully!")
+
 
             # Load the transformer model and associated files
-            with open('Tlabel_encoder.pkl', 'rb') as file:
-                t_label_encoder = pickle.load(file)
+            # with open('Tlabel_encoder.pkl', 'rb') as file:
+            #     t_label_encoder = pickle.load(file)
 
-            with open('Tvectorizer_layer.pkl', 'rb') as file:
-                t_vectorize_layer = pickle.load(file)
+            # with open('Tvectorizer_layer.pkl', 'rb') as file:
+            #      t_vectorize_layer = pickle.load(file)
 
-            transformer_model = load_model('Ttransformer_model.h5', custom_objects=custom_objects)
-            st.success("Transformer model loaded successfully!")
-            
+            # transformer_model = load_model('Ttransformer_model.h5', custom_objects=custom_objects)
+            # st.success("Transformer model loaded successfully!")
 
             # Load and process the dataset
             data = pd.read_csv('preprocessed_mental_health.csv')
@@ -726,7 +769,7 @@ def retrain_model():
 
             # Encode target labels
             y_test = label_encoder.transform(y_test)
-            st.info("Dataset loaded and processed successfully!")
+            st.success("Dataset loaded and processed successfully!")
             progress_step += 10
             progress.progress(progress_step)
 
@@ -753,6 +796,10 @@ def retrain_model():
             xgb_predictions_proba = xgb_model.predict_proba(X_test_xgb)  # XGBoost probabilities
             nb_predictions_proba = nb_model.predict_proba(X_test_nb)  # Naive Bayes probabilities
             lstm_predictions_proba = lstm_model.predict(X_test_lstm)  # LSTM probabilities
+            
+            progress_step += 10
+            progress.progress(progress_step)
+
             # Get probabilities from the transformer model
             transformer_predictions_proba = transformer_model.predict(X_test_transformer)
 
@@ -789,7 +836,7 @@ def retrain_model():
             )
             meta_learner_rf.fit(X_train1, y_train1)
             st.success("Meta-learner trained successfully!")
-            progress_step += 10
+            progress_step += 20
             progress.progress(progress_step)
 
             # Save the meta-learner and evaluate it
@@ -798,7 +845,7 @@ def retrain_model():
             final_predictions_lr = meta_learner_rf.predict(X_test1)
             accuracy_rf = accuracy_score(y_test1, final_predictions_lr)
             st.metric(label="Meta-Learner Accuracy", value=f"{accuracy_rf:.2%}")
-            progress_step += 10
+            progress_step += 20
             progress.progress(progress_step)
 
             # Cross-validation
@@ -819,7 +866,7 @@ def retrain_model():
             # Calculate mean and standard deviation
             mean_val_accuracy = np.mean(cross_val_accuracies)
             std_val_accuracy = np.std(cross_val_accuracies)
-            
+
             progress.progress(100)
 
             # Celebrate successful execution
@@ -832,7 +879,6 @@ def retrain_model():
             st.error(f"An error occurred: {str(e)}")
 
 # ---------------- CHANGED AS PER ENSEMBLE MODEL -----------------
-
 def update_and_retrain(example_text, example_issue):
     """
     Updates the dataset with new data, displays the last three rows,
@@ -865,7 +911,6 @@ def update_and_retrain(example_text, example_issue):
         st.error(f"An error occurred: {e}")
 
 # ---------------- CHANGED AS PER ENSEMBLE MODEL -----------------
-
 # Function to classify text, display result and retrain model
 def classify_text_retrain_model(text):
     # Preprocess the input for each base model
@@ -898,25 +943,41 @@ def classify_text_retrain_model(text):
     top_issue = label_encoder.inverse_transform(final_prediction)[0]
     top_probability = final_prediction_proba[0].max()
 
+    probabilities = final_prediction_proba[0]
     response = get_actual_issue(text,top_issue)
     if response != "" and len(response.split()) == 1 and response != top_issue:
+        # Find the probability of the response (new top issue)
+        response_index = np.where(label_encoder.classes_ == response)[0][0]
+        response_probability = probabilities[response_index]
+
+        # Find the index of the current top issue
+        top_issue_index = np.where(label_encoder.classes_ == top_issue)[0][0]
+
+        # Swap the probabilities
+        probabilities[top_issue_index] = response_probability
+        probabilities[response_index] = top_probability
+
+        # Update the top issue to the response
         top_issue = response
 
     # Display the results
     st.success(f"The most likely mental health concern from all the text obtained is: {top_issue} with a probability of {top_probability:.2%}")
+
+    # Collect classifications and probabilities for the knowledge graph
+    classifications = label_encoder.classes_
+
+    # Show the knowledge graph
+    create_knowledge_graph(text, classifications, probabilities)
 
     # Pass to a custom insight function if needed
     get_wellbeing_insight(text, top_issue)
 
     # Adding Model Retraining Functionality
     update_and_retrain(text, top_issue)
-
 # ---------------- CHANGED AS PER ENSEMBLE MODEL -----------------
-
 # ----------------- Adding Retrain Model functionality
 
 # ---------------------- Adding Facial Recognition for video
-
 def detect_emotions_from_frame(frame):
     try:
         # Use DeepFace to analyze emotions
@@ -945,8 +1006,8 @@ def display_emotion_summary(emotion_counts):
     st.write("Emotion Analysis Summary:")
 
     # Add a bar chart for emotion counts
-    fig = px.bar(emotion_df, x='Emotion', y='Count', 
-                 color='Emotion', 
+    fig = px.bar(emotion_df, x='Emotion', y='Count',
+                 color='Emotion',
                  title="Emotion Counts",
                  labels={'Emotion': 'Detected Emotions', 'Count': 'Frequency'})
     st.plotly_chart(fig)
@@ -988,11 +1049,9 @@ def analyze_with_gemini(dominant_emotion, emotion_counts):
 
         # Return a user-friendly error message
         return "An error occurred while communicating with the Gemini API. Please try again later."
-
 # ---------------------- Adding Facial Recognition for video
 
 # ---------------------- Adding Facial Recognition for image
-
 def detect_emotions_from_image(image):
     """
     Detect the dominant emotion from a single image using DeepFace.
@@ -1055,8 +1114,8 @@ def analyze_emotions_from_image(image):
         mean_emotions.columns = ['Emotion', 'Average Probability']
 
         # Create and display a bar chart
-        fig = px.bar(mean_emotions, x='Emotion', y='Average Probability', 
-                    color='Emotion', 
+        fig = px.bar(mean_emotions, x='Emotion', y='Average Probability',
+                    color='Emotion',
                     title="Average Emotion Probabilities from Analyzed Faces",
                     labels={'Emotion': 'Detected Emotions', 'Average Probability': 'Probability'})
         st.plotly_chart(fig)
@@ -1073,11 +1132,9 @@ def analyze_emotions_from_image(image):
     except Exception as e:
         print(f"Error analyzing emotions from image: {e}")
         return {}, []
-
 # ---------------------- Adding Facial Recognition for image
 
 # ---------------------- Get Image Description
-
 # Function to load the model (cached for efficiency)
 @st.cache_resource
 def load_model_img():
@@ -1109,7 +1166,6 @@ def generate_caption(image):
     return caption
 
 # ---------------- CHANGED AS PER ENSEMBLE MODEL -----------------
-
 def classify_text_with_desc(text,text2):
     # Preprocess the input for each base model
     lr_features = lr_vectorizer.transform([text])  # For Logistic Regression
@@ -1141,12 +1197,31 @@ def classify_text_with_desc(text,text2):
     top_issue = label_encoder.inverse_transform(final_prediction)[0]
     top_probability = final_prediction_proba[0].max()
 
+    probabilities = final_prediction_proba[0]
     response = get_actual_issue(text+" "+text2,top_issue)
     if response != "" and len(response.split()) == 1 and response != top_issue:
+        # Find the probability of the response (new top issue)
+        response_index = np.where(label_encoder.classes_ == response)[0][0]
+        response_probability = probabilities[response_index]
+
+        # Find the index of the current top issue
+        top_issue_index = np.where(label_encoder.classes_ == top_issue)[0][0]
+
+        # Swap the probabilities
+        probabilities[top_issue_index] = response_probability
+        probabilities[response_index] = top_probability
+
+        # Update the top issue to the response
         top_issue = response
 
     # Display the results
     st.success(f"The most likely mental health concern from all the text obtained is: {top_issue} with a probability of {top_probability:.2%}")
+
+    # Collect classifications and probabilities for the knowledge graph
+    classifications = label_encoder.classes_
+
+    # Show the knowledge graph
+    create_knowledge_graph(text+" "+text2, classifications, probabilities)
 
     get_wellbeing_insight(text+" "+text2, top_issue)
 
@@ -1181,12 +1256,31 @@ def classify_text_retrain_model_desc(text,text2):
     top_issue = label_encoder.inverse_transform(final_prediction)[0]
     top_probability = final_prediction_proba[0].max()
 
+    probabilities = final_prediction_proba[0]
     response = get_actual_issue(text+" "+text2,top_issue)
     if response != "" and len(response.split()) == 1 and response != top_issue:
+        # Find the probability of the response (new top issue)
+        response_index = np.where(label_encoder.classes_ == response)[0][0]
+        response_probability = probabilities[response_index]
+
+        # Find the index of the current top issue
+        top_issue_index = np.where(label_encoder.classes_ == top_issue)[0][0]
+
+        # Swap the probabilities
+        probabilities[top_issue_index] = response_probability
+        probabilities[response_index] = top_probability
+
+        # Update the top issue to the response
         top_issue = response
 
     # Display the results
     st.success(f"The most likely mental health concern from all the text obtained is: {top_issue} with a probability of {top_probability:.2%}")
+
+    # Collect classifications and probabilities for the knowledge graph
+    classifications = label_encoder.classes_
+
+    # Show the knowledge graph
+    create_knowledge_graph(text+" "+text2, classifications, probabilities)
 
     get_wellbeing_insight(text+" "+text2, top_issue)
 
@@ -1194,11 +1288,9 @@ def classify_text_retrain_model_desc(text,text2):
     update_and_retrain(text, top_issue)
 
 # ---------------- CHANGED AS PER ENSEMBLE MODEL -----------------
-
 # ---------------------- Get Image Description
 
 # ---------------------- Get Video Description
-
 # Function to load the model (cached for efficiency)
 @st.cache_resource
 def load_image_captioning_model():
@@ -1260,6 +1352,69 @@ def get_actual_issue(text,top_issue):
         print(f"Error: {e}")
         return ""
 
+# ---------------- reddit and twitter all combined text analysis
+def classify_alltext(text):
+    # Preprocess the input for each base model
+    lr_features = lr_vectorizer.transform([text])  # For Logistic Regression
+    svm_features = svm_vectorizer.transform([text])  # For SVM
+    nb_features = nb_vectorizer.transform([text])  # For Naive Bayes
+    xgb_features = tfidf_vectorizer.transform([text])  # For XGBoost
+    lstm_features = lstm_tokenizer.texts_to_sequences([text])  # For LSTM
+    transformer_features = t_vectorizer([text])  # For Transformer
+
+    # Pad sequences for LSTM
+    lstm_features = pad_sequences(lstm_features, maxlen=100, padding='post', truncating='post')
+
+    # Get probabilities from all base models
+    lr_proba = lr_model.predict_proba(lr_features)
+    svm_proba = svm_model.predict_proba(svm_features)
+    nb_proba = nb_model.predict_proba(nb_features)
+    xgb_proba = xgb_model.predict_proba(xgb_features)
+    lstm_proba = lstm_model.predict(lstm_features)
+    transformer_proba = transformer_model.predict(transformer_features)
+
+    # Combine probabilities as input for the meta-learner
+    stacked_features = np.hstack((lr_proba, svm_proba, nb_proba, xgb_proba, lstm_proba, transformer_proba))
+
+    # Predict using the meta-learner
+    final_prediction_proba = meta_learner_rf.predict_proba(stacked_features)
+    final_prediction = meta_learner_rf.predict(stacked_features)
+
+    # Decode the predicted label
+    top_issue = label_encoder.inverse_transform(final_prediction)[0]
+    top_probability = final_prediction_proba[0].max()
+
+    probabilities = final_prediction_proba[0]
+    response = get_actual_issue(text,top_issue)
+    if response != "" and len(response.split()) == 1 and response != top_issue:
+        # Find the probability of the response (new top issue)
+        response_index = np.where(label_encoder.classes_ == response)[0][0]
+        response_probability = probabilities[response_index]
+
+        # Find the index of the current top issue
+        top_issue_index = np.where(label_encoder.classes_ == top_issue)[0][0]
+
+        # Swap the probabilities
+        probabilities[top_issue_index] = response_probability
+        probabilities[response_index] = top_probability
+
+        # Update the top issue to the response
+        top_issue = response
+
+    st.success(f"The most frequently detected mental health concern from all the text obtained is: {top_issue} with a probability of {top_probability * 100:.2f}% from the analyzed text.")
+
+    # Collect classifications and probabilities for the knowledge graph
+    classifications = label_encoder.classes_
+
+    # Show the knowledge graph
+    create_knowledge_graph(text, classifications, probabilities)
+
+    # Pass to a custom insight function if needed
+    get_wellbeing_insight(text, top_issue)
+
+    return top_issue
+
+
 # Define the Streamlit app
 def run_app():
     st.title("Mental Health Disorder Detection")
@@ -1313,19 +1468,14 @@ def run_app():
             st.text(translated_text)
 
             # Step 2: Detect faces and analyze emotions
-            # st.write("Detecting faces and analyzing emotions...")
             emotion_counts, detected_emotions = analyze_emotions_from_image(image)
 
             if emotion_counts:
-                # Display emotion counts in a table
-                # st.write("Detected Emotions:")
-
                 # Determine the dominant emotion
                 dominant_emotion = max(emotion_counts, key=emotion_counts.get)
                 st.success(f"Dominant Emotion: **{dominant_emotion}**")
 
                 # Step 2: Use Gemini API for mental health analysis
-                # st.write("### Facial Recognition Insight")
                 analyze_with_gemini(dominant_emotion, emotion_counts)
 
             else:
@@ -1377,11 +1527,7 @@ def run_app():
             st.success(f"Dominant Emotion: **{dominant_emotion}**")
 
             # Use the dominant emotion and emotion counts to craft a Gemini API prompt
-            # st.write("### Facial Recognition Insight")
             analyze_with_gemini(dominant_emotion, emotion_counts)
-
-            # st.write("Gemini API Response:")
-            #st.text(gemini_response)
 
             for idx, frame in enumerate(frames):
                 # st.image(frame, caption=f"Frame {idx + 1}", use_column_width=True)
@@ -1401,19 +1547,13 @@ def run_app():
 
             # Translate the extracted text from frames
             translated_frame_text = translate_text(combined_text)
-            # st.write("Translated Text from Video Frames:")
-            # st.text(translated_frame_text)
-
+            
             # Extract audio and transcribe it
-            # st.write("Transcribing Audio from Video...")
             transcribed_audio_text = transcribe_audio_from_video(video_file)
 
             st.subheader("Transcribed Audio Text:")
             st.text(transcribed_audio_text)
-
             translated_audio_text = translate_text(transcribed_audio_text)
-            # st.write("Translated Audio Text:")
-            # st.text(translated_audio_text)
 
             # Combine the text extracted from both images and audio
             full_combined_text = combined_text + " " + transcribed_audio_text
@@ -1500,34 +1640,17 @@ def run_app():
 
                         # Append the prediction
                         predictions.append(decoded_prediction)
-                        probabilities.append(final_prediction_proba.max())  # Highest probability
-
-                        # Add the probability to the sum for the respective issue
-                        issue_probabilities[decoded_prediction] += final_prediction_proba.max()
 
                     # Count the most common mental health issue
                     issue_counts = Counter(predictions)
-                    top_issue, top_count = issue_counts.most_common(1)[0]
-                    top_percentage = (top_count / len(predictions)) * 100
-
-                    response = get_actual_issue(" ".join(all_text)+" Image captions are as follows : "+image_caption,top_issue)
-                    if response != "" and len(response.split()) == 1 and response != top_issue:
-                        top_issue = response
-
+                    combined_all_text = " ".join(all_text)+" Image captions are as follows : "+image_caption
                     # Display results
-                    st.success(f"The most frequently detected mental health concern from all the text obtained is: {top_issue} with a probability of {top_percentage:.2f}% from the analyzed text.")
                     issue_distribution = pd.DataFrame(issue_counts.items(), columns=['Mental Health Issue', 'Count'])
                     st.write("Mental health issue distribution across posts:")
                     st.write(issue_distribution)
-
                     # Add a bar chart
                     st.bar_chart(issue_distribution.set_index('Mental Health Issue')['Count'])
-
-                    # Call the Gemini model to get well-being insights
-                    get_wellbeing_insight(" ".join(all_text)+" Image captions are as follows : "+image_caption, top_issue)
-
-                    # Adding Model Retraining Functionality
-                    # update_and_retrain(" ".join(all_text), top_issue)
+                    top_issue = classify_alltext(combined_all_text)
 
                 else:
                     st.write("No valid text found for analysis.")
@@ -1589,24 +1712,14 @@ def run_app():
 
                     # Count the most common mental health issue
                     issue_counts = Counter(predictions)
-                    top_issue, top_count = issue_counts.most_common(1)[0]
-                    top_percentage = (top_count / len(predictions)) * 100
-
-                    response = get_actual_issue(" ".join(all_text)+" Image captions are as follows : "+image_caption,top_issue)
-                    if response != "" and len(response.split()) == 1 and response != top_issue:
-                        top_issue = response
-
+                    combined_all_text = " ".join(all_text)+" Image captions are as follows : "+image_caption
                     # Display results
-                    st.success(f"The most frequently detected mental health concern from all the text obtained is: {top_issue} with a probability of {top_percentage:.2f}% from the analyzed text.")
                     issue_distribution = pd.DataFrame(issue_counts.items(), columns=['Mental Health Issue', 'Count'])
                     st.write("Mental health issue distribution across posts:")
                     st.write(issue_distribution)
-
                     # Add a bar chart
                     st.bar_chart(issue_distribution.set_index('Mental Health Issue')['Count'])
-                    
-                    # Call the Gemini model to get well-being insights
-                    get_wellbeing_insight(" ".join(all_text)+" The image captions are as follows : "+image_caption, top_issue)
+                    top_issue = classify_alltext(combined_all_text)
 
                     # Adding Model Retraining Functionality
                     update_and_retrain(" ".join(all_text), top_issue)
@@ -1730,26 +1843,14 @@ def run_app():
 
                     # Count the most common mental health issue
                     issue_counts = Counter(predictions)
-                    top_issue, top_count = issue_counts.most_common(1)[0]
-                    top_percentage = (top_count / len(predictions)) * 100
-
-                    response = get_actual_issue(" ".join(all_text)+" The image captions are as follows :  "+combined_caption,top_issue)
-                    if response != "" and len(response.split()) == 1 and response != top_issue:
-                        top_issue = response
-
-                    st.success(f"The most frequently detected mental health concern obtained from all the text obtained is: {top_issue}, with a probability of {top_percentage:.2f}% from the analyzed text.")
+                    combined_all_text = " ".join(all_text)+" Image captions are as follows : "+combined_caption
+                    # Display results
                     issue_distribution = pd.DataFrame(issue_counts.items(), columns=['Mental Health Issue', 'Count'])
                     st.write("Mental health issue distribution across posts:")
                     st.write(issue_distribution)
-
                     # Add a bar chart
                     st.bar_chart(issue_distribution.set_index('Mental Health Issue')['Count'])
-                    
-                    # Call the Gemini model to get well-being insights
-                    get_wellbeing_insight(" ".join(all_text)+" The image captions are as follows :  "+combined_caption, top_issue)
-
-                    # Adding Model Retraining Functionality
-                    # update_and_retrain(" ".join(all_text), top_issue)
+                    top_issue = classify_alltext(combined_all_text)
 
                 else:
                     st.write("No valid text found for analysis.")
@@ -1866,23 +1967,14 @@ def run_app():
 
                     # Count the most common mental health issue
                     issue_counts = Counter(predictions)
-                    top_issue, top_count = issue_counts.most_common(1)[0]
-                    top_percentage = (top_count / len(predictions)) * 100
-
-                    response = get_actual_issue(" ".join(all_text)+" The image captions are as follows :  "+combined_caption,top_issue)
-                    if response != "" and len(response.split()) == 1 and response != top_issue:
-                        top_issue = response
-
-                    st.success(f"The most frequently detected mental health concern from all the text obtained is: {top_issue}, with a probability of {top_percentage:.2f}% from the analyzed text.")
+                    combined_all_text = " ".join(all_text)+" Image captions are as follows : "+combined_caption
+                    # Display results
                     issue_distribution = pd.DataFrame(issue_counts.items(), columns=['Mental Health Issue', 'Count'])
                     st.write("Mental health issue distribution across posts:")
                     st.write(issue_distribution)
-
                     # Add a bar chart
                     st.bar_chart(issue_distribution.set_index('Mental Health Issue')['Count'])
-                    
-                    # Call the Gemini model to get well-being insights
-                    get_wellbeing_insight(" ".join(all_text)+" The image options are as follows :  "+combined_caption, top_issue)
+                    top_issue = classify_alltext(combined_all_text)
 
                     # Adding Model Retraining Functionality
                     update_and_retrain(" ".join(all_text), top_issue)
