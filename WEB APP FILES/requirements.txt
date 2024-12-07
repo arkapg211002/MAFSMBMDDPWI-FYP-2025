@@ -32,3 +32,4 @@ nltk
 plotly
 matplotlib
 scipy
+networkx
