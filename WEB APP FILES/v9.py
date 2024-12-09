@@ -29,6 +29,8 @@ from nltk.tokenize import word_tokenize
 import matplotlib.pyplot as plt
 import plotly.express as px
 import networkx as nx
+import yt_dlp
+import io
 import time
 import xgboost as xgb
 from sklearn.model_selection import train_test_split
@@ -125,6 +127,120 @@ def fetch_image_content(image_url):
     except Exception as e:
         st.write(f"Error fetching image: {e}")
         return None
+
+# --- twitter video
+def download_video(video_url, save_path):
+    """Download a video from the given URL and save it locally."""
+    ydl_opts = {
+        "quiet": True,
+        "format": "best[ext=mp4]",
+        "outtmpl": save_path,
+        "noplaylist": True,
+    }
+    try:
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            ydl.download([video_url])
+        return save_path
+    except Exception as e:
+        st.write(f"Error downloading video: {e}")
+        return None
+
+# ----- twitter post with video
+def get_latest_tweets_with_videos(username, max_items=10):
+    """Fetch latest tweets with text, associated images, and videos."""
+    user = client.get_user(username=username)
+    if not user.data:
+        return []
+
+    user_id = user.data.id
+
+    response = client.get_users_tweets(
+        id=user_id,
+        tweet_fields=["attachments"],
+        expansions=["attachments.media_keys"],
+        media_fields=["url", "type", "variants"],
+        exclude=["retweets", "replies"],
+        max_results=max_items
+    )
+
+    tweet_data = []
+
+    if response.data:
+        for tweet in response.data:
+            text = tweet.text
+
+            images = []
+            videos = []
+            if hasattr(tweet, "attachments") and tweet.attachments is not None:
+                if "media_keys" in tweet.attachments:
+                    for media_key in tweet.attachments["media_keys"]:
+                        media = next(
+                            (media for media in response.includes.get("media", []) if media["media_key"] == media_key), None
+                        )
+                        if media:
+                            if media.type == "photo":
+                                images.append(media.url)
+                            elif media.type == "video":
+                                if "variants" in media:
+                                    video_url = max(
+                                        media.variants,
+                                        key=lambda v: v.get("bitrate", 0) if v.get("content_type") == "video/mp4" else 0
+                                    ).get("url", "")
+                                    if video_url:
+                                        videos.append(video_url)
+
+            tweet_data.append({"text": text, "images": images, "videos": videos})
+
+    return tweet_data
+
+# ---- for twitter video
+def process_video(video_file):
+    # If the video is a file path (string)
+    if isinstance(video_file, str):
+        video_path = video_file  # It's a path to a file on disk
+    # If the video is a BytesIO object (Streamlit file uploader)
+    elif isinstance(video_file, io.BytesIO):
+        video_path = "/tmp/uploaded_video.mp4"
+        with open(video_path, "wb") as f:
+            f.write(video_file.getbuffer())
+    else:
+        raise ValueError("Unsupported video format")
+
+    # Extract frames from the uploaded video
+    frames = extract_frames(video_path)
+    combined_text = ""
+
+    # Emotion recognition
+    emotion_counts, frame_emotions = analyze_emotions_from_frames(frames)
+
+    # Display summary table and most frequent emotion
+    dominant_emotion = display_emotion_summary(emotion_counts)
+    st.success(f"Dominant Emotion: **{dominant_emotion}**")
+
+    # Use the dominant emotion and emotion counts to craft a Gemini API prompt
+    analyze_with_gemini(dominant_emotion, emotion_counts)
+
+    # Extract text from frames
+    for idx, frame in enumerate(frames):
+        text_from_frame = extract_text_from_image_video(frame)
+        if text_from_frame and text_from_frame not in combined_text:
+            combined_text += text_from_frame + " "
+
+    # Translate the extracted text from frames
+    translated_frame_text = translate_text(combined_text)
+
+    # Extract audio and transcribe it
+    transcribed_audio_text = transcribe_audio_from_video(video_file)
+
+    # Combine the text extracted from both images and audio
+    full_combined_text = combined_text + " " + transcribed_audio_text
+    translated_combined_text = translate_text(full_combined_text)
+
+    # Clean the translated text
+    cleaned_text = re.sub(r"[^a-zA-Z0-9.,!? ]", "", translated_combined_text)
+
+    # Optionally: You can add additional analysis or return more data if needed.
+    return cleaned_text
 
 def get_latest_tweets_with_images(username, max_items=10):
     """Fetch latest tweets with text and associated images."""
@@ -1134,7 +1250,7 @@ def classify_alltext(text):
         top_issue = response
 
     # Display the results
-    st.success(f"The most likely mental health concern from all the text obtained is: {top_issue} with a probability of {top_probability * 100:.2%}")
+    st.success(f"The most likely mental health concern from all the text obtained is: {top_issue} with a probability of {top_probability:.2%}")
 
     # Collect classifications and probabilities for the knowledge graph
     classifications = label_encoder.classes_
@@ -1144,6 +1260,86 @@ def classify_alltext(text):
 
     get_wellbeing_insight(text, top_issue)
     return top_issue
+
+# ------------------ reddit -----------------
+def download_video(video_url, save_path):
+    """Download a video from the given URL and save it locally."""
+    try:
+        video_data = requests.get(video_url)
+        with open(save_path, 'wb') as f:
+            f.write(video_data.content)
+        return save_path
+    except Exception as e:
+        st.write(f"Error downloading video: {e}")
+        return None
+
+
+def download_audio(audio_url, save_path):
+    """Download audio from the given URL and save it locally."""
+    try:
+        audio_data = requests.get(audio_url)
+        with open(save_path, 'wb') as f:
+            f.write(audio_data.content)
+        return save_path
+    except Exception as e:
+        st.write(f"Error downloading audio: {e}")
+        return None
+
+
+def combine_video_audio(video_path, audio_path, output_path):
+    """Combine video and audio into one file using FFmpeg."""
+    try:
+        # FFmpeg command to combine video and audio
+        ffmpeg_command = [
+            "/usr/bin/ffmpeg",
+            "-i", video_path,  # Input video file
+            "-i", audio_path,  # Input audio file
+            "-c:v", "libx264",  # Use libx264 codec for video
+            "-c:a", "aac",  # Use AAC codec for audio
+            "-strict", "experimental",  # Allow experimental AAC encoding
+            "-shortest",  # Use the shortest length (video or audio) to determine the output length
+            output_path  # Output file path
+        ]
+
+        # Run FFmpeg command
+        subprocess.run(ffmpeg_command, check=True)
+        return output_path
+    except Exception as e:
+        st.write(f"Error combining video and audio: {e}")
+        return None
+
+
+def get_user_posts_with_videos(username, max_items=10):
+    """Fetch latest posts with videos from a Reddit user's profile."""
+    try:
+        # Attempt to fetch the user's posts
+        user = reddit.redditor(username)
+
+        post_data = []
+        for submission in user.submissions.new(limit=max_items):
+            videos = []
+
+            # Check if the post is a direct video
+            if submission.is_video:
+                # Get the URL of the hosted video (Reddit video URL)
+                video_url = submission.media['reddit_video']['fallback_url']
+
+                # Dynamically generate the audio URL by replacing the resolution part with _AUDIO_128.mp4
+                audio_url = video_url.split("DASH_")[0] + "DASH_AUDIO_128.mp4"
+                videos.append({'video_url': video_url, 'audio_url': audio_url})
+
+            # Only add posts with videos
+            if videos:
+                post_data.append({"text": submission.title, "videos": videos})
+
+        return post_data
+
+    except praw.exceptions.RedditAPIException as e:
+        st.error(f"Error fetching data from user '{username}': {e}")
+        return []
+    except Exception as e:
+        st.error(f"Error fetching user data: {e}")
+        return []
 
 # Define the Streamlit app
 def run_app():
@@ -1348,11 +1544,58 @@ def run_app():
                 # Fetch and display image-based posts with extracted text
                 image_texts, image_caption = fetch_user_images_and_extract_text(username)
 
+                # for videos 
+                st.header("Latest Videos from posts:")
+                posts_with_videos = get_user_posts_with_videos(username, max_items=10)
+                combined_video_text = ""
+                if posts_with_videos:
+                    for i, post in enumerate(posts_with_videos, start=1):
+                        # Check if video and/or audio are available and process accordingly
+                        for vid_data in post["videos"]:
+                            # Download Video
+                            video_path = f"video_{i}.mp4"
+                            downloaded_video_path = download_video(vid_data['video_url'], video_path)
+
+                            # Download Audio
+                            audio_path = f"audio_{i}.mp4"
+                            downloaded_audio_path = download_audio(vid_data['audio_url'], audio_path)
+
+                            # If both video and audio are available, combine them
+                            if downloaded_video_path and downloaded_audio_path:
+                                combined_video_path = f"combined_video_{i}.mp4"
+                                final_video = combine_video_audio(downloaded_video_path, downloaded_audio_path, combined_video_path)
+
+                                if final_video:
+                                    st.video(final_video)
+                                    combined_video_text += process_video(final_video) + " "
+                                    os.remove(final_video)  # Clean up after displaying
+                                    os.remove(downloaded_video_path)  # Clean up after displaying
+                                    os.remove(downloaded_audio_path)  # Clean up after displaying
+                                else:
+                                    # st.warning("Could not combine video and audio.")
+                                    if downloaded_video_path:
+                                        # If only the video is available, display the video directly
+                                        st.video(downloaded_video_path)
+                                        combined_video_text += process_video(downloaded_video_path) + " "
+                                        os.remove(downloaded_video_path)  # Clean up after displaying
+                                    elif downloaded_audio_path:
+                                        # If only the audio is available, display the audio directly
+                                        st.audio(downloaded_audio_path)
+                                        os.remove(downloaded_audio_path)  # Clean up after displaying
+                            else:
+                                st.warning("No video or audio found.")
+
+                            for file in os.listdir():
+                                if file.endswith(".mp4"):
+                                    os.remove(file)
+                else:
+                    st.warning("No videos found in this user's posts!")
+
                 # Combine text from both text posts and image text
                 all_text = text_posts + image_texts
                 if all_text:
                     predictions = []
-              
+
                     for text in all_text:
                         # Preprocess the text for both models
                         lr_features = lr_vectorizer.transform([text])  # For Logistic Regression
@@ -1375,7 +1618,7 @@ def run_app():
 
                     # Count the most common mental health issue
                     issue_counts = Counter(predictions)
-                    combined_all_text = " ".join(all_text)+" Image captions are as follows : "+image_caption
+                    combined_all_text = " ".join(all_text)+" "+combined_video_text+" Image captions are as follows : "+image_caption
                     # Display results
                     issue_distribution = pd.DataFrame(issue_counts.items(), columns=['Mental Health Issue', 'Count'])
                     st.write("Mental health issue distribution across posts:")
@@ -1400,6 +1643,53 @@ def run_app():
                 # Fetch and display image-based posts with extracted text
                 image_texts, image_caption = fetch_user_images_and_extract_text(username)
 
+                # for videos 
+                st.header("Latest Videos from posts:")
+                posts_with_videos = get_user_posts_with_videos(username, max_items=10)
+                combined_video_text = ""
+                if posts_with_videos:
+                    for i, post in enumerate(posts_with_videos, start=1):
+                        # Check if video and/or audio are available and process accordingly
+                        for vid_data in post["videos"]:
+                            # Download Video
+                            video_path = f"video_{i}.mp4"
+                            downloaded_video_path = download_video(vid_data['video_url'], video_path)
+
+                            # Download Audio
+                            audio_path = f"audio_{i}.mp4"
+                            downloaded_audio_path = download_audio(vid_data['audio_url'], audio_path)
+
+                            # If both video and audio are available, combine them
+                            if downloaded_video_path and downloaded_audio_path:
+                                combined_video_path = f"combined_video_{i}.mp4"
+                                final_video = combine_video_audio(downloaded_video_path, downloaded_audio_path, combined_video_path)
+
+                                if final_video:
+                                    st.video(final_video)
+                                    combined_video_text += process_video(final_video) + " "
+                                    os.remove(final_video)  # Clean up after displaying
+                                    os.remove(downloaded_video_path)  # Clean up after displaying
+                                    os.remove(downloaded_audio_path)  # Clean up after displaying
+                                else:
+                                    # st.warning("Could not combine video and audio.")
+                                    if downloaded_video_path:
+                                        # If only the video is available, display the video directly
+                                        st.video(downloaded_video_path)
+                                        combined_video_text += process_video(downloaded_video_path) + " "
+                                        os.remove(downloaded_video_path)  # Clean up after displaying
+                                    elif downloaded_audio_path:
+                                        # If only the audio is available, display the audio directly
+                                        st.audio(downloaded_audio_path)
+                                        os.remove(downloaded_audio_path)  # Clean up after displaying
+                            else:
+                                st.warning("No video or audio found.")
+
+                            for file in os.listdir():
+                                if file.endswith(".mp4"):
+                                    os.remove(file)
+                else:
+                    st.warning("No videos found in this user's posts!")
+
                 # Combine text from both text posts and image text
                 all_text = text_posts + image_texts
                 if all_text:
@@ -1424,10 +1714,10 @@ def run_app():
 
                         # Append the prediction
                         predictions.append(decoded_prediction)
-                        
+
                     # Count the most common mental health issue
                     issue_counts = Counter(predictions)
-                    combined_all_text = " ".join(all_text)+" Image captions are as follows : "+image_caption
+                    combined_all_text = " ".join(all_text)+" "+combined_video_text+" Image captions are as follows : "+image_caption
                     # Display results
                     issue_distribution = pd.DataFrame(issue_counts.items(), columns=['Mental Health Issue', 'Count'])
                     st.write("Mental health issue distribution across posts:")
@@ -1452,18 +1742,36 @@ def run_app():
                 st.write("Please enter a Twitter username.")
             else:
                 # Fetch the latest tweets with associated images
-                tweets_with_images = get_latest_tweets_with_images(username)
+                # tweets_with_images = get_latest_tweets_with_images(username)
+                tweets_with_videos =  get_latest_tweets_with_videos(username)
 
                 # Extract text content from tweets
-                text_posts = [tweet['text'] for tweet in tweets_with_images if tweet['text']]
+                text_posts = [tweet['text'] for tweet in tweets_with_videos if tweet['text']]
                 st.write("Recent Text Posts from Tweets:")
                 st.write(text_posts[:3])  # Display a few posts for review
+
+                video_text = ""
+                st.header("Latest Videos from tweets:")
+                if tweets_with_videos:
+                    for i, tweet in enumerate(tweets_with_videos, start=1):
+                        # Display videos
+                        for vid_url in tweet["videos"]:
+                            video_path = f"video_{i}.mp4"
+                            downloaded_path = download_video(vid_url, video_path)
+                            if downloaded_path:
+                                st.video(downloaded_path)
+                                video_text += process_video(downloaded_path) + " "
+                                os.remove(downloaded_path)  # Clean up after displaying
+                            else:
+                                st.warning("Could not download or display video.")
+                else:
+                    st.warning("No videos found!")
 
                 # Extract and process text from associated images
                 image_texts = []
                 all_emotions = {'happy': 0, 'sad': 0, 'angry': 0, 'disgust': 0, 'fear': 0, 'surprise': 0, 'neutral': 0}
                 combined_caption = ""
-                for tweet in tweets_with_images:
+                for tweet in tweets_with_videos:
                     for image_url in tweet['images']:
                         image = fetch_image_content(image_url)
                         if image:
@@ -1514,7 +1822,7 @@ def run_app():
 
                 if all_text:
                     predictions = []
-                    
+
                     for text in all_text:
                         try:
                             # Preprocess the text for both models
@@ -1535,14 +1843,14 @@ def run_app():
 
                             # Append the prediction
                             predictions.append(decoded_prediction)
-                            
+
                         except Exception as e:
                             st.write(f"Error processing text: {text[:50]}... - {e}")
                             continue
 
                     # Count the most common mental health issue
                     issue_counts = Counter(predictions)
-                    combined_all_text = " ".join(all_text)+" Image captions are as follows : "+combined_caption
+                    combined_all_text = " ".join(all_text)+" "+video_text+" Image captions are as follows : "+combined_caption
                     # Display results
                     issue_distribution = pd.DataFrame(issue_counts.items(), columns=['Mental Health Issue', 'Count'])
                     st.write("Mental health issue distribution across posts:")
@@ -1560,18 +1868,36 @@ def run_app():
                 st.write("Please enter a Twitter username.")
             else:
                 # Fetch the latest tweets with associated images
-                tweets_with_images = get_latest_tweets_with_images(username)
+                # tweets_with_images = get_latest_tweets_with_images(username)
+                tweets_with_videos =  get_latest_tweets_with_videos(username)
 
                 # Extract text content from tweets
-                text_posts = [tweet['text'] for tweet in tweets_with_images if tweet['text']]
+                text_posts = [tweet['text'] for tweet in tweets_with_videos if tweet['text']]
                 st.write("Recent Text Posts from Tweets:")
                 st.write(text_posts[:3])  # Display a few posts for review
+
+                video_text = ""
+                st.header("Latest Videos from tweets:")
+                if tweets_with_videos:
+                    for i, tweet in enumerate(tweets_with_videos, start=1):
+                        # Display videos
+                        for vid_url in tweet["videos"]:
+                            video_path = f"video_{i}.mp4"
+                            downloaded_path = download_video(vid_url, video_path)
+                            if downloaded_path:
+                                st.video(downloaded_path)
+                                video_text += process_video(downloaded_path) + " "
+                                os.remove(downloaded_path)  # Clean up after displaying
+                            else:
+                                st.warning("Could not download or display video.")
+                else:
+                    st.warning("No videos found!")
 
                 # Extract and process text from associated images
                 image_texts = []
                 all_emotions = {'happy': 0, 'sad': 0, 'angry': 0, 'disgust': 0, 'fear': 0, 'surprise': 0, 'neutral': 0}
                 combined_caption = ""
-                for tweet in tweets_with_images:
+                for tweet in tweets_with_videos:
                     for image_url in tweet['images']:
                         image = fetch_image_content(image_url)
                         if image:
@@ -1622,7 +1948,7 @@ def run_app():
 
                 if all_text:
                     predictions = []
-                    
+
                     for text in all_text:
                         try:
                             # Preprocess the text for both models
@@ -1643,14 +1969,14 @@ def run_app():
 
                             # Append the prediction
                             predictions.append(decoded_prediction)
-                            
+
                         except Exception as e:
                             st.write(f"Error processing text: {text[:50]}... - {e}")
                             continue
 
                     # Count the most common mental health issue
                     issue_counts = Counter(predictions)
-                    combined_all_text = " ".join(all_text)+" Image captions are as follows : "+combined_caption
+                    combined_all_text = " ".join(all_text)+" "+video_text+" Image captions are as follows : "+combined_caption
                     # Display results
                     issue_distribution = pd.DataFrame(issue_counts.items(), columns=['Mental Health Issue', 'Count'])
                     st.write("Mental health issue distribution across posts:")
