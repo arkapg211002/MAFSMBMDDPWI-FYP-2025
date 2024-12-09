@@ -33,3 +33,4 @@ plotly
 matplotlib
 scipy
 networkx
+yt-dlp
