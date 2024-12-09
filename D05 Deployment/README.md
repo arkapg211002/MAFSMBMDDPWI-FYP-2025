@@ -1,5 +1,5 @@
 ### SEM-7 : `WebAppV9-3.ipynb`
-### SEM-8 : `WebAppV11-3.ipynb` (For Final Deployment)
+### SEM-8 : `WebAppV11-3 / WebAppV11-4 / WebAppV11-5.ipynb` (For Final Deployment)
 
 ```
 The application and its packages, requirements and models require around 8gb of ram
