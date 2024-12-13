@@ -181,6 +181,90 @@ def get_wellbeing_insight(text, top_issue):
 The function \texttt{get\_wellbeing\_insight} interacts with the Gemini AI model to generate insights related to a mental health issue based on the Ryff Scale of Psychological Well-Being. The function starts by initializing a chat session with the Gemini model using \\
 \texttt{gemini\_model.start\_chat()}. It then constructs a detailed prompt that outlines the six factors of well-being: autonomy, environmental mastery, personal growth, positive relations with others, purpose in life, and self-acceptance. These factors are crucial for evaluating an individual's psychological well-being. The prompt includes specific example statements related to each factor, offering context for how the mental health issue (\texttt{top\_issue}) might affect the individual in each area. The function sends this prompt to the Gemini model and retrieves the response, which provides detailed advice and reflections on how the issue impacts each well-being factor. The response includes short paragraphs for each of the six factors, analyzing the potential effects of the issue on the individual's ability to function in these areas. After receiving the response, the function uses Streamlit's \texttt{st.write()} method to display the wellbeing insights. In case of any errors, such as issues with the Gemini model or the chat session, an error message is displayed using \texttt{st.write()}. This function is valuable for generating personalized psychological insights and offering practical advice based on the impact of a specific mental health issue.
 
+%------ reddit audio video combine ---------
+
+\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Getting Video Audio from Reddit and combining them]
+    \begin{lstlisting}[language=Python]
+def download_video(video_url, save_path):
+    try:
+        video_data = requests.get(video_url)
+        with open(save_path, 'wb') as f:
+            f.write(video_data.content)
+        return save_path
+    except Exception as e:
+        st.write(f"Error downloading video: {e}")
+        return None
+
+def download_audio(audio_url, save_path):
+    try:
+        audio_data = requests.get(audio_url)
+        with open(save_path, 'wb') as f:
+            f.write(audio_data.content)
+        return save_path
+    except Exception as e:
+        st.write(f"Error downloading audio: {e}")
+        return None
+
+def combine_video_audio(video_path, audio_path, output_path):
+    try:
+        # FFmpeg command to combine video and audio
+        ffmpeg_command = [
+            "/usr/bin/ffmpeg",
+            "-i", video_path,  # Input video file
+            "-i", audio_path,  # Input audio file
+            "-c:v", "libx264",  # Use libx264 codec for video
+            "-c:a", "aac",  # Use AAC codec for audio
+            "-strict", "experimental",  # Allow experimental AAC encoding
+            "-shortest",  # Use the shortest length (video or audio) to determine the output length
+            output_path  # Output file path
+        ]
+
+        # Run FFmpeg command
+        subprocess.run(ffmpeg_command, check=True)
+        return output_path
+    except Exception as e:
+        st.write(f"Error combining video and audio: {e}")
+        return None
+    \end{lstlisting}
+\end{tcolorbox}
+\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Getting Video Audio from Reddit and combining them]
+    \begin{lstlisting}[language=Python]
+def get_user_posts_with_videos(username, max_items=10):
+    try:
+        # Attempt to fetch the user's posts
+        user = reddit.redditor(username)
+
+        post_data = []
+        for submission in user.submissions.new(limit=max_items):
+            videos = []
+
+            # Check if the post is a direct video
+            if submission.is_video:
+                # Get the URL of the hosted video (Reddit video URL)
+                video_url = submission.media['reddit_video']['fallback_url']
+
+                # Dynamically generate the audio URL by replacing the resolution part with _AUDIO_128.mp4
+                audio_url = video_url.split("DASH_")[0] + "DASH_AUDIO_128.mp4"
+                videos.append({'video_url': video_url, 'audio_url': audio_url})
+
+            # Only add posts with videos
+            if videos:
+                post_data.append({"text": submission.title, "videos": videos})
+
+        return post_data
+
+    except praw.exceptions.RedditAPIException as e:
+        st.error(f"Error fetching data from user '{username}': {e}")
+        return []
+    except Exception as e:
+        st.error(f"Error fetching user data: {e}")
+        return []
+    \end{lstlisting}
+\end{tcolorbox}
+
+\noindent
+The provided code is designed to download audio and video files from a Reddit user's profile and then combine them into a single file. The first two functions, \texttt{download\_video} and \texttt{download\_audio}, handle downloading the video and audio files, respectively, by fetching the content from the given URLs and saving them to local files. These functions use the \texttt{requests} library to make HTTP requests and handle exceptions to ensure errors are logged appropriately. The \texttt{combine\_video\_audio} function uses the FFmpeg library to merge the downloaded video and audio files into a single multimedia file. FFmpeg is a powerful tool for multimedia processing, and the command specifies the codecs to use for video and audio encoding. The combined file is saved at the specified output path. If an error occurs during this process, it is logged for debugging. The \texttt{get\_user\_posts\_with\_videos} function fetches the most recent posts from a specified Reddit user's profile. Using the PRAW library, it identifies posts containing videos, extracts their video and audio URLs, and prepares a dataset containing the post titles and associated media. The function also dynamically constructs audio URLs based on the Reddit video URL format. Finally, the data is returned for further processing, and any exceptions during the data fetch are logged. This system integrates various components such as HTTP requests, media processing, and Reddit API interactions, showcasing a seamless workflow for downloading, combining, and handling multimedia content programmatically.
+
 
 \begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Extract Text from Image Using Tesseract]
     \begin{lstlisting}[language=Python]
@@ -197,8 +281,7 @@ def extract_text_from_image_video(image):
 \end{tcolorbox}
 
 \noindent
-The provided code consists of two functions designed to extract text from an image using the Tesseract OCR (Optical Character Recognition) engine. \\
-The first function, \texttt{extract\_text\_from\_image(image)}, takes an image object as input, applies the \texttt{pytesseract.image\_to\_string(image)} method to extract text from the image, and then splits the resulting text into individual lines using the \texttt{splitlines()} method. This allows the function to return a list where each element corresponds to a line of extracted text, making it easier to handle multiline results. The second function, \\ \texttt{extract\_text\_from\_image\_video(image)}, operates similarly by extracting text from the image, but it includes an additional check to determine whether any text was successfully extracted. If no text is found, the function returns an empty string (\texttt{""}), ensuring that it always returns a consistent type rather than \texttt{None}, which could potentially cause issues in other parts of the code. Both functions rely on the \texttt{pytesseract} library, which is a Python wrapper for the open-source Tesseract OCR engine, to perform the text extraction. These functions are useful for extracting text from images, which can be helpful in various use cases such as document scanning, analyzing images with embedded text, or processing video frames to capture text content.
+The provided code consists of two functions designed to extract text from an image using the Tesseract OCR (Optical Character Recognition) engine. \\ The first function, \texttt{extract\_text\_from\_image(image)}, takes an image object as input, applies the \texttt{pytesseract.image\_to\_string(image)} method to extract text from the image, and then splits the resulting text into individual lines using the \texttt{splitlines()} method. This allows the function to return a list where each element corresponds to a line of extracted text, making it easier to handle multiline results. The second function, \\ \texttt{extract\_text\_from\_image\_video(image)}, operates similarly by extracting text from the image, but it includes an additional check to determine whether any text was successfully extracted. If no text is found, the function returns an empty string (\texttt{""}), ensuring that it always returns a consistent type rather than \texttt{None}, which could potentially cause issues in other parts of the code. Both functions rely on the \texttt{pytesseract} library, which is a Python wrapper for the open-source Tesseract OCR engine, to perform the text extraction. These functions are useful for extracting text from images, which can be helpful in various use cases such as document scanning, analyzing images with embedded text, or processing video frames to capture text content.
 
 
 \begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Extract Frames from Video File]
@@ -209,10 +292,7 @@ def extract_frames(video_path, num_frames=20):
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     frames = []
     frame_interval = total_frames // num_frames
-    \end{lstlisting}
-\end{tcolorbox}
-\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Extract Frames from Video File]
-    \begin{lstlisting}[language=Python]
+
     for i in range(num_frames):
         cap.set(cv2.CAP_PROP_POS_FRAMES, i * frame_interval)
         ret, frame = cap.read()
@@ -238,10 +318,7 @@ def transcribe_audio_from_video(video_file):
             temp_video_path = temp_video_file.name
 
         audio_path = tempfile.NamedTemporaryFile(suffix=".wav", delete=False).name
-    \end{lstlisting}
-\end{tcolorbox}
-\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Transcribe Audio from Video]
-    \begin{lstlisting}[language=Python]
+
         # Extract audio from video using subprocess
         subprocess.run(["ffmpeg", "-i", temp_video_path, "-q:a", "0", "-map", "a", audio_path, "-y"])
         audio = AudioSegment.from_file(audio_path)
@@ -292,18 +369,12 @@ The \texttt{translate\_text(text, target\_lang="en")} function provides an inter
 
 \begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Extract Audio from Video File]
     \begin{lstlisting}[language=Python]
-# Function to extract audio from a video file
 def extract_audio_from_video(video_path):
     try:
-        # Generate a temporary audio file path
         audio_path = tempfile.NamedTemporaryFile(delete=False, suffix=".wav").name
-
         # Use FFmpeg to extract audio from video
         subprocess.run(["ffmpeg", "-i", video_path, "-q:a", "0", "-map", "a", audio_path, "-y"])
-
-        # Return the path of the extracted audio
         return audio_path
-
     except Exception as e:
         return f"Error extracting audio: {str(e)}"
     \end{lstlisting}
@@ -1060,7 +1131,8 @@ This code defines a function to create a knowledge graph that visualizes the rel
     \includegraphics[width=1.0\textwidth]{App Images/19 Interface.png}  
     \caption{Knowledge Graph from classification}
     \label{10i23445}  % Label for referencing the figure
-\end{figure} 
+\end{figure}  
+
 
 % ----------------------- Prototype ends -------------------
 
