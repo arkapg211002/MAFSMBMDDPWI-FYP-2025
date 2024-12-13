@@ -1,6 +1,7 @@
 % -------------------- Result and Analysis ----------------------------------
 
 
+
 \section{Test Plans, Results and Analysis}
 %Prepare the test plans in tabular format, where each Test Case should be represented with distinct id, prefixed with “$\langle$module$\rangle$ “, where module represents the short code of the respective design module. Test Case numbers should be matching as stated in Requirement Matrix.
 %\vspace{.1in}
@@ -12,7 +13,6 @@
 
 %\noindent
 %Depending on your specific project, test results can be represented as a table of data with a corresponding pie chart / bar chart as needed. Analysis of test results should be discussed in terms of clear bullet points.
-
 \begin{center}
     \textbf{Test Case Plan Table}
 \end{center}
@@ -1373,8 +1373,40 @@ Below is a comparison of all the ensemble models for reference
 
 \pagebreak
 
+\subsection{Divide and Conquer}
+
+\begin{center}
+    \textbf{Performance Comparison of Models} \\[0.5em]
+    \begin{tabular}{|c|c|c|c|c|c|c|}
+        \hline
+        \textbf{Model} & \textbf{Subset 1} & \textbf{Subset 2} & \textbf{Subset 3} & \textbf{Subset 4} & \textbf{Subset 5} & \textbf{Subset 6} \\ \hline
+        Logistic Regression & 84.48 & 85.07 & 86.74 & 90.61 & 88.17 & 72.62 \\ \hline
+        Naive Bayes         & 81.80 & 81.71 & 83.50 & 84.44 & 85.93 & 64.33 \\ \hline
+        SVM                 & 81.45 & 82.30 & 83.50 & 88.34 & 85.45 & 67.81 \\ \hline
+        XGBoost             & 84.23 & 85.79 & 86.78 & 91.37 & 86.32 & 70.95 \\ \hline
+        LSTM                & 83.74 & 81.63 & 81.83 & 87.22 & 85.38 & 67.74 \\ \hline
+        Transformer         & 83.21 & 84.50 & 86.50 & 89.35 & 87.62 & 72.40 \\ \hline
+        \textbf{Ensemble}   & \textbf{98.20} & \textbf{97.53} & \textbf{98.02} & \textbf{96.40} & \textbf{96.15} & \textbf{91.92} \\ \hline
+    \end{tabular} \\[1em]
+    \textbf{Note:} The final ensemble meta-model achieved an accuracy of \textbf{96.24\%}.
+\end{center}
+
+\noindent
+The hierarchical ensemble model implemented in this project addresses the challenge of handling large datasets effectively by leveraging a modular and scalable approach. The dataset, consisting of millions of records, is divided into manageable subsets, with each subset treated as an independent data unit. For each subset, multiple base models such as Logistic Regression, Naive Bayes, SVM, LSTM, XGBoost, and Custom Transformers are trained and tested. These base models are then combined into a subset-specific ensemble using Random Forest as the meta learner. This process is repeated for all subsets, resulting in several independent ensemble models. Finally, the outputs from these subset-specific ensembles are aggregated to form a final ensemble model, representing the comprehensive learning from the entire dataset. This approach not only ensures better performance but also provides a framework for handling large-scale data efficiently. While the current implementation follows a fully sequential approach for testing and validation purposes, the design is inherently scalable to a distributed system architecture. In a distributed setup, the dataset can be partitioned and processed in parallel, with each subset assigned to a separate computational node or worker. Each node trains base models, creates an ensemble for its subset, and transmits the results to a central controller. The controller aggregates the subset-specific ensembles into a global ensemble model, ensuring a streamlined process that benefits from parallelism and modularity. This architecture mirrors distributed computing principles, making it highly suitable for large-scale deployments and real-world applications. 
+
+\vspace{1em}
+
+\noindent
+The hierarchical structure of this approach aligns with distributed systems by effectively implementing data parallelism and task parallelism. By dividing the dataset into subsets, the computational load is distributed, preventing memory bottlenecks and ensuring resource optimization. Each subset is processed independently, enabling a modular design where tasks are decoupled. This design also enhances fault tolerance, as the failure of a single subset’s processing does not affect the others. Moreover, the scalability of the approach allows it to adapt to varying resource constraints. Adding more computational nodes makes it feasible to handle additional subsets or process the data faster, showcasing its adaptability and efficiency. The project also emphasizes the potential of this design to be implemented on distributed computing frameworks such as Apache Spark, TensorFlow Distributed, or PyTorch Distributed. These frameworks provide tools to split datasets, distribute tasks, and aggregate results seamlessly across multiple nodes. The distributed nature of the architecture ensures high throughput and reduces training time, making it suitable for scenarios involving large-scale datasets. The hierarchical ensemble model design is a future-ready solution that can transition seamlessly to distributed platforms, leveraging cloud services or on-premises high-performance computing clusters. The methodology combines the strengths of ensemble learning with the efficiencies of distributed systems to create a robust and scalable solution for modern data science challenges.
+
+\begin{figure}[h!]  
+    \centering
+    \includegraphics[width=1.0\textwidth]{Images/Distributed.png}  
+    \caption{Scalable Distributed Architecture}
+    \label{lstm archi}  % Label for referencing the figure
+\end{figure}
 
 
-
+\pagebreak
 
 % ------------------------ Result and Analysis Ends -------------------------
