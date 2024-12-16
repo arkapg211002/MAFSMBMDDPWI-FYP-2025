@@ -1373,7 +1373,7 @@ Below is a comparison of all the ensemble models for reference
 
 \pagebreak
 
-\subsection{Divide and Conquer}
+\subsection{Result from hierarchical Ensemble Models}
 
 \begin{center}
     \textbf{Performance Comparison of Models} \\[0.5em]
@@ -1388,7 +1388,7 @@ Below is a comparison of all the ensemble models for reference
         Transformer         & 83.21 & 84.50 & 86.50 & 89.35 & 87.62 & 72.40 \\ \hline
         \textbf{Ensemble}   & \textbf{98.20} & \textbf{97.53} & \textbf{98.02} & \textbf{96.40} & \textbf{96.15} & \textbf{91.92} \\ \hline
     \end{tabular} \\[1em]
-    \textbf{Note:} The final ensemble meta-model achieved an accuracy of \textbf{96.24\%}.
+    \textbf{Note:} The final ensemble model achieved an accuracy of \textbf{96.24\%} and \textbf{96.23\%}.
 \end{center}
 
 \noindent
@@ -1402,9 +1402,22 @@ The hierarchical structure of this approach aligns with distributed systems by e
 \begin{figure}[h!]  
     \centering
     \includegraphics[width=1.0\textwidth]{Images/Distributed.png}  
-    \caption{Scalable Distributed Architecture}
+    \caption{Scalable Distributed Architecture 1}
     \label{lstm archi}  % Label for referencing the figure
 \end{figure}
+
+
+\begin{figure}[h!]  
+    \centering
+    \includegraphics[width=1.0\textwidth]{Images/Distributed2.png}  
+    \caption{Scalable Distributed Architecture 2}
+    \label{lstm archi}  % Label for referencing the figure
+\end{figure}
+
+\noindent
+The second architecture optimizes the hierarchical ensemble approach by restructuring the model aggregation process to enhance scalability and computational efficiency. Instead of creating ensemble models for each of the $n$ subsets independently, models of the same type from all subsets are combined into a single ensemble for that type using Logistic Regression as the meta learner. This results in six intermediate ensemble models, one for each model type: Logistic Regression, Naive Bayes, SVM, XGBoost, LSTM, and Transformer. These intermediate ensemble models are then used to form the final ensemble model, where Random Forest acts as the meta learner. This architectural adjustment significantly reduces the number of intermediate ensemble models from $n$ to six while preserving the hierarchical structure, thereby maintaining a consistent three-layer design. The second architecture achieved an accuracy of 96.23\%, which is nearly identical to the 96.24\% observed with the first architecture. However, its design provides distinct advantages when dealing with much larger datasets or a higher number of subsets. As the dataset size increases, the number of subsets and computational nodes may also grow. In the previous architecture, this scaling would lead to a proportional increase in the number of intermediate ensemble models, which could strain computational resources and introduce inefficiencies in model aggregation. In contrast, the second architecture fixes the number of intermediate ensemble models at six, irrespective of the number of subsets, ensuring that the computational load remains manageable while scalability is maintained. Another significant improvement lies in the efficient use of hardware resources. In the second architecture, GPUs are utilized exclusively for training the LSTM and Transformer-based ensemble models, rather than being partially engaged across all intermediate models as in the first architecture. This selective usage of GPUs streamlines resource allocation, ensuring that the most computationally intensive models benefit from accelerated hardware while reducing unnecessary overhead for other model types. The use of Logistic Regression as the meta learner in the intermediate ensemble models further contributes to this efficiency. Logistic Regression is computationally lightweight and linear, making it an excellent choice for aggregating predictions across subsets without introducing excessive complexity. Its linearity ensures faster training while maintaining strong predictive performance, particularly for well-separated data classes. A key addition to the second architecture is the implementation of an efficient data bus for transferring models of the same type from different subsets to the respective intermediate nodes responsible for creating the type-specific ensemble. This structured flow of data and models ensures seamless communication between subsets and intermediate nodes, reducing latency and synchronization overhead. By fixing the number of intermediate ensemble models at six, the architecture limits the number of aggregation layers while still leveraging the diversity and complementary strengths of all base models. This design strikes a balance between computational efficiency and predictive performance, making it particularly advantageous for large-scale datasets. The second architecture's streamlined design, efficient resource utilization, and fixed number of intermediate ensemble models make it a robust and scalable solution for modern data science challenges. By addressing the potential bottlenecks of the first architecture while maintaining comparable performance, it provides a practical alternative for real-world applications where scalability and computational efficiency are critical.
+
+
 
 
 \pagebreak
