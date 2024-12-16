@@ -1862,6 +1862,311 @@ This code integrates a transformer-based model into an existing ensemble learnin
 The ensemble model for web application consists of several base models, each utilizing different techniques for feature extraction and training. Logistic Regression is implemented using the Bag of Words model for vectorization. Naive Bayes is optimized through hyperparameter tuning with Random Search, also utilizing the Bag of Words model for feature extraction. The Long Short-Term Memory (LSTM) model processes the text sequences directly, while XGBoost uses the Term Frequency-Inverse Document Frequency (TF-IDF) method for feature extraction. Support Vector Machine (SVM) is implemented using the Bag of Words model as well. These base models along with transformer are then combined through a Random Forest meta-learner.
 
 
+\subsubsection{Hierarchical Ensemble Model}
+
+\textbf{Approach 1 : One Ensemble for One Subset → Final Ensemble}
+
+\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Hierarchical Ensemble Model 1] 
+    \begin{lstlisting}[language=Python]
+import pickle
+import numpy as np
+import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import StratifiedKFold, cross_val_score
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from tensorflow.keras.models import load_model, Model
+from tensorflow.keras.utils import pad_sequences, custom_object_scope
+from tensorflow.keras.layers import MultiHeadAttention, Input, Dense, Embedding, GlobalAveragePooling1D, LayerNormalization, Layer
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.models import Model, Sequential
+from tensorflow.keras.utils import to_categorical
+from sklearn.model_selection import train_test_split, cross_val_score
+from tensorflow.keras.optimizers import Adam
+import tensorflow as tf
+
+# Define the custom layers
+class EmbeddingLayer(Layer):
+    def __init__(self, sequence_length, vocab_size, embed_dim, **kwargs):
+        super(EmbeddingLayer, self).__init__(**kwargs)
+        self.word_embedding = Embedding(input_dim=vocab_size, output_dim=embed_dim)
+        self.position_embedding = Embedding(input_dim=sequence_length, output_dim=embed_dim)
+
+    def call(self, tokens):
+        sequence_length = tf.shape(tokens)[-1]
+        positions = tf.range(start=0, limit=sequence_length, delta=1)
+        positions_encoding = self.position_embedding(positions)
+        words_encoding = self.word_embedding(tokens)
+        return positions_encoding + words_encoding
+    \end{lstlisting}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Hierarchical Ensemble Model 1] 
+    \begin{lstlisting}[language=Python]
+class EncoderLayer(Layer):
+    def __init__(self, total_heads, total_dense_units, embed_dim, **kwargs):
+        super(EncoderLayer, self).__init__(**kwargs)
+        self.multihead = MultiHeadAttention(num_heads=total_heads, key_dim=embed_dim)
+        self.nnw = Sequential([Dense(total_dense_units, activation="relu"), Dense(embed_dim)])
+        self.normalize_layer = LayerNormalization()
+
+    def call(self, inputs):
+        attn_output = self.multihead(inputs, inputs)
+        normalize_attn = self.normalize_layer(inputs + attn_output)
+        nnw_output = self.nnw(normalize_attn)
+        final_output = self.normalize_layer(normalize_attn + nnw_output)
+        return final_output
+
+# Helper function to load models and vectorizers
+def load_models_and_vectorizers(prefix):
+    with open(f'LRmodel_{prefix}.pkl', 'rb') as file:
+        lr_model = pickle.load(file)
+    with open(f'LRvectorizer_{prefix}.pkl', 'rb') as file:
+        lr_vectorizer = pickle.load(file)
+    with open(f'NBmodel_{prefix}.pkl', 'rb') as file:
+        nb_model = pickle.load(file)
+    with open(f'NBvectorizer_{prefix}.pkl', 'rb') as file:
+        nb_vectorizer = pickle.load(file)
+    with open(f'SVMmodel_{prefix}.pkl', 'rb') as file:
+        svm_model = pickle.load(file)
+    with open(f'SVMvectorizer_{prefix}.pkl', 'rb') as file:
+        svm_vectorizer = pickle.load(file)
+    with open(f'xgb_model_{prefix}.pkl', 'rb') as file:
+        xgb_model = pickle.load(file)
+    with open(f'tfidf_vectorizer_{prefix}.pkl', 'rb') as file:
+        tfidf_vectorizer = pickle.load(file)
+    with open(f'label_encoder_{prefix}.pkl', 'rb') as file:
+        label_encoder = pickle.load(file)
+    lstm_model = tf.keras.models.load_model(f'lstm_model_{prefix}.h5')
+    with open(f'LSTM_tokenizer_{prefix}.pkl', 'rb') as file:
+        lstm_tokenizer = pickle.load(file)
+    with open(f'Tlabel_encoder_{prefix}.pkl', 'rb') as file:
+        t_label_encoder = pickle.load(file)
+        \end{lstlisting}
+    \end{tcolorbox}
+    \begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Hierarchical Ensemble Model 1] 
+        \begin{lstlisting}[language=Python]
+    with open(f'Tvectorize_layer_{prefix}.pkl', 'rb') as file:
+    t_vectorize_layer = pickle.load(file)
+    transformer_model = tf.keras.models.load_model(f'Ttransformer_model_{prefix}.h5', custom_objects={
+        "EmbeddingLayer": EmbeddingLayer,
+        "EncoderLayer": EncoderLayer
+    })
+
+    return (lr_model, lr_vectorizer, nb_model, nb_vectorizer, svm_model, svm_vectorizer,
+            xgb_model, tfidf_vectorizer, label_encoder, lstm_model, lstm_tokenizer,
+            t_label_encoder, t_vectorize_layer, transformer_model)
+
+# Function to create meta learner for a given dataset
+def create_meta_learner(dataset_path, prefix, meta_model_path):
+    data = pd.read_csv(dataset_path)
+    data.dropna(subset=['cleaned_text'], inplace=True)
+
+    X = data['cleaned_text']
+    y = data['mental_health_issue']
+
+    models = load_models_and_vectorizers(prefix)
+
+    lr_model, lr_vectorizer, nb_model, nb_vectorizer, svm_model, svm_vectorizer, \
+    xgb_model, tfidf_vectorizer, label_encoder, lstm_model, lstm_tokenizer, \
+    t_label_encoder, t_vectorize_layer, transformer_model = models
+
+    y = label_encoder.transform(y)
+
+    # Preprocess text for each model
+    X_lr = lr_vectorizer.transform(X)
+    X_nb = nb_vectorizer.transform(X)
+    X_svm = svm_vectorizer.transform(X)
+    X_xgb = tfidf_vectorizer.transform(X)
+    X_lstm = lstm_tokenizer.texts_to_sequences(X)
+    X_lstm = pad_sequences(X_lstm, maxlen=100, padding='post', truncating='post')
+    X_transformer = t_vectorize_layer(X)
+\end{lstlisting}
+    \end{tcolorbox}
+    \begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Hierarchical Ensemble Model 1] 
+        \begin{lstlisting}[language=Python]
+    # Get individual model probabilities
+    stacked_features = np.hstack((
+        lr_model.predict_proba(X_lr),
+        nb_model.predict_proba(X_nb),
+        svm_model.predict_proba(X_svm),
+        xgb_model.predict_proba(X_xgb),
+        lstm_model.predict(X_lstm),
+        transformer_model.predict(X_transformer)
+    ))
+
+    # Train meta-learner
+    X_train, X_test, y_train, y_test = train_test_split(
+        stacked_features, y, test_size=0.2, stratify=y, random_state=42
+    )
+
+    meta_learner = RandomForestClassifier(
+        max_depth=None, min_samples_split=20, min_samples_leaf=1,
+        max_features='sqrt', bootstrap=False, random_state=42
+    )
+    meta_learner.fit(X_train, y_train)
+
+    # Save meta-learner
+    with open(meta_model_path, 'wb') as file:
+        pickle.dump(meta_learner, file)
+
+    return stacked_features, y
+
+# Create meta learners for all subsets
+meta_features = []
+meta_labels = []
+
+for i in range(1, 7):
+    dataset_path = f'preprocessed_mental_health_{i}.csv'
+    prefix = f'{i}'
+    meta_model_path = f'meta_learner_rf_{i}.pkl'
+
+    features, labels = create_meta_learner(dataset_path, prefix, meta_model_path)
+    meta_features.append(features)
+    meta_labels.append(labels)
+
+# Combine meta features and labels for final meta-learner
+meta_features = np.vstack(meta_features)
+meta_labels = np.concatenate(meta_labels)
+\end{lstlisting}
+\end{tcolorbox}
+\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Hierarchical Ensemble Model 1] 
+    \begin{lstlisting}[language=Python]
+# Train final meta-learner
+final_meta_learner = RandomForestClassifier(
+    max_depth=None, min_samples_split=20, min_samples_leaf=1,
+    max_features='sqrt', bootstrap=False, random_state=42
+)
+skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+cv_scores = cross_val_score(final_meta_learner, meta_features, meta_labels, cv=skf, scoring='accuracy')
+final_meta_learner.fit(meta_features, meta_labels)
+with open('final_meta_learner_rf.pkl', 'wb') as file:
+    pickle.dump(final_meta_learner, file)
+print(f"Cross-Validation Accuracies: {cv_scores}")
+print(f"Mean Validation Accuracy: {np.mean(cv_scores) * 100:.2f}%")
+print(f"Validation Accuracy Std Dev: {np.std(cv_scores) * 100:.2f}%")
+    \end{lstlisting}
+\end{tcolorbox}
+
+\noindent
+The provided code implements a hierarchical ensemble model for classifying mental health issues from text data. The approach involves multiple base models, a meta-learner for each subset of the dataset, and a final meta-learner to combine the results of all subsets. The primary goal is to leverage the strengths of different machine learning and deep learning models for robust predictions. Initially, the necessary libraries for machine learning, deep learning, and data manipulation are imported. Custom TensorFlow/Keras layers, such as \texttt{EmbeddingLayer} and \texttt{EncoderLayer}, are defined to support the transformer model. The \texttt{EmbeddingLayer} combines word embeddings and positional encodings to capture the contextual representation of tokens, while the \texttt{EncoderLayer} implements the transformer encoder block using multi-head attention and feedforward neural networks with layer normalization for stability and better training dynamics. The function \texttt{load\_models\_and\_vectorizers} is responsible for loading pre-trained machine learning models (e.g., Logistic Regression, Naive Bayes, SVM, XGBoost), their respective vectorizers, and deep learning models (LSTM and transformer). Each model and its vectorizer are uniquely identified by a prefix to support multiple dataset subsets. This modular loading design ensures that the framework can handle various datasets and model configurations dynamically. The \texttt{create\_meta\_learner} function processes an individual subset of the dataset. It begins by loading the data from a CSV file, ensuring no null values exist in the \texttt{cleaned\_text} column. The \texttt{cleaned\_text} column represents preprocessed text, while the \texttt{mental\_health\_issue} column contains class labels. The labels are encoded into numerical values using a label encoder to make them compatible with machine learning algorithms. The text data is then transformed into appropriate feature representations using the vectorizers for each machine learning model. For deep learning models, the LSTM uses tokenized sequences padded to a fixed length, and the transformer model utilizes a vectorization layer.
+
+\vspace{1em}
+
+\noindent
+The models' predictions are gathered as probabilities, representing the confidence levels of each model for all possible classes. These probabilities are horizontally stacked to create a feature matrix, where each row corresponds to an instance, and the columns represent the combined outputs from all base models. This stacked representation serves as input to a meta-learner, which is trained to make final predictions by identifying patterns in the base models' outputs. A \texttt{RandomForestClassifier} is used as the meta-learner, chosen for its robustness and ability to handle diverse input features. The training data is split into training and test sets to evaluate the meta-learner's performance. This process is repeated for all subsets of the dataset, and the resulting meta-learners are saved using the \texttt{pickle} library for future use. Once all meta-learners are trained, their outputs (features) and labels are combined across subsets to form a comprehensive dataset. This aggregated dataset is used to train a final meta-learner, which combines the knowledge from all subset-specific meta-learners. The final meta-learner is trained using a stratified K-fold cross-validation approach, ensuring that the training and validation splits preserve the class distribution. This technique provides a robust estimate of the model's performance across various data partitions. The final model is then trained on the entire aggregated dataset, and its accuracy is evaluated and saved for deployment. The hierarchical structure of the model allows the integration of diverse base models, including both traditional machine learning and neural network-based approaches. This ensemble leverages the strengths of each model type, such as the interpretability of machine learning models and the capacity of deep learning models to capture complex patterns in the data. The use of meta-learners ensures that the final predictions are informed by the combined knowledge of all base models, leading to a more accurate and robust classification system for mental health issues.
+
+\vspace{2em}
+
+\noindent
+\textbf{Approach 2 : One Ensemble for one type of base model → Final Ensemble Model}
+
+\noindent
+The below code expands upon the hierarchical ensemble approach by constructing a multi-layered ensemble model. The primary goal is to group models of the same type, such as Logistic Regression, SVM, Naive Bayes, XGBoost, LSTM, and Transformer, from different data subsets into dedicated ensemble models. Each ensemble model is trained using Logistic Regression as the meta-learner. First, the dataset is divided into multiple subsets, each containing preprocessed data for training individual models. For every subset, models of various types are trained, and their vectorizers or tokenizers preprocess the input data. The function create\_ensemble\_for\_model\_type then groups models of the same type, collecting predictions across all subsets. These predictions are used to train a Logistic Regression meta-learner for each model type, resulting in six meta-learners, one for each model type. In the second step,
+
+\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Hierarchical Ensemble Model 2] 
+    \begin{lstlisting}[language=Python]
+def create_ensemble_for_model_type(data_subsets, model_type):
+    all_predictions = []
+    all_labels = []
+    for i, (dataset_path, prefix) in enumerate(data_subsets):
+        data = pd.read_csv(dataset_path)
+        data.dropna(subset=['cleaned_text'], inplace=True)
+        X = data['cleaned_text']
+        y = data['mental_health_issue']
+        models = load_models_and_vectorizers(prefix)
+        lr_model, lr_vectorizer, nb_model, nb_vectorizer, svm_model, svm_vectorizer, \
+        xgb_model, tfidf_vectorizer, lstm_model, lstm_tokenizer, transformer_model = models
+
+        # Preprocess text and get predictions for the specific model type
+        if model_type == 'LR':
+            X_transformed = lr_vectorizer.transform(X)
+            predictions = lr_model.predict_proba(X_transformed)
+        elif model_type == 'NB':
+            X_transformed = nb_vectorizer.transform(X)
+            predictions = nb_model.predict_proba(X_transformed)
+        elif model_type == 'SVM':
+            X_transformed = svm_vectorizer.transform(X)
+            predictions = svm_model.predict_proba(X_transformed)
+        elif model_type == 'XGB':
+            X_transformed = tfidf_vectorizer.transform(X)
+            predictions = xgb_model.predict_proba(X_transformed)
+        elif model_type == 'LSTM':
+            X_transformed = lstm_tokenizer.texts_to_sequences(X)
+            X_transformed = pad_sequences(X_transformed, maxlen=100, padding='post', truncating='post')
+            predictions = lstm_model.predict(X_transformed)
+        elif model_type == 'Transformer':
+            # Preprocess the text for the Transformer using the TextVectorization layer
+            with open(f'Tvectorize_layer_{prefix}.pkl', 'rb') as vectorizer_file:
+                t_vectorize_layer = pickle.load(vectorizer_file)
+            X_transformed = t_vectorize_layer(tf.convert_to_tensor(X, dtype=tf.string))
+            # Make predictions
+            predictions = transformer_model.predict(X_transformed)
+    all_predictions.append(predictions)
+    all_labels.append(y)
+        \end{lstlisting}
+    \end{tcolorbox}
+\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Hierarchical Ensemble Model 2] 
+    \begin{lstlisting}[language=Python]
+    # Stack predictions and labels
+    stacked_features = np.vstack(all_predictions)
+    stacked_labels = np.concatenate(all_labels)
+    # Train Logistic Regression meta-learner
+    meta_learner = LogisticRegression(max_iter=5000, random_state=42)
+    meta_learner.fit(stacked_features, stacked_labels)
+    return meta_learner
+
+# Create meta-learners for each model type
+data_subsets = [(f'preprocessed_mental_health_{i}.csv', f'{i}') for i in range(1, 7)]
+
+lr_meta_learner = create_ensemble_for_model_type(data_subsets, 'LR')
+nb_meta_learner = create_ensemble_for_model_type(data_subsets, 'NB')
+svm_meta_learner = create_ensemble_for_model_type(data_subsets, 'SVM')
+xgb_meta_learner = create_ensemble_for_model_type(data_subsets, 'XGB')
+lstm_meta_learner = create_ensemble_for_model_type(data_subsets, 'LSTM')
+transformer_meta_learner = create_ensemble_for_model_type(data_subsets, 'Transformer')
+
+# Create final meta-learner using Random Forest
+final_predictions = []
+final_labels = []
+for data_path, prefix in data_subsets:
+data = pd.read_csv(data_path)
+data.dropna(subset=['cleaned_text'], inplace=True)
+X = data['cleaned_text']
+y = data['mental_health_issue']
+models = load_models_and_vectorizers(prefix)
+lr_model, lr_vectorizer, nb_model, nb_vectorizer, svm_model, svm_vectorizer, \
+xgb_model, tfidf_vectorizer, lstm_model, lstm_tokenizer, transformer_model = models
+with open(f'Tvectorize_layer_{prefix}.pkl', 'rb') as vectorizer_file:
+    t_vectorize_layer = pickle.load(vectorizer_file)
+\end{lstlisting}
+\end{tcolorbox}
+\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Hierarchical Ensemble Model 2] 
+    \begin{lstlisting}[language=Python]
+# Get predictions from each meta-learner
+X_lr = lr_vectorizer.transform(X)
+X_nb = nb_vectorizer.transform(X)
+X_svm = svm_vectorizer.transform(X)
+X_xgb = tfidf_vectorizer.transform(X)
+X_lstm = lstm_tokenizer.texts_to_sequences(X)
+X_lstm = pad_sequences(X_lstm, maxlen=100, padding='post', truncating='post')
+# Preprocess the input for the Transformer
+X_transformer = t_vectorize_layer(tf.convert_to_tensor(X, dtype=tf.string))  # Use the text vectorizer layer
+transformer_predictions = transformer_model.predict(X_transformer)
+
+features = np.hstack([
+    lr_meta_learner.predict_proba(lr_model.predict_proba(X_lr)), nb_meta_learner.predict_proba(nb_model.predict_proba(X_nb)), svm_meta_learner.predict_proba(svm_model.predict_proba(X_svm)), xgb_meta_learner.predict_proba(xgb_model.predict_proba(X_xgb)), lstm_meta_learner.predict_proba(lstm_model.predict(X_lstm)), transformer_meta_learner.predict_proba(transformer_predictions)
+])
+
+final_predictions.append(features)
+final_labels.append(y.values[:features.shape[0]])
+final_features = np.vstack(final_predictions)
+final_labels = np.concatenate(final_labels)
+    \end{lstlisting}
+\end{tcolorbox}
+
+\noindent
+predictions from these meta-learners are combined into a feature set for each dataset subset, capturing the information from all model types. These combined predictions and the labels from all subsets are used to train a Random Forest as the final meta-learner, creating the ultimate ensemble model. This approach improves upon the previous model by providing a hierarchical organization, where first-level meta-learners group models by type, and a second-level meta-learner combines these ensembles into a robust final model. The flexibility of this approach allows fine-tuning at each level, such as optimizing the Logistic Regression for type-specific ensembles and Random Forest for the final ensemble. Additionally, by leveraging the strengths of various model architectures and combining them hierarchically, the model is better equipped to generalize to unseen data.
+
 \pagebreak
 
 % ------------------------- Implementation Ends -----------------------------
