@@ -2111,7 +2111,7 @@ def create_ensemble_for_model_type(data_subsets, model_type):
     stacked_features = np.vstack(all_predictions)
     stacked_labels = np.concatenate(all_labels)
     # Train Logistic Regression meta-learner
-    meta_learner = LogisticRegression(max_iter=5000, random_state=42)
+    meta_learner = RandomForestClassifier(max_depth=None, min_samples_split=20, min_samples_leaf=1, max_features='sqrt', bootstrap=False, random_state=42)
     meta_learner.fit(stacked_features, stacked_labels)
     return meta_learner
 
