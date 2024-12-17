@@ -1377,18 +1377,25 @@ Below is a comparison of all the ensemble models for reference
 
 \begin{center}
     \textbf{Performance Comparison of Models} \\[0.5em]
-    \begin{tabular}{|c|c|c|c|c|c|c|}
+    % Resize the table to fit the text width
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{|c|c|c|c|c|c|c|c|}
         \hline
-        \textbf{Model} & \textbf{Subset 1} & \textbf{Subset 2} & \textbf{Subset 3} & \textbf{Subset 4} & \textbf{Subset 5} & \textbf{Subset 6} \\ \hline
-        Logistic Regression & 87.66 & 85.07 & 86.74 & 90.61 & 88.17 & 72.62 \\ \hline
-        Naive Bayes         & 83.63 & 81.71 & 83.50 & 84.44 & 85.93 & 64.33 \\ \hline
-        SVM                 & 85.13 & 82.30 & 83.50 & 88.34 & 85.45 & 67.81 \\ \hline
-        XGBoost             & 87.39 & 85.79 & 86.78 & 91.37 & 86.32 & 70.95 \\ \hline
-        LSTM                & 84.91 & 81.63 & 81.83 & 87.22 & 85.38 & 67.74 \\ \hline
-        Transformer         & 88.50 & 84.50 & 86.50 & 89.35 & 87.62 & 72.40 \\ \hline
-        \textbf{Ensemble}   & \textbf{98.20} & \textbf{97.53} & \textbf{98.02} & \textbf{96.40} & \textbf{96.15} & \textbf{91.92} \\ \hline
-    \end{tabular} \\[1em]
-    \textbf{Note:} The final ensemble model achieved an accuracy of \textbf{96.24\%} and \textbf{99.12\%}.
+        \textbf{Model} & \textbf{Subset 1} & \textbf{Subset 2} & \textbf{Subset 3} & \textbf{Subset 4} & \textbf{Subset 5} & \textbf{Subset 6} & \textbf{ENSEMBLE} \\ \hline
+        Logistic Regression & 87.66 & 85.07 & 86.74 & 90.61 & 88.17 & 72.62 & \textbf{90.90} \\ \hline
+        Naive Bayes         & 83.63 & 81.71 & 83.50 & 84.44 & 85.93 & 64.33 & \textbf{84.15} \\ \hline
+        SVM                 & 85.13 & 82.30 & 83.50 & 88.34 & 85.45 & 67.81 & \textbf{91.79} \\ \hline
+        XGBoost             & 87.39 & 85.79 & 86.78 & 91.37 & 86.32 & 70.95 & \textbf{67.67} \\ \hline
+        LSTM                & 84.91 & 81.63 & 81.83 & 87.22 & 85.38 & 67.74 & \textbf{87.48} \\ \hline
+        Transformer         & 88.50 & 84.50 & 86.50 & 89.35 & 87.62 & 72.40 & \textbf{91.53} \\ \hline
+        \textbf{ENSEMBLE}   & \textbf{98.03} & \textbf{94.85} & \textbf{96.96} & \textbf{97.79} & \textbf{96.86} & \textbf{92.57} & 
+        \diagbox[height=2em,width=7em]%
+        {\makebox[2.5em][r]{\textbf{99.12}}}%
+        {\makebox[2.5em][l]{\textbf{96.24}}} \\ \hline
+    \end{tabular}
+    } % End of resizebox
+    \\[1em]
+    \textbf{Note:} The final ensemble models from two different architectures achieved accuracies of \textbf{96.24\%} and \textbf{99.12\%} respectively.
 \end{center}
 
 \noindent
@@ -1421,6 +1428,46 @@ The second architecture optimizes the hierarchical ensemble approach by restruct
 
 \noindent
 Architecture 1 takes more time in cross-validation compared to Architecture 2 due to its decentralized design. In Architecture 1, each subset independently creates its intermediate ensemble model, resulting in a larger number of models being trained and validated. This increases the computational workload and requires more synchronization across subsets. On the other hand, Architecture 2 aggregates models of the same type into a single intermediate ensemble model, reducing the number of intermediate ensembles. This streamlining minimizes redundancy and allows for faster cross-validation while maintaining predictive performance. In Architecture 2, models of the same type are used as base models in the intermediate ensemble to ensure consistency and simplify the aggregation process. Mixing different types of models, such as Logistic Regression from one subset and SVM from another, would introduce heterogeneity in predictions, making the meta-learning process more complex. By grouping models of the same type, the meta-learner can better capture specific patterns and variations unique to each model type. This design also ensures that the strengths of each algorithm are utilized optimally, allowing the final ensemble to benefit from their complementary capabilities. The observation that SMOTE is not required and yields the same results as stratified K-fold cross-validation indicates that the dataset is either balanced or sufficiently robust to handle minor class imbalances. Stratified K-fold cross-validation ensures that each fold maintains the same class distribution as the original dataset, effectively mitigating the impact of class imbalance during training and testing. This suggests that the dataset's inherent balance, combined with the model’s robustness, eliminates the need for synthetic oversampling techniques like SMOTE. Logistic Regression with L1 or L2 regularization is less suited for Architecture 2 because it takes more time to train on the larger, aggregated datasets at the intermediate level. Regularization adds computational overhead by optimizing penalty terms alongside the model's weights, which can slow down training. Furthermore, Logistic Regression may struggle with the diverse, high-dimensional feature space created by aggregated predictions from multiple subsets. Random Forest, as a meta-learner, is a better choice in Architecture 2 because it is less prone to overfitting, can capture nonlinear relationships, and handles high-dimensional data effectively without extensive parameter tuning. Its ensemble-based nature ensures better generalization, making it more efficient and reliable for intermediate and final aggregation.
+
+\vspace{1em}
+
+\noindent
+To determine \( n \), the number of subsets, based on the size of the original dataset, it is crucial to consider computational efficiency, memory constraints, and sequential execution. Given that the dataset has \( D = 167,229 \) records and is processed sequentially in Google Colab with 12GB of RAM per node, the number of subsets \( n \) must strike a balance between memory usage and model performance.
+
+\vspace{1em}
+
+\noindent
+In this case, you chose \( n = 6 \) subsets, which implies a subset size \( S \) of:
+
+\[
+S = \frac{D}{n} = \frac{167,229}{6} \approx 27,872 \, \text{records per subset}.
+\]
+
+\vspace{1em}
+
+\noindent
+The choice of \( n = 6 \) is reasonable given the following factors:
+
+\vspace{1em}
+
+\noindent
+1. \textbf{Memory Constraints}: Google Colab provides 12GB of RAM. Each subset must fit within this memory while accommodating the model's requirements for training and validation. Processing approximately 27,833 records at a time is well-suited to this memory limit for most machine learning models, including Logistic Regression, SVM, LSTM, and Transformer-based models.
+
+\vspace{1em}
+
+\noindent
+2. \textbf{Sequential Execution}: Since the architectures are implemented sequentially, the number of subsets \( n \) does not need to align with the number of computational nodes. Instead, the goal is to divide the dataset into manageable chunks that reduce training time and memory overhead for each subset.
+
+\vspace{1em}
+
+\noindent
+3. \textbf{Performance and Aggregation}: With \( n = 6 \), both architectures remain computationally feasible. In Architecture 1, \( n = 6 \) leads to six independent intermediate ensemble models, which are aggregated into the final ensemble. In Architecture 2, models of the same type from all six subsets are combined into six intermediate ensemble models, one for each base model type.
+
+
+\vspace{1em}
+
+\noindent
+The choice of \( n = 6 \) also ensures that the dataset is sufficiently divided to prevent memory bottlenecks while allowing each subset to contribute meaningful insights to the ensemble. Larger values of \( n \) would reduce the subset size but increase the number of models to train, leading to longer execution times. Conversely, smaller values of \( n \) would increase the subset size, risking memory overflow in Colab. Here, the RAM usage per record is approximated based on empirical testing, and \( n \) can be dynamically adjusted if needed. Given that \( S \approx 27,833 \) records per subset fits comfortably within 12GB of RAM, the choice of \( n = 6 \) is both optimal and practical for sequential execution on Google Colab. This approach ensures efficient processing, reduces memory overhead, and maintains strong model performance in both architectures.
 
 
 \pagebreak
