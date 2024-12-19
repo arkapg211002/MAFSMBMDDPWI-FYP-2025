@@ -35,7 +35,7 @@ Mental health disorders affect millions of people globally. With the rise of soc
 - **Visualization:** Generate confusion matrices and performance metrics for each model.
 - **Ensemble Model:** Leveraged high accuracy of Logistic regression, Naive Bayes, SVM, LSTM, Transformer and XGBoost to create an ensemble model with accuracy of 98.2% (train-test split) and 98.07% (Stratified K-Fold Cross Validation). Used this model in the web application.
 - **Model Retraining:** Allow users with the option to retrain the existing model using the input data in the application along with the result obtained.
-- **Hierarchical Ensemble Model:** Sequentially tested distributed architecture for model creation with bigger datasets and achieved an accuracy of 99.12%
+- **Hierarchical Ensemble Model:** Sequentially tested distributed architecture for model creation with bigger datasets and achieved an accuracy of 96.25%
 ---
 
 ## Technologies Used
