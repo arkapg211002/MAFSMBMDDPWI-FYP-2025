@@ -120,18 +120,23 @@ The metrics used for evaluating the performance of the classification models inc
 
 \vspace{0.25em}
 
-\begin{figure}[h!]  
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=0.7\textwidth]{Images/LR Confusion Matrix.png}  
-    \caption{Confusion Matrix (Logistic Regression)}
-    \label{LRCM}  % Label for referencing the figure
-\end{figure}
-
-\begin{figure}[h!]  
-    \centering
-    \includegraphics[width=0.7\textwidth]{Images/LR ROC.png}  
-    \caption{ROC AUC (Logistic Regression)}
-    \label{LRROC}  % Label for referencing the figure
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/LR Confusion Matrix.png}
+        \caption{Confusion Matrix (Logistic Regression)}
+        \label{LRCM}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/LR ROC.png}
+        \caption{ROC AUC (Logistic Regression)}
+        \label{LRROC}  % Label for referencing the subfigure
+    \end{subfigure}
+    \caption{Evaluation Results for Logistic Regression}
+    \label{fig:comparison}
 \end{figure}
 
 \noindent
@@ -174,19 +179,23 @@ The Logistic Regression model performed well with an overall accuracy of 87.66\%
 
 \vspace{0.25em}
 
-\begin{figure}[h!]  
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=0.7\textwidth]{Images/NB Confusion Matrix.png}  
-    \caption{Confusion Matrix (Naive Bayes)}
-    \label{NBCM}  % Label for referencing the figure
-\end{figure}
-
-
-\begin{figure}[h!]  
-    \centering
-    \includegraphics[width=0.7\textwidth]{Images/NB ROC.png}  
-    \caption{ROC AUC (Naive Bayes)}
-    \label{NBROC}  % Label for referencing the figure
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/NB Confusion Matrix.png}
+        \caption{Confusion Matrix (Naive Bayes)}
+        \label{NBCM}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/NB ROC.png}
+        \caption{ROC AUC (Naive Bayes)}
+        \label{NBROC}  % Label for referencing the subfigure
+    \end{subfigure}
+    \caption{Evaluation Results for Naive Bayes}
+    \label{fig:nb_comparison}
 \end{figure}
 
 \noindent
@@ -229,24 +238,30 @@ The Naive Bayes model achieved an overall accuracy of 83.63\%, indicating a reas
 
 \vspace{0.25em}
 
-\begin{figure}[h!]  
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=0.7\textwidth]{Images/SVM Confusion Matrix.png}  
-    \caption{Confusion Matrix (SVM)}
-    \label{SVMCM}  % Label for referencing the figure
-\end{figure}
-
-\begin{figure}[h!]  
-    \centering
-    \includegraphics[width=0.7\textwidth]{Images/SVM ROC.png}  
-    \caption{ROC AUC (SVM)}
-    \label{SVMSOC}  % Label for referencing the figure
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/SVM Confusion Matrix.png}
+        \caption{Confusion Matrix (SVM)}
+        \label{SVMCM}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/SVM ROC.png}
+        \caption{ROC AUC (SVM)}
+        \label{SVMROC}  % Label for referencing the subfigure
+    \end{subfigure}
+    \caption{Evaluation Results for SVM}
+    \label{fig:svm_comparison}
 \end{figure}
 
 \noindent
 The Support Vector Machine (SVM) model achieved an accuracy of 85.13\%, demonstrating strong performance in classifying the various mental health conditions. The classification report indicates that the Normal class has the highest precision (0.94) and recall (0.95), resulting in an F1-score of 0.95, showing that the model is particularly good at identifying instances of normal behavior. However, the Bipolar class shows lower performance, with a precision of 0.62 and recall of 0.61, suggesting that the model struggles more with identifying bipolar disorder instances. The recall for the Anxiety class is relatively high (0.76), though precision is somewhat lower (0.72), indicating a balanced classification performance for this condition. The confusion matrix reveals that the model is generally accurate, with the Normal class being correctly classified most of the time (2084 true positives). However, some misclassifications occur for classes like Bipolar, Depression, and PTSD, with notable misclassifications of Bipolar as Depression and Normal. These misclassifications are likely affecting the overall recall for certain classes. The ROC AUC curve areas demonstrate that the model has excellent performance in distinguishing between most classes. The Normal class has the highest AUC of 0.98, followed by Anxiety, Depression, and PTSD with AUCs of 0.96. Bipolar, although still high at 0.90, lags behind the other classes, reflecting the model's challenge in distinguishing Bipolar from other conditions.
 
 % ------------- random forest
+\pagebreak
 
 \subsection{Results of Random Forest}
 
@@ -283,24 +298,29 @@ The Support Vector Machine (SVM) model achieved an accuracy of 85.13\%, demonstr
 
 \vspace{0.25em}
 
-\begin{figure}[h!]  
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=0.7\textwidth]{Images/RF Confusion Matrix.png}  
-    \caption{Confusion Matrix (Random Forest)}
-    \label{RFCM}  % Label for referencing the figure
-\end{figure}
-
-\begin{figure}[h!]  
-    \centering
-    \includegraphics[width=0.7\textwidth]{Images/RF ROC.png}  
-    \caption{ROC AUC (Random Forest)}
-    \label{RFROC}  % Label for referencing the figure
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/RF Confusion Matrix.png}
+        \caption{Confusion Matrix (Random Forest)}
+        \label{RFCM}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/RF ROC.png}
+        \caption{ROC AUC (Random Forest)}
+        \label{RFROC}  % Label for referencing the subfigure
+    \end{subfigure}
+    \caption{Evaluation Results for Random Forest}
+    \label{fig:rf_comparison}
 \end{figure}
 
 \noindent
 The Random Forest model achieved an accuracy of 86.00\%, indicating a strong performance in classifying the mental health conditions. The classification report shows that the Normal class achieved the highest recall (1.00) and a precision of 0.88, resulting in a high F1-score of 0.93. This reflects the model’s ability to correctly classify the majority of the Normal instances. The Bipolar class, however, shows a much lower recall (0.47), which indicates that the model has difficulty identifying instances of Bipolar disorder, as reflected by its F1-score of 0.62. The Anxiety and PTSD classes have relatively balanced performance, with moderate precision and recall values. The confusion matrix illustrates the distribution of misclassifications. The Normal class is correctly classified almost entirely (2173 true positives), while other classes like Bipolar and PTSD exhibit significant misclassifications, particularly Bipolar, which is often misclassified as Depression and Normal. The ROC AUC scores for all classes are quite high, indicating that the model is effective at distinguishing between the classes. The Anxiety, Depression, Normal, and PTSD classes each have AUC values above 0.96, with the Normal and Depression classes achieving 0.97. Bipolar has the lowest AUC at 0.89, which corresponds to its lower classification performance. These AUC values suggest that the Random Forest model is proficient in distinguishing between most of the classes, though it faces challenges in identifying Bipolar disorder.
 
-\pagebreak
+
 % -------- xgb
 
 \subsection{Results of XGBoost}
@@ -338,18 +358,23 @@ The Random Forest model achieved an accuracy of 86.00\%, indicating a strong per
 
 \vspace{0.25em}
 
-\begin{figure}[h!]  
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=0.7\textwidth]{Images/XG Confusion Matrix.png}  
-    \caption{Confusion Matrix (XGBoost)}
-    \label{XGCM}  % Label for referencing the figure
-\end{figure}
-
-\begin{figure}[h!]  
-    \centering
-    \includegraphics[width=0.7\textwidth]{Images/XG ROC.png}  
-    \caption{ROC AUC (XGBoost)}
-    \label{XGrOC}  % Label for referencing the figure
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/XG Confusion Matrix.png}
+        \caption{Confusion Matrix (XGBoost)}
+        \label{XGCM}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/XG ROC.png}
+        \caption{ROC AUC (XGBoost)}
+        \label{XGROC}  % Label for referencing the subfigure
+    \end{subfigure}
+    \caption{Evaluation Results for XGBoost}
+    \label{fig:xgboost_comparison}
 \end{figure}
 
 \noindent
@@ -376,7 +401,7 @@ The XGBoost model achieved an accuracy of 87.39\%, demonstrating strong overall 
 \end{center}
 
 \vspace{0.25em}
-\pagebreak
+
 \begin{center}
     \textbf{ROC Curve Areas for Each Class} \\[0.5em]
     \begin{tabular}{|l|c|}
@@ -392,24 +417,27 @@ The XGBoost model achieved an accuracy of 87.39\%, demonstrating strong overall 
 
 \vspace{0.25em}
 
-\begin{figure}[h!]  
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=0.7\textwidth]{Images/KNN Confusion Matrix.png}  
-    \caption{Confusion Matrix (KNN)}
-    \label{KNNCM}  % Label for referencing the figure
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/KNN Confusion Matrix.png}
+        \caption{Confusion Matrix (KNN)}
+        \label{KNNCM}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/KNN ROC.png}
+        \caption{ROC AUC (KNN)}
+        \label{KNNROC}  % Label for referencing the subfigure
+    \end{subfigure}
+    \caption{Evaluation Results for KNN}
+    \label{fig:knn_comparison}
 \end{figure}
-
-\begin{figure}[h!]  
-    \centering
-    \includegraphics[width=0.7\textwidth]{Images/KNN ROC.png}  
-    \caption{ROC AUC (KNN)}
-    \label{KNnROC}  % Label for referencing the figure
-\end{figure}
-
 \noindent
 The KNN model achieved an accuracy of 54.46\%, which is considerably lower than the XGBoost model. The classification report reveals a significant imbalance in performance across classes. The 'Normal' class achieved relatively high precision (0.79) and recall (0.69), reflecting the model's tendency to perform well with dominant classes. However, the 'Anxiety' and 'PTSD' classes performed poorly, especially with PTSD having a very low recall of 0.09, indicating substantial misclassification. The confusion matrix suggests that the model struggles with distinguishing between some classes, especially 'Anxiety' and 'Bipolar,' where confusion with other categories is high. The ROC AUC scores are relatively lower compared to the XGBoost model, with 'Normal' having the highest AUC of 0.80. These results indicate that while the KNN model offers a lower overall performance, it still provides a reasonable level of discrimination for the 'Normal' class.
 
-\pagebreak
 % ------ lstm
 
 \subsection{Results of LSTM}
@@ -432,6 +460,8 @@ The KNN model achieved an accuracy of 54.46\%, which is considerably lower than 
 
 \vspace{0.1em}
 
+\pagebreak
+
 \begin{center}
     \textbf{ROC Curve Areas for Each Class} \\[0.5em]
     \begin{tabular}{|l|c|}
@@ -447,18 +477,23 @@ The KNN model achieved an accuracy of 54.46\%, which is considerably lower than 
 
 \vspace{0.1em}
 
-\begin{figure}[h!]  
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=0.7\textwidth]{Images/LSTM Confusion Matrix.png}  
-    \caption{Confusion Matrix (LSTM)}
-    \label{LSTMCM}  % Label for referencing the figure
-\end{figure}
-
-\begin{figure}[h!]  
-    \centering
-    \includegraphics[width=0.7\textwidth]{Images/LSTM ROC.png}  
-    \caption{ROC AUC (LSTM)}
-    \label{LSTMROC}  % Label for referencing the figure
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/LSTM Confusion Matrix.png}
+        \caption{Confusion Matrix (LSTM)}
+        \label{LSTMCM}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/LSTM ROC.png}
+        \caption{ROC AUC (LSTM)}
+        \label{LSTMROC}  % Label for referencing the subfigure
+    \end{subfigure}
+    \caption{Evaluation Results for LSTM}
+    \label{fig:lstm_comparison}
 \end{figure}
 
 \noindent
@@ -467,9 +502,12 @@ The LSTM model achieved an accuracy of 84.91\%, indicating strong performance. T
 
 % ----------- hyperparameter tuning
 
+\pagebreak
+
 \subsection{Results of Hyperparameter Tuning}
 
-\subsubsection{Logistic Regression}
+\noindent
+\textbf{Logistic Regression}
 \begin{center}
     \textbf{Hyperparameter Tuning on Logistic Regression} \\[0.5em]
     \begin{tabular}{|l|c|}
@@ -511,27 +549,32 @@ The LSTM model achieved an accuracy of 84.91\%, indicating strong performance. T
     \end{tabular}
 \end{center}
 
-\begin{figure}[h!]  
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=0.9\textwidth]{Images/HP LR CM.png}  
-    \caption{Classification Matrix after Hyperparameter Tuning (Logistic Regression)}
-    \label{LSTMROC2}  % Label for referencing the figure
-\end{figure}
-
-\begin{figure}[h!]  
-    \centering
-    \includegraphics[width=0.9\textwidth]{Images/HP LR ROC.png}  
-    \caption{ROC AUC after Hyperparamter Tuning (Logistic Regression)}
-    \label{LSTMROC3}  % Label for referencing the figure
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/HP LR CM.png}
+        \caption{Classification Matrix after Hyperparameter Tuning (Logistic Regression)}
+        \label{LSTMROC2}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/HP LR ROC.png}
+        \caption{ROC AUC after Hyperparameter Tuning (Logistic Regression)}
+        \label{LSTMROC3}  % Label for referencing the subfigure
+    \end{subfigure}
+    \caption{Evaluation Results after Hyperparameter Tuning (Logistic Regression)}
+    \label{fig:hp_lr_comparison}
 \end{figure}
 
 \noindent
 The results of hyperparameter tuning on the Logistic Regression model show that the best hyperparameters were a solver of \texttt{liblinear}, a penalty of \texttt{l2}, and a regularization parameter (\texttt{C}) of 1. The model achieved an overall accuracy of 87.72\%, with high performance across most classes. The classification report reveals that the model performs well on \texttt{normal} class with an accuracy of 92\% in predicting this class, whereas performance on \texttt{bipolar} is slightly lower \(64\% F1-score\). The ROC AUC scores indicate that the model is highly effective in distinguishing between different classes, with \texttt{normal} achieving a near-perfect AUC of 0.99, followed closely by \texttt{depression} at 0.96. These results suggest that the model is well-tuned, particularly for classes like \texttt{normal} and \texttt{anxiety}.
 
-\pagebreak
-
 % ----------- knn hpt
-\subsubsection{K-Nearest Neighbours}
+\vspace{1.5em}
+\noindent
+\textbf{K-Nearest Neighbours}
 \begin{center}
     \textbf{Hyperparameter Tuning on k-NN} \\[0.5em]
     \begin{tabular}{|l|c|}
@@ -572,25 +615,31 @@ The results of hyperparameter tuning on the Logistic Regression model show that 
     \end{tabular}
 \end{center}
 
-\begin{figure}[h!]  
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=0.9\textwidth]{Images/HP KNN CM.png}  
-    \caption{Classification Matrix after Hyperparameter Tuning (KNN)}
-    \label{LSTMROC4}  % Label for referencing the figure
-\end{figure}
-
-\begin{figure}[h!]  
-    \centering
-    \includegraphics[width=0.9\textwidth]{Images/HP KNN ROC.png}  
-    \caption{ROC AUC after Hyperparameter Tuning (KNN)}
-    \label{LSTMROC5}  % Label for referencing the figure
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/HP KNN CM.png}
+        \caption{Classification Matrix after Hyperparameter Tuning (KNN)}
+        \label{LSTMROC4}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/HP KNN ROC.png}
+        \caption{ROC AUC after Hyperparameter Tuning (KNN)}
+        \label{LSTMROC5}  % Label for referencing the subfigure
+    \end{subfigure}
+    \caption{Evaluation Results after Hyperparameter Tuning (KNN)}
+    \label{fig:hp_knn_comparison}
 \end{figure}
 
 \noindent
 The results of hyperparameter tuning on the k-Nearest Neighbors (k-NN) model show that the best hyperparameters were \texttt{weights} set to \texttt{distance}, \texttt{n\_neighbors} set to 10, and \texttt{metric} set to \texttt{euclidean}. Despite these optimizations, the model achieved an overall accuracy of 52.03\%, which is relatively low. The classification report indicates that the model struggled to effectively predict the \texttt{anxiety} and \texttt{PTSD} classes, with particularly low recall values (0.23 and 0.10, respectively). However, it performed reasonably well on the \texttt{normal} class with an F1-score of 0.69. The ROC AUC scores reflect this by showing relatively poor performance for \texttt{bipolar} (0.67) and \texttt{PTSD} (0.71), while \texttt{normal} and \texttt{depression} had slightly better values at 0.79 each. These results suggest that k-NN is not the best model for this dataset, as it fails to consistently classify the minority classes effectively. 
 
-\pagebreak
-\subsubsection{Support Vector Machine}
+\vspace{1.5em}
+\noindent
+\textbf{Support Vector Machine}
 \begin{center}
     \textbf{Hyperparameter Tuning on SVM} \\[0.5em]
     \begin{tabular}{|l|c|}
@@ -618,6 +667,7 @@ The results of hyperparameter tuning on the k-Nearest Neighbors (k-NN) model sho
     \end{tabular}
 \end{center}
 
+\pagebreak
 
 \begin{center}
     \textbf{ROC Curve Areas for Each Class} \\[0.5em]
@@ -632,26 +682,31 @@ The results of hyperparameter tuning on the k-Nearest Neighbors (k-NN) model sho
     \end{tabular}
 \end{center}
 
-\begin{figure}[h!]  
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=0.9\textwidth]{Images/HP SVM CM.png}  
-    \caption{Classification Matrix after Hyperparameter Tuning (SVM)}
-    \label{LSTMROC6}  % Label for referencing the figure
-\end{figure}
-
-\begin{figure}[h!]  
-    \centering
-    \includegraphics[width=0.9\textwidth]{Images/HP SVM ROC.png}  
-    \caption{ROC AUC after Hyperparameter Tuning (SVM)}
-    \label{LSTMROC}  % Label for referencing the figure
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/HP SVM CM.png}
+        \caption{Classification Matrix after Hyperparameter Tuning (SVM)}
+        \label{LSTMROC6}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/HP SVM ROC.png}
+        \caption{ROC AUC after Hyperparameter Tuning (SVM)}
+        \label{LSTMROC}  % Label for referencing the subfigure
+    \end{subfigure}
+    \caption{Evaluation Results after Hyperparameter Tuning (SVM)}
+    \label{fig:hp_svm_comparison}
 \end{figure}
 
 \noindent
 The results of hyperparameter tuning on the Support Vector Machine (SVM) model reveal that the best hyperparameters were \texttt{kernel} set to \texttt{linear}, \texttt{gamma} set to \texttt{scale}, and \texttt{C} set to 1. With these settings, the model achieved an overall accuracy of 85.13\%. The classification report indicates solid performance across most classes, with \texttt{normal} achieving the highest F1-score of 0.95, followed by \texttt{depression} at 0.72 and \texttt{anxiety} at 0.74. The \texttt{bipolar} class had a slightly lower F1-score of 0.61, indicating that the model was less effective in distinguishing this class. The ROC AUC values were strong for most classes, with \texttt{normal} reaching 0.98 and \texttt{depression}, \texttt{PTSD}, and \texttt{anxiety} all scoring above 0.90, showing that the SVM model effectively discriminates between the classes. Overall, the SVM model performed well on this dataset, particularly for the \texttt{normal} and \texttt{anxiety} classes, making it a strong contender for mental health issue classification.
 
-
-\pagebreak
-\subsubsection{Naive Bayes}
+\vspace{1.5em}
+\noindent
+\textbf{Naive Bayes}
 \begin{center}
     \textbf{Hyperparameter Tuning on Naive Bayes} \\[0.5em]
     \begin{tabular}{|l|c|}
@@ -690,25 +745,35 @@ The results of hyperparameter tuning on the Support Vector Machine (SVM) model r
     \end{tabular}
 \end{center}
 
-\begin{figure}[h!]  
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=0.9\textwidth]{Images/HP NB CM.png}  
-    \caption{Classification Matrix after Hyperparameter Tuning (Naive Bayes)}
-    \label{LSTMROC7}  % Label for referencing the figure
-\end{figure}
-
-\begin{figure}[h!]  
-    \centering
-    \includegraphics[width=0.9\textwidth]{Images/HP NB ROC.png}  
-    \caption{ROC AUC after Hyperparameter Tuning (Naive Bayes)}
-    \label{LSTMROC8}  % Label for referencing the figure
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/HP NB CM.png}
+        \caption{Classification Matrix after Hyperparameter Tuning (Naive Bayes)}
+        \label{LSTMROC7}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/HP NB ROC.png}
+        \caption{ROC AUC after Hyperparameter Tuning (Naive Bayes)}
+        \label{LSTMROC8}  % Label for referencing the subfigure
+    \end{subfigure}
+    \caption{Evaluation Results after Hyperparameter Tuning (Naive Bayes)}
+    \label{fig:hp_nb_comparison}
 \end{figure}
 
 \noindent
 The results of hyperparameter tuning on the Naive Bayes model show that the best hyperparameter was \texttt{alpha} set to 0.2914. With this optimal value, the model achieved an accuracy of 83.95\%. The classification report reveals that the \texttt{normal} class performed the best, with a high F1-score of 0.94, followed by \texttt{PTSD} at 0.76. The \texttt{anxiety} class achieved a solid F1-score of 0.72, while \texttt{bipolar} and \texttt{depression} had lower scores. The ROC AUC curve areas demonstrate strong performance across all classes, with \texttt{normal} reaching a perfect 0.99 and the other classes scoring above 0.90. Overall, the Naive Bayes model performed well, especially in identifying \texttt{normal} and \texttt{PTSD}, making it a good candidate for mental health issue classification. After performing hyperparameter tuning using RandomizedSearchCV, Logistic Regression emerged as the best-performing model for mental health classification. The model achieved an accuracy of 87.72\%, demonstrating its strong ability to correctly classify mental health issues based on text data. The best hyperparameters found during tuning were \texttt{'solver': 'liblinear', 'penalty': 'l2', 'C': 1}, which contributed to the model's robustness and efficiency. In terms of classification performance, Logistic Regression showed a high recall and precision, especially for classes like \textit{normal}, with a recall of 0.99, indicating its proficiency in identifying the most prevalent class in the dataset. 
 
+\vspace{1em}
+
+\noindent 
+K-Nearest Neighbors (KNN) performs significantly poorly on this dataset compared to other algorithms, both before and after hyperparameter tuning. The dataset used, which includes Reddit posts with corresponding mental health labels, presents challenges for KNN due to its reliance on distance-based metrics. Specifically, KNN uses the distance between data points to classify them, but this approach is sensitive to the scale and distribution of features. In the case of text data, the feature space can be sparse and high-dimensional, making it difficult for KNN to find meaningful relationships between the posts and their associated mental health labels. After hyperparameter tuning, KNN was optimized with parameters such as \textbf{weights='distance'}, \textbf{n\_neighbors=10}, and \textbf{metric='euclidean'}, yet its performance remains suboptimal. This suggests that KNN struggles with the complexities inherent in text classification tasks, where the relationships between features (such as words or phrases in a Reddit post) are often non-linear and context-dependent. Despite tuning, the algorithm's performance metrics—accuracy, precision, recall, and F1-score—remain notably lower than those of other algorithms like Logistic Regression, Naive Bayes, or SVM. Additionally, KNN's inability to capture these subtleties in language means it performs poorly, particularly in distinguishing between categories like anxiety, bipolar disorder, or PTSD, where the text patterns may be more nuanced. Overall, KNN's reliance on proximity without considering the richer context of textual data likely contributes to its lower performance on this mental health classification task.
+
 % -------------- Adding transformer
-\subsection{Transformer based model}
+\subsection{Results from Transformer based model}
 \begin{center}
     \textbf{Classification Report} \\[0.5em]
     \begin{tabular}{|l|c|c|c|c|}
@@ -738,24 +803,28 @@ The results of hyperparameter tuning on the Naive Bayes model show that the best
     \end{tabular}
 \end{center}
 
-\begin{figure}[h!]  
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=0.75\textwidth]{Images/T CM.png}  
-    \caption{Confusion Matrix for Transformer based Model}
-    \label{dfdl145}  % Label for referencing the figure
-\end{figure}
-
-\begin{figure}[h!]  
-    \centering
-    \includegraphics[width=0.75\textwidth]{Images/T ROC.png}  
-    \caption{ROC AUC for Transformer based Model}
-    \label{dfdl145}  % Label for referencing the figure
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/T CM.png}
+        \caption{Confusion Matrix for Transformer based Model}
+        \label{dfdl145}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/T ROC.png}
+        \caption{ROC AUC for Transformer based Model}
+        \label{dfdl146}  % Updated label for referencing the subfigure
+    \end{subfigure}
+    \caption{Evaluation Results for Transformer based Model}
+    \label{fig:transformer_comparison}
 \end{figure}
 
 \noindent 
 The classification report and ROC AUC scores for your transformer-based model demonstrate strong performance across all classes, reflecting its ability to effectively handle the nuances of mental health text. The model achieved high precision, recall, and F1-scores, particularly for the "Normal" and "Anxiety" classes, where the precision and recall values were very high. This indicates that the model is good at identifying these conditions with minimal false positives and negatives. The high ROC AUC scores, ranging from 0.94 to 0.99 for each class, further highlight the model's ability to distinguish between different mental health conditions, with "Normal" and "Anxiety" showing particularly strong discriminatory power. The transformer-based architecture has likely contributed to these results by enabling the model to capture the complex relationships and contextual cues present in the text, which traditional models might struggle to identify. The pre-training on large datasets and fine-tuning for specific tasks has likely improved the model's ability to generalize across various mental health issues, contributing to the high accuracy of 88.5\%. This model's ability to balance performance across both major and minor classes is reflected in its macro and weighted averages, which show that it handles the class imbalance well and performs effectively on all categories. The transformer model's ability to process long-range dependencies and understand contextual relationships in the text has clearly enhanced its ability to classify mental health issues accurately, resulting in improved overall performance.
 
-\pagebreak
 
 \begin{figure}[h!]  
     \centering
@@ -770,13 +839,6 @@ The classification report and ROC AUC scores for your transformer-based model de
     \caption{Result Comparison after Hyperparameter Tuning}
     \label{dfdl123}  % Label for referencing the figure
 \end{figure}
-
-\vspace{1em}
-
-\noindent 
-K-Nearest Neighbors (KNN) performs significantly poorly on this dataset compared to other algorithms, both before and after hyperparameter tuning. The dataset used, which includes Reddit posts with corresponding mental health labels, presents challenges for KNN due to its reliance on distance-based metrics. Specifically, KNN uses the distance between data points to classify them, but this approach is sensitive to the scale and distribution of features. In the case of text data, the feature space can be sparse and high-dimensional, making it difficult for KNN to find meaningful relationships between the posts and their associated mental health labels. After hyperparameter tuning, KNN was optimized with parameters such as \textbf{weights='distance'}, \textbf{n\_neighbors=10}, and \textbf{metric='euclidean'}, yet its performance remains suboptimal. This suggests that KNN struggles with the complexities inherent in text classification tasks, where the relationships between features (such as words or phrases in a Reddit post) are often non-linear and context-dependent. Despite tuning, the algorithm's performance metrics—accuracy, precision, recall, and F1-score—remain notably lower than those of other algorithms like Logistic Regression, Naive Bayes, or SVM. Additionally, KNN's inability to capture these subtleties in language means it performs poorly, particularly in distinguishing between categories like anxiety, bipolar disorder, or PTSD, where the text patterns may be more nuanced. Overall, KNN's reliance on proximity without considering the richer context of textual data likely contributes to its lower performance on this mental health classification task. Other algorithms, particularly those that are more suited for high-dimensional and sparse data (like Logistic Regression or SVM), show much better results as they can better account for the underlying patterns in the Reddit posts.
-
-
 
 % ------------------ Different Vectorization ---------
 \subsection{Comparison of different tokenizations}
@@ -820,13 +882,14 @@ The reason for selecting Bag of Words (BoW) for LR, NB, and SVM, and TFIDF for X
 \vspace{1em}
 
 \noindent
-On the other hand, TFIDF takes into account not only the frequency of words in a document but also their importance in the entire corpus. Words that occur frequently across many documents are weighted lower, while words that are more specific to a particular document are given more importance. This approach is particularly useful for models like XGBoost, which can handle the more complex and rich feature sets that TFIDF generates. The increased dimensionality of TFIDF features provides a better representation of the data, which XGBoost leverages to improve accuracy. Combining BoW for LR, NB, and SVM with TFIDF for XGBoost ensures that the strengths of both simpler and more complex feature extraction methods are utilized. The simpler methods prevent the models from being overwhelmed by excessive features, while TFIDF provides more nuanced features for XGBoost, leading to improved accuracy.
+On the other hand, TFIDF takes into account not only the frequency of words in a document but also their importance in the entire corpus. Words that occur frequently across many documents are weighted lower, while words that are more specific to a particular document are given more importance. This approach is particularly useful for models like XGBoost, which can handle the more complex and rich feature sets that TFIDF generates. The increased dimensionality of TFIDF features provides a better representation of the data, which XGBoost leverages to improve accuracy. Combining BoW for LR, NB, and SVM with TFIDF for XGBoost ensures that the strengths of both simpler and more complex feature extraction methods are utilized. The simpler methods prevent the models from being overwhelmed by excessive features, while TFIDF provides more nuanced features for XGBoost, leading to improved accuracy. 
 
 \vspace{1em}
 
 \noindent
 Ultimately, the combination of \textbf{BoW} and \textbf{TFIDF} strikes a balance between simplicity and complexity, ensuring that each model works efficiently and effectively within the ensemble without causing undue computational strain. This balanced approach helps to maintain both high accuracy and manageable computational requirements, making it the best choice for feature extraction in this scenario.
 
+\pagebreak
 
 \subsection{Results from Ensemble Model Training and Testing}
 \subsubsection{Ensemble Model 1}
@@ -875,18 +938,24 @@ Ultimately, the combination of \textbf{BoW} and \textbf{TFIDF} strikes a balance
     \end{tabular}
 \end{center}
 
-\begin{figure}[h!]  
-    \centering
-    \includegraphics[width=0.7\textwidth]{Images/EM CM.png}  
-    \caption{Confusion Matrix for Ensemble Model 1}
-    \label{dfdl3123}  % Label for referencing the figure
-\end{figure}
 
-\begin{figure}[h!]  
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=0.7\textwidth]{Images/EM ROC.png}  
-    \caption{ROC AUC Curve for Ensemble Model 1}
-    \label{dfdl12443}  % Label for referencing the figure
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/EM CM.png}
+        \caption{Confusion Matrix for Ensemble Model 1}
+        \label{dfdl3123}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/EM ROC.png}
+        \caption{ROC AUC Curve for Ensemble Model 1}
+        \label{dfdl12443}  % Label for referencing the subfigure
+    \end{subfigure}
+    \caption{Evaluation Results for Ensemble Model 1}
+    \label{fig:ensemble_model_comparison}
 \end{figure}
 
 
@@ -901,14 +970,6 @@ to distinguish between different classes. The AUC score ranges from 0 to 1, with
 \noindent
 This ensemble model, combining Logistic Regression and XGBoost, is highly effective for the mental health classification web application due to its ability to leverage the strengths of both algorithms. Logistic Regression provides a simple yet powerful linear approach to classification, offering interpretability and efficiency, while XGBoost excels at handling complex, non-linear relationships with its gradient boosting framework, enabling better accuracy and robustness. By stacking these models, the ensemble approach mitigates the individual weaknesses of each algorithm—Logistic Regression's limitations in capturing non-linear patterns and XGBoost's susceptibility to overfitting on small datasets—resulting in a more balanced, accurate, and generalizable model. This synergy ensures that the mental health classification web application delivers reliable, high-precision predictions across diverse text-based inputs.
 
-\begin{figure}[h!]  
-    \centering
-    \includegraphics[width=1.0\textwidth]{Images/EM RESULT.png}  
-    \caption{Comparison of Base models and Ensemble Model1}
-    \label{dfdl1244883}  % Label for referencing the figure
-\end{figure}
-
-\pagebreak
 
 \subsubsection{Ensemble Model 2}
 
@@ -943,6 +1004,8 @@ This ensemble model, combining Logistic Regression and XGBoost, is highly effect
     \end{tabular}
 \end{center}
 
+\pagebreak
+
 \begin{center}
     \textbf{ROC AUC Scores for Each Class} \\[0.5em]
     \begin{tabular}{|c|c|}
@@ -956,25 +1019,23 @@ This ensemble model, combining Logistic Regression and XGBoost, is highly effect
     \end{tabular}
 \end{center}
 
-\begin{figure}[h!]  
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=0.7\textwidth]{Images/EM2 CM.png}  
-    \caption{Confusion Matrix for Ensemble Model 2}
-    \label{em2 cm}  % Label for referencing the figure
-\end{figure}
-
-\begin{figure}[h!]  
-    \centering
-    \includegraphics[width=0.7\textwidth]{Images/EM2 ROC.png}  
-    \caption{ROC AUC for Ensemble Model 2}
-    \label{em2 roc}  % Label for referencing the figure
-\end{figure}
-
-\begin{figure}[h!]  
-    \centering
-    \includegraphics[width=1.0\textwidth]{Images/EM2 RESULT.png}  
-    \caption{Comparison of Base models and Ensemble Model2}
-    \label{lstm arch}  % Label for referencing the figure
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/EM2 CM.png}
+        \caption{Confusion Matrix for Ensemble Model 2}
+        \label{em2 cm}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/EM2 ROC.png}
+        \caption{ROC AUC for Ensemble Model 2}
+        \label{em2 roc}  % Label for referencing the subfigure
+    \end{subfigure}
+    \caption{Evaluation Results for Ensemble Model 2}
+    \label{fig:ensemble_model2_comparison}
 \end{figure}
 
 \noindent
@@ -992,6 +1053,8 @@ Additionally, XGBoost is highly efficient in terms of both computation and memor
 
 \noindent
 While using models like XGBoost, SVM, Naive Bayes, and LSTM as meta-learners in ensemble modeling can provide high accuracy, these models can also be prone to \textbf{overfitting}, especially when they are trained on the predictions of multiple base models. Overfitting occurs when the model learns the noise or patterns specific to the training data that do not generalize well to unseen data. For XGBoost, although it is a powerful and highly flexible model, its ability to capture complex relationships between features can lead to overfitting, especially when the base models are already strong. When combined with a large number of features from multiple base models, the XGBoost meta-learner may excessively adjust to small fluctuations in the training data, leading to high performance on the training set but poor generalization to new data. This risk is heightened if the base models already provide overlapping or correlated predictions, which can reinforce irrelevant patterns for the meta-learner. Similarly, SVM as a meta-learner can overfit in ensemble setups. SVM, especially when using a non-linear kernel, is very sensitive to the scale of features and may become highly specialized to the training data if not properly tuned. When stacking the output of multiple base models, each with its own biases and prediction tendencies, the SVM meta-learner may overemphasize specific instances that are not representative of the general data distribution. This can lead to poor performance on new, unseen data despite strong accuracy on the training set. Naive Bayes is another model that can overfit when used as a meta-learner. Although it assumes independence between features, stacking it with predictions from base models may violate this assumption, leading to overly optimistic performance during training. Naive Bayes models are particularly sensitive to correlated features, and in an ensemble, where the base models might produce similar predictions, the meta-learner might end up fitting to these correlations too closely. This results in high training accuracy but a significant drop in performance when applied to unseen data. Finally, LSTM models, although excellent at capturing long-range dependencies in sequential data, can also overfit when used as a meta-learner. LSTMs are prone to memorizing the training data, especially when the number of parameters in the model is large relative to the size of the training set. In ensemble settings, the LSTM meta-learner might overly adapt to the specific features of the training data, particularly when the base models' predictions are very similar, reinforcing the same patterns in the data. This can cause the LSTM meta-learner to perform well on training data but fail to generalize effectively to new data.
+
+\pagebreak
 
 \subsubsection{Ensemble Model 3}
 
@@ -1025,8 +1088,6 @@ While using models like XGBoost, SVM, Naive Bayes, and LSTM as meta-learners in 
     \end{tabular}
 \end{center}
 
-\pagebreak
-
 \begin{center}
     \textbf{ROC AUC Scores} \\[0.5em]
     \begin{tabular}{|c|c|}
@@ -1039,26 +1100,26 @@ While using models like XGBoost, SVM, Naive Bayes, and LSTM as meta-learners in 
     \end{tabular}
 \end{center}
 
-\begin{figure}[h!]  
+
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=0.7\textwidth]{Images/EM3 CM.png}  
-    \caption{Confusion Matrix for Ensemble Model 3}
-    \label{lstm arch}  % Label for referencing the figure
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/EM3 CM.png}
+        \caption{Confusion Matrix for Ensemble Model 3}
+        \label{em3 cm}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/EM3 ROC.png}
+        \caption{ROC AUC for Ensemble Model 3}
+        \label{em3 roc}  % Label for referencing the subfigure
+    \end{subfigure}
+    \caption{Evaluation Results for Ensemble Model 3}
+    \label{fig:ensemble_model3_comparison}
 \end{figure}
 
-\begin{figure}[h!]  
-    \centering
-    \includegraphics[width=0.7\textwidth]{Images/EM3 ROC.png}  
-    \caption{ROC AUC for Ensemble Model 3}
-    \label{lstm arch}  % Label for referencing the figure
-\end{figure}
-
-\begin{figure}[h!]  
-    \centering
-    \includegraphics[width=1.0\textwidth]{Images/EM3 RESULT.png}  
-    \caption{Comparison of Base Models and Ensemble Model3}
-    \label{lstm arch}  % Label for referencing the figure
-\end{figure}
 
 \noindent
 The confusion matrix for the Random Forest model shows the performance of the classifier for each of the five mental health issues. For anxiety, there were 389 true positives, 2 false positives, 4 false negatives, and 2 misclassifications into other classes, demonstrating the model's high precision and recall for this category. Similarly, the bipolar disorder class had 351 true positives, 1 false positive, and 28 misclassifications into other classes, indicating strong but slightly lower recall compared to other categories. Depression exhibited robust performance with 377 true positives, only 6 misclassifications into other classes, and minimal false negatives. The normal class had an outstanding result with 2127 true positives, 8 false positives, and only 1 false negative, highlighting the model’s exceptional accuracy for the majority class. For the PTSD class, there were 386 true positives, 5 misclassifications into other classes, and minimal false positives and negatives, showcasing excellent performance. Overall, the confusion matrix indicates that the Random Forest model is highly effective across all classes, with very few errors. The consistent performance across all classes underscores the model's ability to distinguish between different mental health conditions with high accuracy and reliability. Random Forest is particularly effective at mitigating overfitting because it uses techniques like bootstrapping and random feature selection when constructing decision trees. This ensures that individual trees focus on different aspects of the data, reducing the risk of over-reliance on noise or specific patterns that might lead to overfitting. In contrast, linear models like Logistic Regression are inherently more sensitive to overfitting in high-dimensional spaces or when the data contains multicollinearity. Logistic Regression assumes a linear relationship between features and the target variable, making it less flexible in capturing complex patterns and more prone to memorizing specific data points, especially when regularization techniques are not carefully tuned. Despite experimenting with alternative configurations, such as N-Gram for XGBoost or TF-IDF for SVM, the selected ensemble model remains one of the optimal choices. The minor accuracy gains offered by the selected model are complemented by its computational efficiency, making it a practical solution for deployment. Random Forest’s robust handling of overfitting and ability to generalize effectively across different inputs further solidify its suitability as the meta-learner, ensuring the web application remains both efficient and reliable in its predictive capabilities.
@@ -1110,25 +1171,23 @@ The confusion matrix for the Random Forest model shows the performance of the cl
     \end{tabular}
 \end{center}
 
-\begin{figure}[h!]  
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=0.7\textwidth]{Images/BAG CM.png}  
-    \caption{Confusion Matrix for Ensemble Model4}
-    \label{lstm arch}  % Label for referencing the figure
-\end{figure}
-
-\begin{figure}[h!]  
-    \centering
-    \includegraphics[width=0.7\textwidth]{Images/BAG ROC.png}  
-    \caption{ROC AUC for Ensemble Model4}
-    \label{lstm arch}  % Label for referencing the figure
-\end{figure}
-
-\begin{figure}[h!]  
-    \centering
-    \includegraphics[width=1.0\textwidth]{Images/BAG RESULT.png}  
-    \caption{Comparison of Base Models and Ensemble Model4}
-    \label{lstm arch}  % Label for referencing the figure
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/BAG CM.png}
+        \caption{Confusion Matrix for Ensemble Model 4}
+        \label{bag cm}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/BAG ROC.png}
+        \caption{ROC AUC for Ensemble Model 4}
+        \label{bag roc}  % Label for referencing the subfigure
+    \end{subfigure}
+    \caption{Evaluation Results for Ensemble Model 4}
+    \label{fig:ensemble_model4_comparison}
 \end{figure}
 
 \noindent
@@ -1137,6 +1196,7 @@ The classification results for the Bagging model demonstrate high performance, w
 \noindent
 Bagging classifiers, while highly effective at improving predictive accuracy, have a tendency to overfit the training data when used as meta-learners in ensemble models. This is due to the way bagging works, which involves training multiple base models on bootstrapped subsets of the training data and averaging their predictions. Although this method reduces variance in individual models, it can inadvertently lead to overfitting. Bagging classifiers aggregate outputs from high-variance base models, and when used as a meta-learner, the bagging process leverages outputs from already strong individual classifiers such as SVM, XGBoost, and LSTM. This additional layer of aggregation may amplify the model's capacity to memorize the training data, particularly when the meta-learner is exposed to intricate patterns that are not generalizable to unseen data. This can result in high accuracy on the training set but poor generalization to new data. The Bagging classifier can achieve an impressive accuracy, such as 99.77\%, but this performance might not hold in real-world scenarios due to its reduced ability to generalize. When the model encounters slight variations in the testing dataset, its overfitting nature can cause the model to fail in maintaining consistent accuracy, leading to unreliable predictions. Bagging classifiers also do not inherently introduce the same level of regularization that Random Forest does. Random Forest uses feature-level randomness, selecting a subset of features for splitting at each node, which helps reduce overfitting by preventing any single feature from dominating the splits. Bagging classifiers, on the other hand, utilize all available features for training, which increases the likelihood of the model fitting noise in the training data, especially in high-dimensional datasets. Moreover, Bagging classifiers can be unstable and sensitive to minor changes in input data or individual base model outputs. This instability can further reduce the reliability of the model in practical applications, where consistency in predictions is crucial. In contrast, Random Forest, despite having slightly lower accuracy than the Bagging classifier, is better suited as a meta-learner. Random Forest introduces feature-level randomness, which prevents overfitting and enables the model to generalize well to unseen data. The bias-variance tradeoff is better balanced in Random Forest, which allows it to perform consistently across different datasets. Another significant advantage of using Random Forest as a meta-learner is its ability to maintain stability when retrained with new data inputs. For example, when retraining with user inputs, the accuracy fluctuations of the Random Forest meta-learner are minimal, indicating its robustness and ensuring stable performance over time. Additionally, Random Forest classifiers are computationally more efficient than Bagging classifiers, making them a more practical choice for real-time systems, such as those in web applications.
 
+\pagebreak
 
 \subsubsection{Ensemble Model 5}
 
@@ -1153,6 +1213,7 @@ Bagging classifiers, while highly effective at improving predictive accuracy, ha
         \textbf{Mean Validation Accuracy} & \textbf{96.98\%} \\ \hline
     \end{tabular}
 \end{center}
+
 
 \begin{center}
     \textbf{Classification Report for Ensemble Model5} \\[0.5em]
@@ -1184,26 +1245,25 @@ Bagging classifiers, while highly effective at improving predictive accuracy, ha
     \end{tabular}
 \end{center}
 
-\begin{figure}[h!]  
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=0.7\textwidth]{Images/BLD CM.png}  
-    \caption{Confusion Matric for Ensemble Model5}
-    \label{lstm arch}  % Label for referencing the figure
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/BLD CM.png}
+        \caption{Confusion Matrix for Ensemble Model 5}
+        \label{bld cm}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/BLD ROC.png}
+        \caption{ROC AUC for Ensemble Model 5}
+        \label{bld roc}  % Label for referencing the subfigure
+    \end{subfigure}
+    \caption{Evaluation Results for Ensemble Model 5}
+    \label{fig:ensemble_model5_comparison}
 \end{figure}
 
-\begin{figure}[h!]  
-    \centering
-    \includegraphics[width=0.7\textwidth]{Images/BLD ROC.png}  
-    \caption{ROC AUC for Ensemble Model5}
-    \label{lstm arch}  % Label for referencing the figure
-\end{figure}
-
-\begin{figure}[h!]  
-    \centering
-    \includegraphics[width=1.0\textwidth]{Images/BLD RESULT.png}  
-    \caption{Comparison of Base Models and Ensemble Model5}
-    \label{lstm arch}  % Label for referencing the figure
-\end{figure}
 
 \noindent
 The Blending Meta-Learner model exhibits strong performance with a test accuracy of 97.17\%. The classification report highlights solid precision, recall, and F1-scores across all classes, confirming the model's ability to accurately classify mental health conditions. For anxiety, the precision, recall, and F1-score are 0.96, 0.95, and 0.96 respectively, indicating high accuracy in classifying anxiety. The bipolar class shows a precision of 0.94 and recall of 0.89, with an F1-score of 0.92. Depression has an excellent performance with precision, recall, and F1-score of 0.96, 0.95, and 0.95, respectively. The normal class shows near-perfect classification with precision of 0.98, recall of 0.99, and F1-score of 0.99, highlighting the model's ability to accurately predict the majority class. PTSD shows a precision of 0.97, recall of 0.97, and F1-score of 0.97, reflecting strong performance. The accuracy across all classes is 97\%, with the macro average F1-score being 0.96, and the weighted average F1-score being 0.97. The confusion matrix reveals minimal misclassifications, with anxiety, bipolar, and depression showing only a few misclassified instances, and the normal class showing very few errors. The ROC AUC scores indicate excellent model performance in distinguishing between classes, with perfect scores of 1.00 for anxiety, depression, normal, and PTSD, and a score of 0.99 for bipolar. Cross-validation results show consistency, with accuracies ranging from 96.77\% to 97.31\% and a mean validation accuracy of 96.98\%. The standard deviation of validation accuracy is 0.25\%, demonstrating the stability of the model across different folds. These results emphasize the effectiveness and reliability of the Blending Meta-Learner in predicting mental health conditions with minimal misclassifications and high consistency. However, despite these impressive results, stacking ensemble using Random Forest as the meta-learner is often preferred over this Blending model. The main reason for this is that stacking tends to be more effective in generalizing to unseen data because it leverages multiple models for training the meta-learner, which reduces the risk of overfitting. In contrast, Blending may result in overfitting as it typically uses a simpler approach of directly training the meta-learner on the predictions from base models without incorporating a cross-validation step.
@@ -1225,6 +1285,8 @@ The Blending Meta-Learner model exhibits strong performance with a test accuracy
         \textbf{Mean Validation Accuracy} & \textbf{94.93\%} \\ \hline
     \end{tabular}
 \end{center}
+
+\pagebreak
 
 \begin{center}
     \textbf{Classification Report for Ensemble Model6} \\[0.5em]
@@ -1255,26 +1317,25 @@ The Blending Meta-Learner model exhibits strong performance with a test accuracy
     \end{tabular}
 \end{center}
 
-\begin{figure}[h!]  
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=0.7\textwidth]{Images/WV CM.png}  
-    \caption{Confusion Matrix for Ensemble Model6}
-    \label{lstm arch}  % Label for referencing the figure
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/WV CM.png}
+        \caption{Confusion Matrix for Ensemble Model 6}
+        \label{wv cm}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/WV ROC.png}
+        \caption{ROC AUC for Ensemble Model 6}
+        \label{wv roc}  % Label for referencing the subfigure
+    \end{subfigure}
+    \caption{Evaluation Results for Ensemble Model 6}
+    \label{fig:ensemble_model6_comparison}
 \end{figure}
 
-\begin{figure}[h!]  
-    \centering
-    \includegraphics[width=0.7\textwidth]{Images/WV ROC.png}  
-    \caption{ROC for Ensemble Model6}
-    \label{lstm arch}  % Label for referencing the figure
-\end{figure}
-
-\begin{figure}[h!]  
-    \centering
-    \includegraphics[width=1.00\textwidth]{Images/WV RESULT.png}  
-    \caption{Comparison of Base Models and Ensemble Model6}
-    \label{lstm arch}  % Label for referencing the figure
-\end{figure}
 
 \noindent
 The Weighted Voting model achieved an accuracy of 95.15\% on the test set, showcasing solid performance across multiple mental health categories. The classification report reveals that the model performed particularly well in identifying "Normal" cases, with perfect recall (1.00) and high precision (0.95). While the "Bipolar" class showed the lowest recall (0.74) and precision (0.96), indicating some challenges in correctly identifying bipolar disorder, other classes like "Anxiety" and "PTSD" exhibited strong performance with high F1-scores (0.94 and 0.96, respectively). The confusion matrix further highlights a few misclassifications, with a notable number of "Bipolar" instances misclassified as other classes, particularly "Normal" and "Depression." The ROC AUC score of 0.99 for PTSD indicates that the model performed exceptionally well in distinguishing PTSD cases from the rest, though other classes had lower AUC values. Overall, the Weighted Voting model effectively handled the classification task with robust performance for most classes, but some room for improvement remains in distinguishing between certain mental health issues, particularly bipolar disorder.
@@ -1298,6 +1359,8 @@ While the Weighted Voting ensemble model shows a respectable accuracy of 94.93\%
         \textbf{Mean Validation Accuracy} & \textbf{98.03\%} \\ \hline
     \end{tabular}
 \end{center}
+
+\pagebreak
 
 \begin{center}
     \textbf{Classification Report for Ensemble Model7} \\[0.5em]
@@ -1328,18 +1391,23 @@ While the Weighted Voting ensemble model shows a respectable accuracy of 94.93\%
     \end{tabular}
 \end{center}
 
-\begin{figure}[h!]  
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=0.7\textwidth]{Images/EM T CM.png}  
-    \caption{Confusion Matrix for Ensemble Model7}
-    \label{lstm arch}  % Label for referencing the figure
-\end{figure}
-
-\begin{figure}[h!]  
-    \centering
-    \includegraphics[width=0.7\textwidth]{Images/EM T ROC.png}  
-    \caption{ROC AUC for Ensemble Model7}
-    \label{lstm arch}  % Label for referencing the figure
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/EM T CM.png}
+        \caption{Confusion Matrix for Ensemble Model 7}
+        \label{em_t cm}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/EM T ROC.png}
+        \caption{ROC AUC for Ensemble Model 7}
+        \label{em_t roc}  % Label for referencing the subfigure
+    \end{subfigure}
+    \caption{Evaluation Results for Ensemble Model 7}
+    \label{fig:ensemble_model7_comparison}
 \end{figure}
 
 \begin{figure}[h!]  
@@ -1350,7 +1418,7 @@ While the Weighted Voting ensemble model shows a respectable accuracy of 94.93\%
 \end{figure}
 
 \noindent
-The ensemble model, which leverages a Transformer-based model as the base learner along with Logistic Regression, Naive Bayes, SVM, LSTM, XGBoost, and Random Forest as the meta-learner, has achieved an impressive accuracy of 98.03\% on the test set. The classification report indicates high precision, recall, and F1-scores across all classes, with the model performing particularly well in detecting "Normal" and "PTSD" cases, where precision and recall are both very high. The confusion matrix reveals minimal misclassifications, further demonstrating the effectiveness of the ensemble approach in handling complex classification tasks. The perfect ROC AUC scores of 1.00 across all classes suggest that the model is able to distinguish between different mental health conditions with near-perfect specificity and sensitivity. This robust performance highlights the advantage of combining multiple models through ensemble learning, where the strengths of each model contribute to the overall improvement in classification accuracy.
+The ensemble model, which leverages a Transformer-based model as the base learner along with Logistic Regression, Naive Bayes, SVM, LSTM, XGBoost, and Random Forest as the meta-learner, has achieved an impressive accuracy of 98.03\% on the test set. The classification report indicates high precision, recall, and F1-scores across all classes, with the model performing particularly well in detecting "Normal" and "PTSD" cases, where precision and recall are both very high. The confusion matrix reveals minimal misclassifications, further demonstrating the effectiveness of the ensemble approach in handling complex classification tasks. The perfect ROC AUC scores of 1.00 across all classes suggest that the model is able to distinguish between different mental health conditions with near-perfect specificity and sensitivity. This robust performance highlights the advantage of combining multiple models through ensemble learning, where the strengths of each model contribute to the overall improvement in accuracy.
 
 \vspace{1em}
 
@@ -1406,6 +1474,8 @@ The hierarchical ensemble model implemented in this project addresses the challe
 \noindent
 The hierarchical structure of this approach aligns with distributed systems by effectively implementing data parallelism and task parallelism. By dividing the dataset into subsets, the computational load is distributed, preventing memory bottlenecks and ensuring resource optimization. Each subset is processed independently, enabling a modular design where tasks are decoupled. This design also enhances fault tolerance, as the failure of a single subset’s processing does not affect the others. Moreover, the scalability of the approach allows it to adapt to varying resource constraints. Adding more computational nodes makes it feasible to handle additional subsets or process the data faster, showcasing its adaptability and efficiency. The project also emphasizes the potential of this design to be implemented on distributed computing frameworks such as Apache Spark, TensorFlow Distributed, or PyTorch Distributed. These frameworks provide tools to split datasets, distribute tasks, and aggregate results seamlessly across multiple nodes. The distributed nature of the architecture ensures high throughput and reduces training time, making it suitable for scenarios involving large-scale datasets. The hierarchical ensemble model design is a future-ready solution that can transition seamlessly to distributed platforms, leveraging cloud services or on-premises high-performance computing clusters. The methodology combines the strengths of ensemble learning with the efficiencies of distributed systems to create a robust and scalable solution for modern data science challenges.
 
+\vspace{1em}
+
 \begin{figure}[h!]  
     \centering
     \includegraphics[width=1.0\textwidth]{Images/Distributed.png}  
@@ -1421,7 +1491,6 @@ The hierarchical structure of this approach aligns with distributed systems by e
     \label{lstm archi}  % Label for referencing the figure
 \end{figure}
 
-\pagebreak
 
 \noindent
 The second architecture optimizes the hierarchical ensemble approach by restructuring the model aggregation process to enhance scalability and computational efficiency. Instead of creating ensemble models for each of the $n$ subsets independently, models of the same type from all subsets are combined into a single ensemble for that type using Random Forest (or Logistic Regression) as the meta learner. This results in six intermediate ensemble models, one for each model type: Logistic Regression, Naive Bayes, SVM, XGBoost, LSTM, and Transformer. These intermediate ensemble models are then used to form the final ensemble model, where Random Forest acts as the meta learner. This architectural adjustment significantly reduces the number of intermediate ensemble models from $n$ to six while preserving the hierarchical structure, thereby maintaining a consistent three-layer design. The second architecture achieved an accuracy of 96.25\%. However, its design provides distinct advantages when dealing with much larger datasets or a higher number of subsets. As the dataset size increases, the number of subsets and computational nodes may also grow. In the previous architecture, this scaling would lead to a proportional increase in the number of intermediate ensemble models, which could strain computational resources and introduce inefficiencies in model aggregation. In contrast, the second architecture fixes the number of intermediate ensemble models at six, irrespective of the number of subsets, ensuring that the computational load remains manageable while scalability is maintained. Another significant improvement lies in the efficient use of hardware resources. In the second architecture, GPUs are utilized exclusively for training the LSTM and Transformer-based ensemble models, rather than being partially engaged across all intermediate models as in the first architecture. This selective usage of GPUs streamlines resource allocation, ensuring that the most computationally intensive models benefit from accelerated hardware while reducing unnecessary overhead for other model types. The use of Logistic Regression as the meta learner in the intermediate ensemble models further contributes to this efficiency. Logistic Regression is computationally lightweight and linear, making it an excellent choice for aggregating predictions across subsets without introducing excessive complexity. Its linearity ensures faster training while maintaining strong predictive performance, particularly for well-separated data classes. Random Forest as a meta-learner is a better option for considering overfitting issues. A key addition to the second architecture is the implementation of an efficient data bus for transferring models of the same type from different subsets to the respective intermediate nodes responsible for creating the type-specific ensemble. This structured flow of data and models ensures seamless communication between subsets and intermediate nodes, reducing latency and synchronization overhead. By fixing the number of intermediate ensemble models at six, the architecture limits the number of aggregation layers while still leveraging the diversity and complementary strengths of all base models. This design strikes a balance between computational efficiency and predictive performance, making it particularly advantageous for large-scale datasets. The second architecture's streamlined design, efficient resource utilization, and fixed number of intermediate ensemble models make it a robust and scalable solution for modern data science challenges. By addressing the potential bottlenecks of the first architecture while maintaining comparable performance, it provides a practical alternative for real-world applications where scalability and computational efficiency are critical.
@@ -1434,12 +1503,7 @@ Architecture 1 takes more time in cross-validation compared to Architecture 2 du
 \vspace{1em}
 
 \noindent
-To determine \( n \), the number of subsets, based on the size of the original dataset, it is crucial to consider computational efficiency, memory constraints, and sequential execution. Given that the dataset has \( D = 167,229 \) records and is processed sequentially in Google Colab with 12GB of RAM per node, the number of subsets \( n \) must strike a balance between memory usage and model performance.
-
-\vspace{1em}
-
-\noindent
-In this case, you chose \( n = 6 \) subsets, which implies a subset size \( S \) of:
+To determine \( n \), the number of subsets, based on the size of the original dataset, it is crucial to consider computational efficiency, memory constraints, and sequential execution. Given that the dataset has \( D = 167,229 \) records and is processed sequentially in Google Colab with 12GB of RAM per node, the number of subsets \( n \) must strike a balance between memory usage and model performance. In this case, you chose \( n = 6 \) subsets, which implies a subset size \( S \) of:
 
 \[
 S = \frac{D}{n} = \frac{167,229}{6} \approx 27,872 \, \text{records per subset}.
@@ -1455,22 +1519,16 @@ The choice of \( n = 6 \) is reasonable given the following factors:
 \noindent
 1. \textbf{Memory Constraints}: Google Colab provides 12GB of RAM. Each subset must fit within this memory while accommodating the model's requirements for training and validation. Processing approximately 27,833 records at a time is well-suited to this memory limit for most machine learning models, including Logistic Regression, SVM, LSTM, and Transformer-based models.
 
-\vspace{1em}
-
 \noindent
 2. \textbf{Sequential Execution}: Since the architectures are implemented sequentially, the number of subsets \( n \) does not need to align with the number of computational nodes. Instead, the goal is to divide the dataset into manageable chunks that reduce training time and memory overhead for each subset.
-
-\vspace{1em}
 
 \noindent
 3. \textbf{Performance and Aggregation}: With \( n = 6 \), both architectures remain computationally feasible. In Architecture 1, \( n = 6 \) leads to six independent intermediate ensemble models, which are aggregated into the final ensemble. In Architecture 2, models of the same type from all six subsets are combined into six intermediate ensemble models, one for each base model type.
 
-
 \vspace{1em}
 
 \noindent
-The choice of \( n = 6 \) also ensures that the dataset is sufficiently divided to prevent memory bottlenecks while allowing each subset to contribute meaningful insights to the ensemble. Larger values of \( n \) would reduce the subset size but increase the number of models to train, leading to longer execution times. Conversely, smaller values of \( n \) would increase the subset size, risking memory overflow in Colab. Here, the RAM usage per record is approximated based on empirical testing, and \( n \) can be dynamically adjusted if needed. Given that \( S \approx 27,833 \) records per subset fits comfortably within 12GB of RAM, the choice of \( n = 6 \) is both optimal and practical for sequential execution on Google Colab. This approach ensures efficient processing, reduces memory overhead, and maintains strong model performance in both architectures.
-
+The choice of \( n = 6 \) also ensures that the dataset is sufficiently divided to prevent memory bottlenecks while allowing each subset to contribute meaningful insights to the ensemble. Larger values of \( n \) would reduce the subset size but increase the number of models to train, leading to longer execution times. Conversely, smaller values of \( n \) would increase the subset size, risking memory overflow in Colab. Here, the RAM usage per record is approximated based on empirical testing, and \( n \) can be dynamically adjusted if needed. Given that \( S \approx 27,833 \) records per subset fits comfortably within 12GB of RAM, the choice of \( n = 6 \) is both optimal and practical.
 
 \pagebreak
 
