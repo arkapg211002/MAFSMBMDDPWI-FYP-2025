@@ -706,22 +706,6 @@ def analyze_audio_mood(video_path):
         high_freq_mfcc = np.mean(mfcc[8:13], axis=1)
         mean_high = np.mean(high_freq_mfcc)  # Scalar mean for high frequencies
 
-        # Now use these scalar means for classification
-        # if mean_high <= mean_low and mean_high <= mean_mid_low and mean_high <= mean_mid_high:
-        #     return "Audio sounds normal, with no dominant emotion detected"
-        # elif mean_mid_high <= mean_low and mean_mid_high <= mean_mid_low and mean_mid_high <= mean_high:
-        #     return "Audio sounds neutral, calm, or peaceful"
-        # elif mean_mid_low <= mean_low and mean_mid_low <= mean_mid_high and mean_mid_low <= mean_high:
-        #     return "Audio sounds slightly melancholic or neutral"
-        # elif mean_low <= mean_mid_low and mean_low <= mean_mid_high and mean_low <= mean_high:
-        #     return "Audio sounds calm or melancholic, with less intensity"
-        # elif mean_high > mean_low and mean_high > mean_mid_low and mean_high <= mean_mid_high:
-        #     return "Audio sounds depressive or anxious in nature"
-        # else :
-        #     return "Audio sounds upbeat and energetic (Happy)"
-        # response=get_audio_mood(audio_path)
-        # st.info(response)
-
         myfile = genai.upload_file(audio_path)
         prompt = "Classify the tone and mood of the given audio file based on the following conditions: For **tone**, choose from Calm (moderate pitch, smooth energy, consistent speech rate), Excited (high pitch, rapid speech, dynamic energy), Tense (strained voice, high zero-crossing rate, uneven energy), Flat (low pitch variation, monotone delivery, low spectral contrast), Confident (strong energy, clear articulation, stable rhythm), Fearful (high pitch, irregular pauses, trembling voice), Sad (low pitch, slow speech rate, reduced spectral brightness), or Angry (loud volume, fast speech rate, sharp spectral edges). For **mood**, choose from Relaxed (low tempo, smooth rhythm, low spectral variance), Happy (bright spectral centroid, high tempo, energetic rhythm), Worried (irregular rhythm, increased pauses, unstable pitch), Stressed (high energy, rapid speech, high zero-crossing rate), Melancholic (low tempo, soft volume, monotone delivery), Agitated (fast tempo, irregular pitch changes, high loudness), Detached (low energy, slow speech, long silences), or Energetic (high tempo, bright pitch, strong spectral roll-off). Provide a compact response with the classified tone and mood, and a concise summary of the analysis."
         result = gemini_model.generate_content([myfile, prompt])
@@ -729,35 +713,6 @@ def analyze_audio_mood(video_path):
 
     except Exception as e:
         st.error(f"Error analyzing audio mood: {str(e)}")
-
-def get_audio_mood(audio_path):
-    try:
-        # Load the audio file using librosa
-        audio, sr = librosa.load(audio_path, sr=None)  # Load with original sampling rate
-
-        # Convert audio to WAV format as a binary stream using soundfile
-        buffer = io.BytesIO()
-        sf.write(buffer, audio, sr, format='WAV')  # Write audio data to the buffer in WAV format
-        buffer.seek(0)
-        audio_data = buffer.read()
-
-        chat_session = gemini_model.start_chat(history=[])
-        prompt = f"Classify the tone and mood of the given audio file based on the following conditions: For **tone**, choose from Calm (moderate pitch, smooth energy, consistent speech rate), Excited (high pitch, rapid speech, dynamic energy), Tense (strained voice, high zero-crossing rate, uneven energy), Flat (low pitch variation, monotone delivery, low spectral contrast), Confident (strong energy, clear articulation, stable rhythm), Fearful (high pitch, irregular pauses, trembling voice), Sad (low pitch, slow speech rate, reduced spectral brightness), or Angry (loud volume, fast speech rate, sharp spectral edges). For **mood**, choose from Relaxed (low tempo, smooth rhythm, low spectral variance), Happy (bright spectral centroid, high tempo, energetic rhythm), Worried (irregular rhythm, increased pauses, unstable pitch), Stressed (high energy, rapid speech, high zero-crossing rate), Melancholic (low tempo, soft volume, monotone delivery), Agitated (fast tempo, irregular pitch changes, high loudness), Detached (low energy, slow speech, long silences), or Energetic (high tempo, bright pitch, strong spectral roll-off). Provide a compact response with the classified tone and mood, and a concise summary of the analysis."
-
-        # Prepare the list with the audio file and the prompt
-        files = [("audio.wav", audio_data, "audio/wav")]
-        inputs = [files, prompt]
-
-        # Send the message and audio file to the Gemini API
-        response = gemini_model.generate_content(inputs)
-
-        st.write("Hello")
-        st.write(response.text)
-        return response.text.strip()
-    except Exception as e:
-        print(f"Error: {e}")
-        st.error(f"An error occurred: {e}")
-        return ""
 
 # ----------------- Adding Retrain Model functionality
 # File path for dataset
