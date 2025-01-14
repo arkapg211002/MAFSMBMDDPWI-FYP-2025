@@ -1,17 +1,10 @@
 % --------------------------- Implementation ---------------------------------
 
-\pagebreak
 
 \section{Implementation}
 \subsection{Features From RM}
 \noindent
-For the initial prototype development, a subset of the requirements from the Requirement Matrix (RM) was carefully selected to focus on implementing core functionalities and demonstrating proof of concept. The selection was based on a combination of high-priority functional requirements that form the backbone of the system, ensuring that critical features are built and validated before expanding the scope.
-
-The requirements chosen for the prototype primarily involve data preprocessing, model training, and evaluation processes. These requirements were selected because they are fundamental to the project's success, ensuring that the data pipeline and model implementation work seamlessly together. This subset of features lays the groundwork for later integration with additional components and more complex functionality.
-
-The filtered part of the RM focuses on the following high-priority requirements: data cleaning and feature extraction, training of machine learning models, and evaluation of model performance using standard metrics. These requirements were identified as crucial because they directly impact the system's ability to handle data, learn patterns, and provide meaningful outputs. Without successfully implementing these core features, the overall effectiveness of the solution would be significantly reduced.
-
-Furthermore, these selected features align with the project’s goals and provide a clear pathway for incremental development. By narrowing down the requirements to these foundational aspects, the development team can ensure that the prototype is not only functional but also extensible, providing a robust framework for future enhancements.
+For the initial prototype development, a subset of the requirements from the Requirement Matrix (RM) was carefully selected to focus on implementing core functionalities and demonstrating proof of concept. The selection was based on a combination of high-priority functional requirements that form the backbone of the system, ensuring that critical features are built and validated before expanding the scope. The requirements chosen for the prototype primarily involve data preprocessing, model training, and evaluation processes. These requirements were selected because they are fundamental to the project's success, ensuring that the data pipeline and model implementation work seamlessly together. This subset of features lays the groundwork for later integration with additional components and more complex functionality. The filtered part of the RM focuses on the following high-priority requirements: data cleaning and feature extraction, training of machine learning models, and evaluation of model performance using standard metrics. These requirements were identified as crucial because they directly impact the system's ability to handle data, learn patterns, and provide meaningful outputs. Without successfully implementing these core features, the overall effectiveness of the solution would be significantly reduced. Furthermore, these selected features align with the project’s goals and provide a clear pathway for incremental development. By narrowing down the requirements to these foundational aspects, the development team can ensure that the prototype is not only functional but also extensible, providing a robust framework for future enhancements.
 
 \begin{figure}[h!]  
     \centering
@@ -19,6 +12,14 @@ Furthermore, these selected features align with the project’s goals and provid
     \caption{Features from Requirement Matrix}
     \label{Features from Requirement Matrix}  % Label for referencing the figure
 \end{figure}
+
+\begin{figure}[h!]  
+    \centering
+    \includegraphics[width=1.0\textwidth]{Images/ML Model Workflow.png}  
+    \caption{Workflow for getting the model for the web application}
+    \label{model workflow}  % Label for referencing the figure
+\end{figure}
+
 
 \subsection{Code Details and Output}
 
@@ -282,10 +283,14 @@ X = dataset['tokens'].apply(get_document_vector)
 \noindent
 Word2Vec creates dense vector representations of words by training a neural network to predict words in context. These embeddings capture semantic meaning, and document vectors are computed by averaging word embeddings. The Python code implements a Word2Vec-based approach to transform text data into numerical vectors. First, the \texttt{tokenize\_text} function is defined to tokenize each text in the dataset into lowercase words, creating a new column named \texttt{tokens}. Using these tokenized sentences, a Word2Vec model is trained with parameters such as a vector size of 100, a context window of 5, and a minimum word frequency of 1. The \texttt{get\_document\_vector} function computes a document-level vector by averaging the Word2Vec embeddings of valid tokens in each text, ensuring that empty documents return a zero vector. Finally, the document vectors are calculated and stored in \texttt{X}, enabling their use as input features for downstream machine learning tasks.
 
+\vspace{1em}
+
+\noindent
+The matrix dimensions for Bag of Words are determined by the number of records, which is 18,597 in this case, and the size of the vocabulary, which represents the number of unique words in the \texttt{cleaned\_text} column. Similarly, for TF-IDF, the dimensions of the matrix are the same as BOW, calculated as the number of records multiplied by the vocabulary size. For N-gram, the matrix size depends on the range of n-grams used. For example, a unigram produces dimensions equivalent to BOW, while bigram or trigram models increase the vocabulary size due to the inclusion of word combinations. Word2Vec, on the other hand, creates a dense vector representation for each word, with dimensions based on the predefined vector size, such as 100 or 200. Aggregating these vectors at the sentence level, typically by averaging, results in a matrix of dimensions equal to the number of records multiplied by the vector dimensions. For LIWC, the dimensions are determined by the number of predefined LIWC categories, which is typically around 70. The resulting matrix dimensions are the number of records multiplied by the number of LIWC categories.
+
 % -------- logistic regression
 
 \subsubsection{Logistic Regression Model for Classification}
-
 \begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Logistic Regression for Mental Health Classification]
     \begin{lstlisting}[language=Python]
 import pandas as pd
@@ -296,47 +301,39 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 
 # Load the preprocessed dataset
 dataset = pd.read_csv('preprocessed_mental_health.csv')
-
 # Check if 'cleaned_text' and 'mental_health_issue' columns exist
 if 'cleaned_text' not in dataset.columns or 'mental_health_issue' not in dataset.columns:
     raise ValueError("The dataset must have 'cleaned_text' and 'mental_health_issue' columns.")
-
 # Remove rows with missing values in 'cleaned_text' column
 dataset.dropna(subset=['cleaned_text'], inplace=True)
-
 # Initialize the CountVectorizer and fit/transform the cleaned text
 LRvectorizer = CountVectorizer()
 X = LRvectorizer.fit_transform(dataset['cleaned_text'])
-
 # Prepare the target variable
 y = dataset['mental_health_issue']
-
-# Split the dataset into Training and Test Sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-# Initialize the Logistic Regression model
-LRmodel = LogisticRegression(multi_class='ovr', max_iter=10000)
-
-# Train the model
-LRmodel.fit(X_train, y_train)
-
-# Make predictions on the test set
-y_pred = LRmodel.predict(X_test)
-
-# Evaluate the model
-accuracy = accuracy_score(y_test, y_pred)
-print(f'Accuracy: {accuracy * 100:.2f}%')
 \end{lstlisting}
 \end{tcolorbox}
 
 \begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Logistic Regression for Mental Health Classification]
     \begin{lstlisting}[language=Python]
+# Split the dataset into Training and Test Sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# Initialize the Logistic Regression model
+LRmodel = LogisticRegression(multi_class='ovr', max_iter=10000)
+# Train the model
+LRmodel.fit(X_train, y_train)
+
+# Make predictions on the test set
+y_pred = LRmodel.predict(X_test)
+# Evaluate the model
+accuracy = accuracy_score(y_test, y_pred)
+print(f'Accuracy: {accuracy * 100:.2f}%')
+
 # Print classification report
 print("Classification Report:\n", classification_report(y_test, y_pred))
-
 # Print confusion matrix
 print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
-    \end{lstlisting}
+\end{lstlisting}
 \end{tcolorbox}
 
 \noindent
@@ -348,48 +345,20 @@ The provided code demonstrates how to apply Logistic Regression for mental healt
 
 \begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Naive Bayes for Mental Health Classification]
     \begin{lstlisting}[language=Python]
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+# KEEPING THE EXACT SAME IMPLEMENTATION CODE AS THE LOGISTIC REGRESSION
 
-# Load the preprocessed dataset
-dataset = pd.read_csv('preprocessed_mental_health.csv')
-# Check if 'cleaned_text' and 'mental_health_issue' columns exist
-if 'cleaned_text' not in dataset.columns or 'mental_health_issue' not in dataset.columns:
-    raise ValueError("The dataset must have 'cleaned_text' and 'mental_health_issue' columns.")
-
-# Remove rows with missing values in 'cleaned_text' column
-dataset.dropna(subset=['cleaned_text'], inplace=True)
-# Initialize the CountVectorizer and fit/transform the cleaned text
-NBvectorizer = CountVectorizer()
-X = NBvectorizer.fit_transform(dataset['cleaned_text'])
-
-# Prepare the target variable
-y = dataset['mental_health_issue']
-
-# Split the dataset into Training and Test Sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 # Initialize the Naive Bayes classifier
 NBmodel = MultinomialNB()
 # Fit the model
 NBmodel.fit(X_train, y_train)
 # Make predictions
 y_pred = NBmodel.predict(X_test)
-# Evaluate the model
-accuracy = accuracy_score(y_test, y_pred)
-print(f'Accuracy: {accuracy * 100:.2f}%')
 
-# Print classification report
-print("Classification Report:\n", classification_report(y_test, y_pred))
-# Print confusion matrix
-print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
     \end{lstlisting}
 \end{tcolorbox}
 
 \noindent
-The provided code demonstrates how to apply the Naive Bayes classifier (MultinomialNB) for mental health classification using a preprocessed dataset. First, the dataset is loaded, and a check is performed to ensure that it contains the necessary columns, specifically \texttt{cleaned\_text} and \texttt{mental\_health\_issue}. If these columns are missing, an error is raised. The dataset is then cleaned by removing rows that have missing values in the \texttt{cleaned\_text} column using the \texttt{dropna()} function. Next, the \texttt{CountVectorizer} is initialized and applied to the \texttt{cleaned\_text} column to convert the text data into a numerical format suitable for machine learning. This is accomplished by transforming the text into a document-term matrix where each row represents a document (post) and each column represents a unique term (word). The target variable, \texttt{mental\_health\_issue}, is also extracted from the dataset. The dataset is then split into training and testing sets using \texttt{train\_test\_split()}, where 80\% of the data is used for training, and 20\% is reserved for testing. The \texttt{random\_state} is set to ensure reproducibility of the results. A Naive Bayes model (\texttt{MultinomialNB}) is initialized and trained on the training data using the \texttt{fit()} method. After training, predictions are made on the test set using the \texttt{predict()} method. The model's performance is evaluated by calculating the accuracy score, which is printed as a percentage. Additionally, a detailed classification report is generated, which includes metrics such as precision, recall, and F1-score for each class. Lastly, a confusion matrix is printed to visualize the model's classification performance and to understand how well the model distinguishes between different mental health issues. This end-to-end pipeline is crucial for applying the Naive Bayes algorithm to textual data, allowing for effective classification of mental health issues based on Reddit posts.
+The provided code applies the Naive Bayes classifier (MultinomialNB) for mental health classification using a preprocessed dataset. A Naive Bayes model (\texttt{MultinomialNB}) is initialized and trained on the training data using the \texttt{fit()} method. After training, predictions are made on the test set using the \texttt{predict()} method.
 
 % --------- svc
 
@@ -397,31 +366,7 @@ The provided code demonstrates how to apply the Naive Bayes classifier (Multinom
 
 \begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Support Vector Classifier Implementation]
     \begin{lstlisting}[language=Python]
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.svm import SVC
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
-
-# Load the preprocessed dataset
-dataset = pd.read_csv('preprocessed_mental_health.csv')
-# Check if 'cleaned_text' and 'mental_health_issue' columns exist
-if 'cleaned_text' not in dataset.columns or 'mental_health_issue' not in dataset.columns:
-    raise ValueError("The dataset must have 'cleaned_text' and 'mental_health_issue' columns.")
-\end{lstlisting}
-\end{tcolorbox}
-\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Support Vector Classifier Implementation]
-    \begin{lstlisting}[language=Python]
-# Remove rows with missing values in 'cleaned_text' column
-dataset.dropna(subset=['cleaned_text'], inplace=True)
-# Initialize the CountVectorizer and fit/transform the cleaned text
-SVMvectorizer = CountVectorizer()
-X = SVMvectorizer.fit_transform(dataset['cleaned_text'])
-
-# Prepare the target variable
-y = dataset['mental_health_issue']
-# Split the dataset into Training and Test Sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# KEEPING THE EXACT SAME IMPLEMENTATION CODE AS THE LOGISTIC REGRESSION
 
 # Initialize the Support Vector Classifier
 SVMmodel = SVC(kernel='linear', C=1, random_state=42, probability=True)  # You can adjust parameters as needed
@@ -430,52 +375,20 @@ SVMmodel = SVC(kernel='linear', C=1, random_state=42, probability=True)  # You c
 SVMmodel.fit(X_train, y_train)
 # Make predictions on the test set
 y_pred = SVMmodel.predict(X_test)
-
-# Evaluate the model
-accuracy = accuracy_score(y_test, y_pred)
-print(f'Accuracy: {accuracy * 100:.2f}%')
-
-# Print classification report
-print("Classification Report:\n", classification_report(y_test, y_pred))
-# Print confusion matrix
-print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
 \end{lstlisting}
 \end{tcolorbox}
 
 \noindent
-The provided code demonstrates how to apply the Support Vector Classifier (SVC) for mental health classification using a preprocessed dataset. First, the dataset is loaded, and a check is performed to ensure that it contains the necessary columns, specifically \texttt{cleaned\_text} and \texttt{mental\_health\_issue}. If these columns are missing, an error is raised. The dataset is then cleaned by removing rows that have missing values in the \texttt{cleaned\_text} column using the \texttt{dropna()} function.Next, the \texttt{CountVectorizer} is initialized and applied to the \texttt{cleaned\_text} column to convert the text data into a numerical format suitable for machine learning. This is accomplished by transforming the text into a document-term matrix where each row represents a document (post) and each column represents a unique term (word). The target variable, \texttt{mental\_health\_issue}, is also extracted from the dataset. The dataset is then split into training and testing sets using \texttt{train\_test\_split()}, where 80\% of the data is used for training, and 20\% is reserved for testing. The \texttt{random\_state} is set to ensure reproducibility of the results. A Support Vector Classifier model (\texttt{SVC}) is initialized with a linear kernel (\texttt{kernel='linear'}), regularization parameter \texttt{C=1}, and the probability flag set to \texttt{True} to enable probability estimates. The model is then trained on the training data using the \texttt{fit()} method. After training, predictions are made on the test set using the \texttt{predict()} method. The model's performance is evaluated by calculating the accuracy score, which is printed as a percentage. Additionally, a detailed classification report is generated, which includes metrics such as precision, recall, and F1-score for each class. Lastly, a confusion matrix is printed to visualize the model's classification performance and to understand how well the model distinguishes between different mental health issues. This end-to-end pipeline is crucial for applying the Support Vector Machine (SVM) algorithm to textual data, allowing for effective classification of mental health issues based on Reddit posts.
+ A Support Vector Classifier model (\texttt{SVC}) is initialized with a linear kernel (\texttt{kernel='linear'}), regularization parameter \texttt{C=1}, and the probability flag set to \texttt{True} to enable probability estimates. The model is then trained on the training data using the \texttt{fit()} method. After training, predictions are made on the test set using the \texttt{predict()} method. 
 
 % ----------------- random forest
 
 \subsubsection{Random Forest for Classification}
-
-\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Random Forest Classifier Implementation]
-    \begin{lstlisting}[language=Python]
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
-
-# Load the preprocessed dataset
-dataset = pd.read_csv('preprocessed_mental_health.csv')
-# Check if 'cleaned_text' and 'mental_health_issue' columns exist
-if 'cleaned_text' not in dataset.columns or 'mental_health_issue' not in dataset.columns:
-    raise ValueError("The dataset must have 'cleaned_text' and 'mental_health_issue' columns.")
-# Remove rows with missing values in 'cleaned_text' column
-dataset.dropna(subset=['cleaned_text'], inplace=True)
-# Initialize the CountVectorizer and fit/transform the cleaned text
-RFvectorizer = CountVectorizer()
-X = RFvectorizer.fit_transform(dataset['cleaned_text'])
-# Prepare the target variable
-y = dataset['mental_health_issue']
-# Split the dataset into Training and Test Sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-\end{lstlisting}
-\end{tcolorbox}
   
 \begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Random Forest Classifier Implementation]
     \begin{lstlisting}[language=Python]
+# KEEPING THE EXACT SAME IMPLEMENTATION CODE AS THE LOGISTIC REGRESSION
+
 # Initialize the Random Forest Classifier with added parameters
 RFmodel = RandomForestClassifier(n_estimators=3000, max_depth=None, min_samples_split=20, min_samples_leaf=1, max_features='sqrt', bootstrap=False, random_state=42)
 
@@ -483,19 +396,11 @@ RFmodel = RandomForestClassifier(n_estimators=3000, max_depth=None, min_samples_
 RFmodel.fit(X_train, y_train)
 # Make predictions on the test set
 y_pred = RFmodel.predict(X_test)
-# Evaluate the model
-accuracy = accuracy_score(y_test, y_pred)
-print(f'Accuracy: {accuracy * 100:.2f}%')
-
-# Print classification report
-print("Classification Report:\n", classification_report(y_test, y_pred))
-# Print confusion matrix
-print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
     \end{lstlisting}
 \end{tcolorbox}
 
 \noindent
-The provided code demonstrates how to apply the Random Forest Classifier for mental health classification using a preprocessed dataset. First, the dataset is loaded, and a check is performed to ensure that it contains the necessary columns, specifically \texttt{cleaned\_text} and \texttt{mental\_health\_issue}. If these columns are missing, an error is raised. The dataset is then cleaned by removing rows that have missing values in the \texttt{cleaned\_text} column using the \texttt{dropna()} function. Next, the \texttt{CountVectorizer} is initialized and applied to the \texttt{cleaned\_text} column to convert the text data into a numerical format suitable for machine learning. This is accomplished by transforming the text into a document-term matrix where each row represents a document (post) and each column represents a unique term (word). The target variable, \texttt{mental\_health\_issue}, is also extracted from the dataset. The dataset is then split into training and testing sets using \texttt{train\_test\_split()}, where 80\% of the data is used for training, and 20\% is reserved for testing. The \texttt{random\_state} is set to ensure reproducibility of the results. A Random Forest Classifier model is initialized with several hyperparameters. Specifically, \texttt{n\_estimators=3000} defines the number of decision trees in the forest. The \texttt{max\_depth=None} means the trees are allowed to grow until all leaves are pure or contain fewer than the minimum samples required to split a node. The \texttt{min\_samples\_split=20} and \texttt{min\_samples\_leaf=1} specify the minimum number of samples required to split an internal node and the minimum number of samples required to be at a leaf node, respectively. The \texttt{max\_features='sqrt'} sets the maximum number of features to consider for the best split at each node to be the square root of the total number of features. \texttt{bootstrap=False} disables bootstrapping, meaning the entire dataset is used to build each tree. After initialization, the model is trained using the \texttt{fit()} method on the training data. After training, predictions are made on the test set using the \texttt{predict()} method. The model's performance is evaluated by calculating the accuracy score, which is printed as a percentage. Additionally, a detailed classification report is generated, which includes metrics such as precision, recall, and F1-score for each class. Lastly, a confusion matrix is printed to visualize the model's classification performance and to understand how well the model distinguishes between different mental health issues. This end-to-end pipeline is essential for applying the Random Forest algorithm to textual data, allowing for effective classification of mental health issues based on Reddit posts.
+ A Random Forest Classifier model is initialized with several hyperparameters. Specifically, \texttt{n\_estimators=3000} defines the number of decision trees in the forest. The \texttt{max\_depth=None} means the trees are allowed to grow until all leaves are pure or contain fewer than the minimum samples required to split a node. The \texttt{min\_samples\_split=20} and \texttt{min\_samples\_leaf=1} specify the minimum number of samples required to split an internal node and the minimum number of samples required to be at a leaf node, respectively. The \texttt{max\_features='sqrt'} sets the maximum number of features to consider for the best split at each node to be the square root of the total number of features. \texttt{bootstrap=False} disables bootstrapping, meaning the entire dataset is used to build each tree. After initialization, the model is trained using the \texttt{fit()} method on the training data. After training, predictions are made on the test set using the \texttt{predict()} method.
 
 
 % ----------- xgboost
@@ -504,31 +409,20 @@ The provided code demonstrates how to apply the Random Forest Classifier for men
 
 \begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=XGBoost Classifier Implementation]
     \begin{lstlisting}[language=Python]
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
-import xgboost as xgb
-
-# Load the dataset
-data = pd.read_csv('preprocessed_mental_health.csv')
-# Separate features and target
-X = data['text']
-y = data['mental_health_issue']
-# Encode target labels
-label_encoder = LabelEncoder()
-y = label_encoder.fit_transform(y)
-# Split dataset into training and test sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# WITH THE EXACT SAME IMPLEMENTATION CODE. THE CountVectorizer IS CHANGED TO TF-IDF
 
 # Convert text data to numerical data using TF-IDF Vectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 tfidf = TfidfVectorizer(max_features=5000)
 X_train = tfidf.fit_transform(X_train)
 X_test = tfidf.transform(X_test)
-
+\end{lstlisting}
+\end{tcolorbox}
+\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=XGBoost Classifier Implementation]
+    \begin{lstlisting}[language=Python]
 # Define the XGBoost classifier
 xgb_clf = xgb.XGBClassifier(objective='multi:softmax', num_class=5, eval_metric='mlogloss', use_label_encoder=False)
+
 # Train the model
 xgb_clf.fit(X_train, y_train)
 # Predict on the test set
@@ -536,21 +430,8 @@ y_pred = xgb_clf.predict(X_test)
 \end{lstlisting}
 \end{tcolorbox}
 
-\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=XGBoost Classifier Implementation]
-    \begin{lstlisting}[language=Python]
-# Evaluate the model
-accuracy = accuracy_score(y_test, y_pred)
-report = classification_report(y_test, y_pred, target_names=label_encoder.classes_)
-
-print(f"Accuracy: {accuracy * 100:.2f}%")
-print("Classification Report:\n", report)
-# Print confusion matrix
-print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
-    \end{lstlisting}
-\end{tcolorbox}
-
 \noindent
-The provided code demonstrates how to apply XGBoost for mental health classification using a preprocessed dataset. First, the dataset is loaded, and the target variable (\texttt{mental\_health\_issue}) is separated from the feature variable (\texttt{text}). The target variable is then encoded using \texttt{LabelEncoder()} to convert the categorical labels into numerical values, which are required for machine learning algorithms. Next, the dataset is split into training and testing sets using \texttt{train\_test\_split()}, where 80\% of the data is used for training, and 20\% is reserved for testing. The \texttt{random\_state} is set to ensure reproducibility of the results. The text data is then transformed into numerical features using the \texttt{TfidfVectorizer()}. This vectorizer converts the raw text into a matrix of TF-IDF (Term Frequency-Inverse Document Frequency) features, which are more suitable for training a machine learning model. The \texttt{max\_features=5000} parameter limits the number of features to the 5000 most frequent terms in the dataset. The XGBoost classifier is then initialized with several hyperparameters. The \texttt{objective='multi:softmax'} indicates that the task is a multi-class classification problem. The \texttt{num\_class=5} parameter specifies the number of classes for the classification task, and \texttt{eval\_metric='mlogloss'} is set to use the log loss metric for evaluation. \texttt{use\_label\_encoder=False} disables the automatic label encoding of target labels, as we have already manually encoded the labels. After initialization, the model is trained on the training data using the \texttt{fit()} method. After training, predictions are made on the test set using the \texttt{predict()} method. The model's performance is evaluated by calculating the accuracy score, which is printed as a percentage. Additionally, a detailed classification report is generated, which includes metrics such as precision, recall, and F1-score for each class. Lastly, a confusion matrix is printed to visualize the model's classification performance and to understand how well the model distinguishes between different mental health issues. This pipeline demonstrates the use of XGBoost in combination with TF-IDF vectorization for text classification, enabling effective classification of mental health issues based on Reddit posts.
+The text data is transformed into numerical features using the \texttt{TfidfVectorizer()}. This vectorizer converts the raw text into a matrix of TF-IDF (Term Frequency-Inverse Document Frequency) features, which are more suitable for training a machine learning model. The \texttt{max\_features=5000} parameter limits the number of features to the 5000 most frequent terms in the dataset. The XGBoost classifier is then initialized with several hyperparameters. The \texttt{objective='multi:softmax'} indicates that the task is a multi-class classification problem. The \texttt{num\_class=5} parameter specifies the number of classes for the classification task, and \texttt{eval\_metric='mlogloss'} is set to use the log loss metric for evaluation. \texttt{use\_label\_encoder=False} disables the automatic label encoding of target labels, as we have already manually encoded the labels. After initialization, the model is trained on the training data using the \texttt{fit()} method. 
 
 % ------------ knn
 
@@ -558,46 +439,19 @@ The provided code demonstrates how to apply XGBoost for mental health classifica
 
 \begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=k-NN Classifier Implementation for Mental Health Classification]
     \begin{lstlisting}[language=Python]
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
-
-# Load the preprocessed dataset
-dataset = pd.read_csv('preprocessed_mental_health.csv')
-# Check if 'cleaned_text' and 'mental_health_issue' columns exist
-if 'cleaned_text' not in dataset.columns or 'mental_health_issue' not in dataset.columns:
-    raise ValueError("The dataset must have 'cleaned_text' and 'mental_health_issue' columns.")
-# Remove rows with missing values in 'cleaned_text' column
-dataset.dropna(subset=['cleaned_text'], inplace=True)
-# Initialize the CountVectorizer and fit/transform the cleaned text
-KNNvectorizer = CountVectorizer()
-X = KNNvectorizer.fit_transform(dataset['cleaned_text'])
-# Prepare the target variable
-y = dataset['mental_health_issue']
-# Split the dataset into Training and Test Sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# KEEPING THE EXACT SAME IMPLEMENTATION CODE AS THE LOGISTIC REGRESSION 
 
 # Initialize the k-NN classifier
-KNNmodel = KNeighborsClassifier(n_neighbors=5)  # You can adjust the number of neighbors
+KNNmodel = KNeighborsClassifier(n_neighbors=5)  
 # Fit the model
 KNNmodel.fit(X_train, y_train)
 # Make predictions
 y_pred = KNNmodel.predict(X_test)
-# Evaluate the model
-accuracy = accuracy_score(y_test, y_pred)
-print(f'Accuracy: {accuracy * 100:.2f}%')
-
-# Print classification report
-print("Classification Report:\n", classification_report(y_test, y_pred))
-# Print confusion matrix
-print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
 \end{lstlisting}
 \end{tcolorbox}
 
 \noindent
-The code provided demonstrates how to implement a k-Nearest Neighbors (k-NN) classifier for mental health issue classification based on text data. Initially, the dataset is loaded from a CSV file, and a check is performed to ensure the presence of the necessary columns, namely \texttt{cleaned\_text} and \texttt{mental\_health\_issue}. If any of these columns are missing, the program raises an error. The next step involves removing rows with missing text data from the \texttt{cleaned\_text} column using \texttt{dropna()}. The \texttt{CountVectorizer} from \texttt{sklearn} is used to transform the textual data into a matrix of token counts, which is suitable for machine learning. This transformation converts each post (document) into a vector of word occurrences, with each unique word in the dataset being represented by a column. The target variable, \texttt{mental\_health\_issue}, is extracted, and the dataset is split into training and test sets using \texttt{train\_test\_split()}. The training set consists of 80\% of the data, and the remaining 20\% is used for testing. A k-NN classifier is initialized with 5 neighbors (\texttt{n\_neighbors=5}), though this number can be adjusted for tuning the model. The classifier is trained on the training data using the \texttt{fit()} method. Once the model is trained, it is used to predict mental health issues for the test set, and the accuracy of the predictions is calculated and printed. In addition to the accuracy score, a detailed classification report is generated, which includes metrics like precision, recall, and F1-score for each class. Finally, a confusion matrix is printed to help visualize the model’s performance in terms of how well it classifies different mental health issues. This end-to-end pipeline demonstrates how to apply a k-NN classifier to a text classification task, specifically identifying mental health issues based on user-generated content such as social media posts.
+ A k-NN classifier is initialized with 5 neighbors (\texttt{n\_neighbors=5}), though this number can be adjusted for tuning the model. The classifier is trained on the training data using the \texttt{fit()} method. Once the model is trained, it is used to predict mental health issues for the test set, and the accuracy of the predictions is calculated and printed. 
 
 % --------------- lstm
 
@@ -617,11 +471,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Embedding, LSTM, Dense, Dropout
 from tensorflow.keras.utils import to_categorical
 from sklearn.model_selection import train_test_split
-\end{lstlisting}
-\end{tcolorbox}
 
-\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=LSTM Model Implementation]
-    \begin{lstlisting}[language=Python]
 # Load the dataset
 data = pd.read_csv('preprocessed_mental_health.csv')
 # Separate features and target
@@ -642,6 +492,11 @@ tokenizer.fit_on_texts(X_train)
 X_train_seq = tokenizer.texts_to_sequences(X_train)
 X_test_seq = tokenizer.texts_to_sequences(X_test)
 X_train_padded = pad_sequences(X_train_seq, maxlen=max_length, padding='post', truncating='post')
+\end{lstlisting}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=LSTM Model Implementation]
+    \begin{lstlisting}[language=Python]
 X_test_padded = pad_sequences(X_test_seq, maxlen=max_length, padding='post', truncating='post')
 # Build the LSTM model
 model = Sequential([ Embedding(vocab_size, 128, input_length=max_length), LSTM(128,eturn_sequences=True), Dropout(0.2), LSTM(64), Dropout(0.2), Dense(64,activation='relu'), Dense(y.shape[1],activation='softmax')])
@@ -665,21 +520,21 @@ This code demonstrates how to apply a Long Short-Term Memory (LSTM) neural netwo
 
 \begin{figure}[h!]  
     \centering
-    \includegraphics[width=1.0\textwidth]{Images/LSTM Epoch.png}  
+    \includegraphics[width=0.8\textwidth]{Images/LSTM Epoch.png}  
     \caption{Output for LSTM Epochs}
     \label{LSTm Epochs}  % Label for referencing the figure
 \end{figure}
 
 \begin{figure}[h!]  
     \centering
-    \includegraphics[width=0.9\textwidth]{Images/LSTM LA.png}  
+    \includegraphics[width=0.8\textwidth]{Images/LSTM LA.png}  
     \caption{LSTM Validation loss and accuracy}
     \label{Accuracy Loss}  % Label for referencing the figure
 \end{figure}
 
 \begin{figure}[h!]  
     \centering
-    \includegraphics[width=0.85\textwidth]{Images/LSTM EMBED.png}  
+    \includegraphics[width=0.8\textwidth]{Images/LSTM EMBED.png}  
     \caption{LSTM Random and Learned Embeddings}
     \label{lstm embed}  % Label for referencing the figure
 \end{figure}
@@ -707,6 +562,11 @@ from sklearn.metrics import accuracy_score, classification_report
 dataset = pd.read_csv('preprocessed_mental_health.csv')
 if 'cleaned_text' not in dataset.columns or 'mental_health_issue' not in dataset.columns:
     raise ValueError("The dataset must have 'cleaned_text' and 'mental_health_issue' columns.")
+\end{lstlisting}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Logistic Regression]
+    \begin{lstlisting}[language=Python]
 # Remove rows with missing values in 'cleaned_text' column
 dataset.dropna(subset=['cleaned_text'], inplace=True)
 
@@ -732,15 +592,10 @@ random_search.fit(X_train, y_train)
 print("Best Hyperparameters:", random_search.best_params_)
 best_modelLR = random_search.best_estimator_
 y_pred = best_modelLR.predict(X_test)
-\end{lstlisting}
-\end{tcolorbox}
 
-\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Logistic Regression]
-    \begin{lstlisting}[language=Python]
 # Evaluate the model
 accuracy = accuracy_score(y_test, y_pred)
 print(f'Accuracy: {accuracy * 100:.2f}%')
-
 # Print classification report
 print("Classification Report:\n", classification_report(y_test, y_pred))
 \end{lstlisting}
@@ -749,36 +604,10 @@ print("Classification Report:\n", classification_report(y_test, y_pred))
 \noindent
 The above code demonstrates a machine learning workflow for classifying mental health issues using \texttt{LogisticRegression} with hyperparameter tuning. The dataset is loaded using \texttt{pandas}, and a check ensures the presence of \texttt{'cleaned\_text'} and \texttt{'mental\_health\_issue'} columns. Missing values in \texttt{'cleaned\_text'} are dropped to prevent processing errors. The textual data is transformed into a numerical format using \texttt{CountVectorizer}, which converts text into a bag-of-words representation. The dataset is then split into training and testing sets using \texttt{train\_test\_split}. A logistic regression model is initialized, and the hyperparameter grid is defined, including parameters like \texttt{C} (inverse of regularization strength), \texttt{penalty}, and \texttt{solver}. Hyperparameter tuning is performed using \texttt{RandomizedSearchCV}, which searches for the best model configuration by sampling parameter combinations. The best model is used to make predictions on the test set, and evaluation metrics such as accuracy and a classification report are printed.
 
-\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=K Nearest Neighbours]
-    \begin{lstlisting}[language=Python]
-import pandas as pd
-from sklearn.model_selection import train_test_split, RandomizedSearchCV
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
-
-# Load the preprocessed dataset
-dataset = pd.read_csv('preprocessed_mental_health.csv')
-# Check if 'cleaned_text' and 'mental_health_issue' columns exist
-if 'cleaned_text' not in dataset.columns or 'mental_health_issue' not in dataset.columns:
-    raise ValueError("The dataset must have 'cleaned_text' and 'mental_health_issue' columns.")
-\end{lstlisting}
-\end{tcolorbox}
 
 \begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=K Nearest Neighbours]
     \begin{lstlisting}[language=Python]
-# Remove rows with missing values in 'cleaned_text' column
-dataset.dropna(subset=['cleaned_text'], inplace=True)
-
-# Initialize the CountVectorizer and fit/transform the cleaned text
-HPTKNNvectorizer = CountVectorizer()
-X = HPTKNNvectorizer.fit_transform(dataset['cleaned_text'])
-
-# Prepare the target variable
-y = dataset['mental_health_issue']
-
-# Split the dataset into Training and Test Sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# KEEPING THE EXACT SAME IMPLEMENTATION CODE AS THE Hyperparameter Tuning ON LOGISTIC REGRESSION
 
 # Initialize the k-NN classifier
 knn = KNeighborsClassifier()
@@ -797,67 +626,22 @@ random_search = RandomizedSearchCV(estimator=knn, param_distributions=param_dist
 
 # Fit RandomizedSearchCV
 random_search.fit(X_train, y_train)
-
 # Best hyperparameters from Random Search
 print("Best Hyperparameters:", random_search.best_params_)
-
 # Best model from Random Search
 best_knn = random_search.best_estimator_
-
 # Make predictions using the best model
 y_pred = best_knn.predict(X_test)
 \end{lstlisting}
 \end{tcolorbox}
 
-\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=K Nearest Neighbours]
-    \begin{lstlisting}[language=Python]
-# Evaluate the model
-accuracy = accuracy_score(y_test, y_pred)
-print(f'Accuracy: {accuracy * 100:.2f}%')
-
-# Print classification report
-print("Classification Report:\n", classification_report(y_test, y_pred))
-
-# Print confusion matrix
-print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
-    \end{lstlisting}
-\end{tcolorbox}
-
 \noindent
-This code implements a k-Nearest Neighbors (k-NN) classifier for classifying mental health issues from text data using hyperparameter tuning via RandomizedSearchCV. First, it loads a preprocessed dataset, ensuring the existence of critical columns, \texttt{cleaned\_text} (features) and \texttt{mental\_health\_issue} (target). Rows with missing values in the \texttt{cleaned\_text} column are removed to maintain data integrity. The text is vectorized into numerical format using \texttt{CountVectorizer}, converting text into a bag-of-words model. The features (\(X\)) and target (\(y\)) are split into training (80\%) and test (20\%) datasets to ensure proper model evaluation. The k-NN model is initialized without predefined parameters, and a hyperparameter grid is defined for tuning. This grid explores various values for the number of neighbors (\texttt{n\_neighbors}), distance metrics (\texttt{metric}), and neighbor weighting options (\texttt{weights}). \texttt{RandomizedSearchCV} is then used to optimize these parameters by training multiple k-NN models with combinations from the grid, evaluating them with 5-fold cross-validation, and scoring based on accuracy. The best combination of hyperparameters is identified and used to configure the final k-NN model. The model is then tested on unseen data (test set), and its performance is evaluated by calculating the accuracy, a classification report detailing precision, recall, F1-score for each class, and a confusion matrix showing true vs. predicted classifications. This approach balances computational efficiency with robustness, enabling the selection of an optimized k-NN model for mental health classification.
+The k-NN model is initialized without predefined parameters, and a hyperparameter grid is defined for tuning. This grid explores various values for the number of neighbors (\texttt{n\_neighbors}), distance metrics (\texttt{metric}), and neighbor weighting options (\texttt{weights}). \texttt{RandomizedSearchCV} is then used to optimize these parameters by training multiple k-NN models with combinations from the grid, evaluating them with 5-fold cross-validation, and scoring based on accuracy. The best combination of hyperparameters is identified and used to configure the final k-NN model.
 
 
 \begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Support Vector Machine]
     \begin{lstlisting}[language=Python]
-import pandas as pd
-from sklearn.model_selection import train_test_split, RandomizedSearchCV
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.svm import SVC
-from sklearn.metrics import accuracy_score, classification_report
-\end{lstlisting}
-\end{tcolorbox}
-
-\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Support Vector Machine]
-    \begin{lstlisting}[language=Python]
-# Load the preprocessed dataset
-dataset = pd.read_csv('preprocessed_mental_health.csv')
-
-# Check if 'cleaned_text' and 'mental_health_issue' columns exist
-if 'cleaned_text' not in dataset.columns or 'mental_health_issue' not in dataset.columns:
-    raise ValueError("The dataset must have 'cleaned_text' and 'mental_health_issue' columns.")
-
-# Remove rows with missing values in 'cleaned_text' column
-dataset.dropna(subset=['cleaned_text'], inplace=True)
-
-# Initialize the CountVectorizer and fit/transform the cleaned text
-vectorizer = CountVectorizer()
-X = vectorizer.fit_transform(dataset['cleaned_text'])
-
-# Prepare the target variable
-y = dataset['mental_health_issue']
-
-# Split the dataset into Training and Test Sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# KEEPING THE EXACT SAME IMPLEMENTATION CODE AS THE Hyperparameter Tuning ON LOGISTIC REGRESSION
 
 # Initialize the SVC model
 model = SVC()
@@ -875,60 +659,21 @@ random_search = RandomizedSearchCV(estimator=model, param_distributions=param_di
 
 # Fit RandomizedSearchCV
 random_search.fit(X_train, y_train)
-\end{lstlisting}
-\end{tcolorbox}
-
-\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Support Vector Machine]
-    \begin{lstlisting}[language=Python]
 # Best hyperparameters from Random Search
 print("Best Hyperparameters:", random_search.best_params_)
-
 # Best model from Random Search
 best_model = random_search.best_estimator_
-
 # Make predictions using the best model
 y_pred = best_model.predict(X_test)
-
-# Evaluate the model
-accuracy = accuracy_score(y_test, y_pred)
-print(f'Accuracy: {accuracy * 100:.2f}%')
-
-# Print classification report
-print("Classification Report:\n", classification_report(y_test, y_pred))
 \end{lstlisting}
 \end{tcolorbox}
 
 \noindent
-This code implements a Support Vector Classifier (SVC) for classifying mental health issues from text data using hyperparameter tuning via RandomizedSearchCV. It begins by loading a preprocessed dataset and ensuring that essential columns, \texttt{cleaned\_text} (features) and \texttt{mental\_health\_issue} (target), are present. Any rows with missing values in the \texttt{cleaned\_text} column are removed to ensure clean data. The text is then vectorized into a numerical format using \texttt{CountVectorizer}, transforming it into a bag-of-words representation. The features (\(X\)) and target (\(y\)) are split into training (80\%) and test (20\%) sets for model validation. The SVC model is initialized without predefined hyperparameters, and a hyperparameter grid is defined for tuning. This grid includes different values for the regularization parameter (\texttt{C}), kernel types (\texttt{kernel}), and the kernel coefficient (\texttt{gamma}). \texttt{RandomizedSearchCV} is employed to find the best combination of these parameters by evaluating multiple models with various hyperparameter combinations through 5-fold cross-validation, using accuracy as the scoring metric. The best set of hyperparameters is selected to configure the final SVC model. The model is then evaluated on the test set by making predictions, and its performance is measured by calculating the accuracy, as well as generating a classification report that includes precision, recall, and F1-score for each class. This approach ensures the selection of the most optimized SVC model for the classification of mental health issues from text data.
+The SVC model is initialized without predefined hyperparameters, and a hyperparameter grid is defined for tuning. This grid includes different values for the regularization parameter (\texttt{C}), kernel types (\texttt{kernel}), and the kernel coefficient (\texttt{gamma}). \texttt{RandomizedSearchCV} is employed to find the best combination of these parameters by evaluating multiple models with various hyperparameter combinations through 5-fold cross-validation, using accuracy as the scoring metric. The best set of hyperparameters is selected to configure the final SVC model. 
 
 \begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Naive Bayes]
     \begin{lstlisting}[language=Python]
-import pandas as pd
-from sklearn.model_selection import train_test_split, RandomizedSearchCV
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
-from scipy.stats import uniform
-
-# Load the preprocessed dataset
-dataset = pd.read_csv('preprocessed_mental_health.csv')
-
-# Check if 'cleaned_text' and 'mental_health_issue' columns exist
-if 'cleaned_text' not in dataset.columns or 'mental_health_issue' not in dataset.columns:
-    raise ValueError("The dataset must have 'cleaned_text' and 'mental_health_issue' columns.")
-
-# Remove rows with missing values in 'cleaned_text' column
-dataset.dropna(subset=['cleaned_text'], inplace=True)
-
-# Initialize the CountVectorizer and fit/transform the cleaned text
-vectorizer = CountVectorizer()
-X = vectorizer.fit_transform(dataset['cleaned_text'])
-
-# Prepare the target variable
-y = dataset['mental_health_issue']
-
-# Split the dataset into Training and Test Sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# KEEPING THE EXACT SAME IMPLEMENTATION CODE AS THE Hyperparameter Tuning ON LOGISTIC REGRESSION
 
 # Initialize the Naive Bayes model
 naive_bayes_model = MultinomialNB()
@@ -937,41 +682,24 @@ naive_bayes_model = MultinomialNB()
 param_distributions = {
     'alpha': uniform(0.001, 5.0)  # Sampling alpha from a uniform distribution
 }
-\end{lstlisting}
-\end{tcolorbox}
 
-\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Naive Bayes]
-    \begin{lstlisting}[language=Python]
 # Initialize RandomizedSearchCV
 random_search = RandomizedSearchCV(estimator=naive_bayes_model, param_distributions=param_distributions,
                                     n_iter=10, scoring='accuracy', cv=5, n_jobs=-1, random_state=42)
 
 # Fit RandomizedSearchCV
 random_search.fit(X_train, y_train)
-
 # Best hyperparameters from Random Search
 print("Best Hyperparameters:", random_search.best_params_)
-
 # Best model from Random Search
 best_model = random_search.best_estimator_
-
 # Make predictions using the best model
 y_pred = best_model.predict(X_test)
-
-# Evaluate the model
-accuracy = accuracy_score(y_test, y_pred)
-print(f'Accuracy: {accuracy * 100:.2f}%')
-
-# Print classification report
-print("Classification Report:\n", classification_report(y_test, y_pred))
-
-# Print confusion matrix
-print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))        
     \end{lstlisting}
 \end{tcolorbox}
 
 \noindent
-This code implements a Naive Bayes classifier using the MultinomialNB algorithm to classify mental health issues from text data, with hyperparameter tuning via RandomizedSearchCV. The dataset is first loaded, ensuring the required columns, \texttt{cleaned\_text} (features) and \texttt{mental\_health\_issue} (target), exist. Rows with missing values in the \texttt{cleaned\_text} column are removed to maintain data quality. The text is vectorized using \texttt{CountVectorizer}, converting it into a bag-of-words representation. The features (\(X\)) and target (\(y\)) are then split into training (80\%) and test (20\%) sets to facilitate proper evaluation. The Naive Bayes model is initialized, and a parameter distribution for \texttt{alpha} is defined using a uniform distribution, sampling values between 0.001 and 5.0. \texttt{RandomizedSearchCV} is utilized to explore different values for \texttt{alpha} over 10 iterations, using 5-fold cross-validation and accuracy as the scoring metric. The best hyperparameters are identified and used to configure the final Naive Bayes model. The model is then tested on the unseen data (test set).
+ The Naive Bayes model is initialized, and a parameter distribution for \texttt{alpha} is defined using a uniform distribution, sampling values between 0.001 and 5.0. \texttt{RandomizedSearchCV} is utilized to explore different values for \texttt{alpha} over 10 iterations, using 5-fold cross-validation and accuracy as the scoring metric. The best hyperparameters are identified and used to configure the final Naive Bayes model. The model is then tested on the unseen data (test set).
 
 % ---------- transformer -------
 \subsubsection{Tranformer based model for classification}
@@ -1152,9 +880,9 @@ This code performs the crucial steps of splitting the dataset into training and 
 \pagebreak
 
 % --------- ENSEMBLE LEARNING 1----------
-\subsubsection{Ensemble Model 1 (Stacking with Meta-Learner : Logistic Regression)}
+\subsubsection{Ensemble Models}
 \noindent
-\textbf{Base Model : Logistic Regression, XGBoost. }
+\textbf{Ensemble Model 1 (Stacking): Logistic Regression, XGBoost as base models and Logistic Regression as the meta learner. }
 
 \begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Ensemble Model 1 : Loading and Preprocessing]
     \begin{lstlisting}[language=Python]
@@ -1277,65 +1005,13 @@ In ensemble learning, combining different models like Logistic Regression and XG
 
 % --------- ENSEMBLE LEARNING 2----------
 \pagebreak
-\subsubsection{Ensemble Model 2 (Stacking and Boosting with Meta-Learner : XGBoost)}
+
 \noindent
-\textbf{Base Models : Logistic Regression, Naive Bayes, SVM, LSTM, XGBoost.}
-
-\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Evaluate Meta-Learner and Ensemble Model 2]
-    \begin{lstlisting}[language=Python]
-import pickle
-import numpy as np
-import pandas as pd
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
-from tensorflow.keras.models import load_model
-from tensorflow.keras.utils import pad_sequences
-from xgboost import XGBClassifier
-
-# Load Logistic Regression model and vectorizer
-with open('LRmodel.pkl', 'rb') as file:
-    lr_model = pickle.load(file)
-with open('LRvectorizer.pkl', 'rb') as file:
-    lr_vectorizer = pickle.load(file)
-# Load SVM model and vectorizer
-with open('SVMmodel.pkl', 'rb') as file:
-    svm_model = pickle.load(file)
-with open('SVMvectorizer.pkl', 'rb') as file:
-    svm_vectorizer = pickle.load(file)
-# Load XGBoost model, vectorizer, and label encoder
-with open('xgb_model.pkl', 'rb') as file:
-    xgb_model = pickle.load(file)
-with open('tfidf_vectorizer.pkl', 'rb') as file:
-    tfidf_vectorizer = pickle.load(file)
-with open('label_encoder.pkl', 'rb') as file:
-    label_encoder = pickle.load(file)
-# Load LSTM model, tokenizer, and label encoder
-lstm_model = load_model('lstm_model.h5')
-with open('LSTM_tokenizer.pkl', 'rb') as file:
-    lstm_tokenizer = pickle.load(file)
-# Load Naive Bayes model and vectorizer
-with open('NBmodel.pkl', 'rb') as file:
-    nb_model = pickle.load(file)
-with open('NBvectorizer.pkl', 'rb') as file:
-    nb_vectorizer = pickle.load(file)
-# Load the test dataset
-data = pd.read_csv('preprocessed_mental_health.csv')
-
-# Check if 'cleaned_text' column exists
-if 'cleaned_text' not in data.columns:
-    raise ValueError("The dataset must have a 'cleaned_text' column.")
-\end{lstlisting}
-\end{tcolorbox}
+\textbf{Ensemble Model 2 (Stacking and Boosting): Logistic Regression, Naive Bayes, SVM, LSTM, XGBoost as base models and XGboost as the meta learner. }
  
 \begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Evaluate Meta-Learner and Ensemble Model 2]
     \begin{lstlisting}[language=Python]
-# Remove rows with missing values in 'cleaned_text'
-data.dropna(subset=['cleaned_text'], inplace=True)
-# Split features and target
-X_test = data['cleaned_text']
-y_test = data['mental_health_issue']
-
-# Encode target labels
-y_test = label_encoder.transform(y_test)
+# KEEPING THE EXACT SAME IMPLEMENTATION CODE AS THE Ensemble Model 1 BY IMPORTING THE NECESSARY LIBRARIES, LOADING THE MODELS, AND PREPROCESSING THE DATA
 
 # Process the text for each model
 X_test_lr = lr_vectorizer.transform(X_test)  # Logistic Regression vectorizer
@@ -1378,19 +1054,11 @@ with open('meta_learner_xgb.pkl', 'wb') as file:
 
 # Predict using the XGBoost meta-learner
 final_predictions_xgb = meta_learner_xgb.predict(stacked_features)
-
-# Evaluate the XGBoost ensemble model
-accuracy_xgb = accuracy_score(y_test, final_predictions_xgb)
-report_xgb = classification_report(y_test, final_predictions_xgb, target_names=label_encoder.classes_)
-
-print(f"XGBoost Meta-Learner Accuracy: {accuracy_xgb * 100:.2f}%")
-print("Classification Report (XGBoost):\n", report_xgb)
-print("Confusion Matrix (XGBoost):\n", confusion_matrix(y_test, final_predictions_xgb))
 \end{lstlisting}
 \end{tcolorbox}
  
 \noindent
-This script is designed to load several pre-trained machine learning models, apply them to a dataset of mental health-related text data, combine their predictions using a meta-learner approach, and evaluate the performance of the meta-learner model. The models used in this pipeline include logistic regression, support vector machine (SVM), XGBoost, Naive Bayes, and a deep learning-based Long Short-Term Memory (LSTM) model. The purpose of this setup is to leverage the individual strengths of different models to improve classification accuracy for predicting mental health issues based on text data. First, the script imports various necessary libraries like \texttt{pickle}, \texttt{numpy}, \texttt{pandas}, and machine learning tools from \texttt{sklearn} and \texttt{xgboost}. These libraries help load, transform, and evaluate models and datasets. It then proceeds to load each pre-trained model and associated preprocessing objects (like vectorizers and tokenizers) from disk using \texttt{pickle.load()}. Specifically, models for logistic regression, SVM, Naive Bayes, XGBoost, and LSTM are loaded along with their respective vectorizers or tokenizers. These models are already trained and saved previously, allowing the script to reuse them for making predictions on new data. Next, the script loads the test dataset, which contains preprocessed mental health-related text in a column called \texttt{cleaned\_text}. It ensures that no rows with missing values are present in this column by dropping such rows. The target variable, \texttt{mental\_health\_issue}, which indicates whether a mental health issue is present, is also extracted. This target variable is then encoded using a label encoder that was previously saved. Encoding is essential because machine learning models require numerical labels rather than categorical ones. For each model, the script prepares the test data differently. The text data is processed using the corresponding vectorizer or tokenizer to convert the text into numerical features that the models can understand. For models like logistic regression, SVM, Naive Bayes, and XGBoost, the test data is transformed into feature matrices using their respective vectorizers, such as \texttt{lr\_vectorizer} for logistic regression and \texttt{svm\_vectorizer} for the SVM model. In contrast, the LSTM model requires tokenized sequences, so the \texttt{lstm\_tokenizer} is used to convert the text into sequences of integers. Since the LSTM model requires fixed-length input, the sequences are padded to a maximum length of 100 tokens using \texttt{pad\_sequences}.
+Specifically, models for logistic regression, SVM, Naive Bayes, XGBoost, and LSTM are loaded along with their respective vectorizers or tokenizers. These models are already trained and saved previously, allowing the script to reuse them for making predictions on new data. Next, the script loads the test dataset, which contains preprocessed mental health-related text in a column called \texttt{cleaned\_text}. It ensures that no rows with missing values are present in this column by dropping such rows. The target variable, \texttt{mental\_health\_issue}, which indicates whether a mental health issue is present, is also extracted. This target variable is then encoded using a label encoder that was previously saved. Encoding is essential because machine learning models require numerical labels rather than categorical ones. For each model, the script prepares the test data differently. The text data is processed using the corresponding vectorizer or tokenizer to convert the text into numerical features that the models can understand. For models like logistic regression, SVM, Naive Bayes, and XGBoost, the test data is transformed into feature matrices using their respective vectorizers, such as \texttt{lr\_vectorizer} for logistic regression and \texttt{svm\_vectorizer} for the SVM model. In contrast, the LSTM model requires tokenized sequences, so the \texttt{lstm\_tokenizer} is used to convert the text into sequences of integers. Since the LSTM model requires fixed-length input, the sequences are padded to a maximum length of 100 tokens using \texttt{pad\_sequences}.
 
 \vspace{1em}
 
@@ -1398,64 +1066,15 @@ This script is designed to load several pre-trained machine learning models, app
 After transforming the data, the script proceeds to generate predictions from each model. The predictions for each model are given in the form of probabilities (instead of class labels), using methods like \texttt{predict\_proba()}. These probabilities represent the model’s confidence in each class for a given input. For the LSTM model, the prediction probabilities are generated using \texttt{model.predict()}, which outputs the probability distribution across possible classes. With these prediction probabilities in hand, the script constructs a feature matrix for the meta-learner, which is an ensemble learning method that combines the predictions of the base models. This meta-learner is an XGBoost classifier, which is a powerful machine learning algorithm known for its efficiency and predictive accuracy. The probabilities predicted by each base model are stacked together using \texttt{np.hstack()}, creating a combined feature vector for each sample in the dataset. These stacked features are then used to train the XGBoost meta-learner model. The trained meta-learner, now stored in \texttt{meta\_learner\_xgb}, is used to make final predictions. These predictions represent the ensemble decision, which ideally benefits from the strengths of all the base models. The script then evaluates the performance of the meta-learner using accuracy, classification report, and confusion matrix. Accuracy gives an overall percentage of correctly classified instances, while the classification report provides detailed metrics like precision, recall, and F1-score for each class. The confusion matrix helps visualize the performance of the classifier, showing how many samples were correctly or incorrectly classified for each class. Finally, the trained meta-learner is saved to disk using \texttt{pickle.dump()} for future use, so it can be reused to make predictions on new data without retraining. This entire process ensures that the ensemble model, which combines the strengths of different classifiers, is capable of making robust predictions on the mental health issue dataset.
 
 % --------- ENSEMBLE LEARNING 3----------
-\pagebreak
 
-\subsubsection{Ensemble Model 3 (Stacking with Meta Learner : Random Forest)}
+\vspace{1em}
 
 \noindent
-\textbf{Base Model : Logistic Regression, Naive Bayes, SVM, LSTM, XGBoost}
+\textbf{Ensemble Model 3 (Stacking): Logistic Regression, Naive Bayes, SVM, LSTM, XGBoost as base models and Random Forest as the meta learner. }
 
 \begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Evaluate Meta-Learner and Ensemble Model 3]
     \begin{lstlisting}[language=Python]
-import pickle
-import numpy as np
-import pandas as pd
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
-from sklearn.ensemble import RandomForestClassifier
-from tensorflow.keras.models import load_model
-from tensorflow.keras.utils import pad_sequences
-
-# Load models and vectorizers
-with open('LRmodel.pkl', 'rb') as file:
-    lr_model = pickle.load(file)
-with open('LRvectorizer.pkl', 'rb') as file:
-    lr_vectorizer = pickle.load(file)
-with open('SVMmodel.pkl', 'rb') as file:
-    svm_model = pickle.load(file)
-with open('SVMvectorizer.pkl', 'rb') as file:
-    svm_vectorizer = pickle.load(file)
-with open('XGBmodel.pkl', 'rb') as file:
-    xgb_model = pickle.load(file)
-with open('XGBvectorizer.pkl', 'rb') as file:
-    tfidf_vectorizer = pickle.load(file)
-with open('XGBlabel_encoder.pkl', 'rb') as file:
-    label_encoder = pickle.load(file)
-lstm_model = load_model('LSTMmodel.h5')
-with open('LSTMtokenizer.pkl', 'rb') as file:
-    lstm_tokenizer = pickle.load(file)
-with open('NBmodel.pkl', 'rb') as file:
-    nb_model = pickle.load(file)
-with open('NBvectorizer.pkl', 'rb') as file:
-    nb_vectorizer = pickle.load(file)
-
-# Load the test dataset
-data = pd.read_csv('preprocessed_mental_health.csv')
-data.dropna(subset=['cleaned_text'], inplace=True)
-X_test = data['cleaned_text']
-y_test = data['mental_health_issue']
-y_test = label_encoder.transform(y_test)
-
-# Preprocess the text
-X_test_lr = lr_vectorizer.transform(X_test)
-X_test_svm = svm_vectorizer.transform(X_test)
-\end{lstlisting}
-\end{tcolorbox}
-\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Evaluate Meta-Learner and Ensemble Model 3]
-    \begin{lstlisting}[language=Python]
-X_test_nb = nb_vectorizer.transform(X_test)
-X_test_xgb = tfidf_vectorizer.transform(X_test)
-X_test_lstm = lstm_tokenizer.texts_to_sequences(X_test)
-X_test_lstm = pad_sequences(X_test_lstm, maxlen=100, padding='post', truncating='post')
+# KEEPING THE EXACT SAME IMPLEMENTATION CODE AS THE Ensemble Model 1 BY IMPORTING THE NECESSARY LIBRARIES, LOADING THE MODELS, AND PREPROCESSING THE DATA 
 
 # Get individual model probabilities
 lr_predictions_proba = lr_model.predict_proba(X_test_lr)
@@ -1468,7 +1087,10 @@ lstm_predictions_proba = lstm_model.predict(X_test_lstm)
 stacked_features = np.hstack((
     lr_predictions_proba, svm_predictions_proba, nb_predictions_proba, xgb_predictions_proba, lstm_predictions_proba
 ))
-
+\end{lstlisting}
+\end{tcolorbox}
+\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Evaluate Meta-Learner and Ensemble Model 3]
+    \begin{lstlisting}[language=Python]
 # Train Random Forest as the meta-learner
 meta_learner_rf = RandomForestClassifier(
     max_depth=None, min_samples_split=20, min_samples_leaf=1, max_features='sqrt', bootstrap=False, random_state=42           
@@ -1481,77 +1103,21 @@ with open('meta_learner_rf.pkl', 'wb') as file:
 
 # Predict using the Random Forest meta-learner
 final_predictions_rf = meta_learner_rf.predict(stacked_features)
-
-# Evaluate the Random Forest ensemble model
-accuracy_rf = accuracy_score(y_test, final_predictions_rf)
-report_rf = classification_report(y_test, final_predictions_rf, target_names=label_encoder.classes_)
-
-print(f"Random Forest Meta-Learner Accuracy: {accuracy_rf * 100:.2f}%")
-print("Classification Report (Random Forest):\n", report_rf)
-print("Confusion Matrix (Random Forest):\n", confusion_matrix(y_test, final_predictions_rf))
     \end{lstlisting}
 \end{tcolorbox}
 
 \noindent
 In this section, we evaluate the performance of the Random Forest meta-learner model in the ensemble. The code loads various pre-trained models and their respective vectorizers, processes the test data, and then stacks the predictions from each model to form a feature matrix. The Random Forest classifier is then trained as a meta-learner using this stacked feature matrix. After training, the model's accuracy is calculated, and the classification report and confusion matrix are displayed to assess its performance. This ensemble approach combines the strengths of individual models, improving the overall classification accuracy for mental health issue prediction.
 
-
-\subsubsection{Ensemble Model 4 (Bagging)}
+\vspace{1em}
 
 \noindent
-\textbf{Base Model : Logistic Regression, Naive Bayes, SVM, LSTM, XGBoost}
-
+\textbf{Ensemble Model 4 (Bagging): Logistic Regression, Naive Bayes, SVM, LSTM, XGBoost as base models. }
+\vspace{1em}
 \noindent
 \begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Evaluate Bagging Meta-Learner and Ensemble Model 4]
     \begin{lstlisting}[language=Python]
-import pickle
-import numpy as np
-import pandas as pd
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
-from sklearn.ensemble import BaggingClassifier
-from tensorflow.keras.models import load_model
-from tensorflow.keras.utils import pad_sequences
-
-# Load models and vectorizers
-with open('LRmodel.pkl', 'rb') as file:
-    lr_model = pickle.load(file)
-with open('LRvectorizer.pkl', 'rb') as file:
-    lr_vectorizer = pickle.load(file)
-with open('SVMmodel.pkl', 'rb') as file:
-    svm_model = pickle.load(file)
-with open('SVMvectorizer.pkl', 'rb') as file:
-    svm_vectorizer = pickle.load(file)
-with open('xgb_model.pkl', 'rb') as file:
-    xgb_model = pickle.load(file)
-with open('tfidf_vectorizer.pkl', 'rb') as file:
-    tfidf_vectorizer = pickle.load(file)
-with open('label_encoder.pkl', 'rb') as file:
-    label_encoder = pickle.load(file)
-lstm_model = load_model('lstm_model.h5')
-with open('LSTM_tokenizer.pkl', 'rb') as file:
-    lstm_tokenizer = pickle.load(file)
-with open('NBmodel.pkl', 'rb') as file:
-    nb_model = pickle.load(file)
-with open('NBvectorizer.pkl', 'rb') as file:
-    nb_vectorizer = pickle.load(file)
-\end{lstlisting}
-\end{tcolorbox}
-\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Evaluate Bagging Meta-Learner and Ensemble Model 4]
-    \begin{lstlisting}[language=Python]
-# Load the test dataset
-data = pd.read_csv('preprocessed_mental_health.csv')
-data.dropna(subset=['cleaned_text'], inplace=True)
-X_test = data['cleaned_text']
-y_test = data['mental_health_issue']
-y_test = label_encoder.transform(y_test)
-
-# Preprocess the text
-X_test_lr = lr_vectorizer.transform(X_test)
-X_test_svm = svm_vectorizer.transform(X_test)
-X_test_nb = nb_vectorizer.transform(X_test)
-X_test_xgb = tfidf_vectorizer.transform(X_test)
-X_test_lstm = lstm_tokenizer.texts_to_sequences(X_test)
-X_test_lstm = pad_sequences(X_test_lstm, maxlen=100, padding='post', truncating='post')
+# KEEPING THE EXACT SAME IMPLEMENTATION CODE AS THE Ensemble Model 1 BY IMPORTING THE NECESSARY LIBRARIES, LOADING THE MODELS, AND PREPROCESSING THE DATA
 
 # Get individual model probabilities
 lr_predictions_proba = lr_model.predict_proba(X_test_lr)
@@ -1559,12 +1125,15 @@ svm_predictions_proba = svm_model.predict_proba(X_test_svm)
 nb_predictions_proba = nb_model.predict_proba(X_test_nb)
 xgb_predictions_proba = xgb_model.predict_proba(X_test_xgb)
 lstm_predictions_proba = lstm_model.predict(X_test_lstm)
-
+\end{lstlisting}
+\end{tcolorbox}
+\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Evaluate Meta-Learner and Ensemble Model 4]
+    \begin{lstlisting}[language=Python]
 # Stack the predictions to create the feature matrix for the meta-learner
 stacked_features = np.hstack((
     lr_predictions_proba, svm_predictions_proba,  nb_predictions_proba, xgb_predictions_proba,  lstm_predictions_proba
-))
-
+)) 
+        
 # Train BaggingClassifier as the ensemble model
 meta_learner_bagging = BaggingClassifier(
     n_estimators=50,            # Number of base models
@@ -1578,82 +1147,24 @@ meta_learner_bagging.fit(stacked_features, y_test)
 # Save the trained Bagging meta-learner
 with open('meta_learner_bagging.pkl', 'wb') as file:
     pickle.dump(meta_learner_bagging, file)
-\end{lstlisting}
-\end{tcolorbox}
-\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Evaluate Meta-Learner and Ensemble Model 4]
-    \begin{lstlisting}[language=Python]
+
 # Predict using the Bagging meta-learner
 final_predictions_bagging = meta_learner_bagging.predict(stacked_features)
-
-# Evaluate the Bagging ensemble model
-accuracy_bagging = accuracy_score(y_test, final_predictions_bagging)
-report_bagging = classification_report(y_test, final_predictions_bagging, target_names=label_encoder.classes_)
-
-print(f"Bagging Meta-Learner Accuracy: {accuracy_bagging * 100:.2f}%")
-print("Classification Report (Bagging):\n", report_bagging)
-print("Confusion Matrix (Bagging):\n", confusion_matrix(y_test, final_predictions_bagging))
     \end{lstlisting}
 \end{tcolorbox}
 
 \noindent
 In this section, the performance of the Bagging ensemble model is evaluated. The process begins by loading pre-trained models and their vectorizers, along with the test dataset. After preprocessing the text data for each model, the individual model probabilities are obtained. These predictions are then stacked to form a feature matrix that is fed into the BaggingClassifier, which is trained as a meta-learner. The accuracy, classification report, and confusion matrix are computed to assess the performance of the Bagging meta-learner on the test data.
 
+\pagebreak
 
-\subsubsection{Ensemble Model 5 (Blending with Meta-Learner : Random Forest)}
-
-\textbf{Base Model : Logistic Regression, Naive Bayes, SVM, LSTM, XGBoost}
+% --------- ENSEMBLE LEARNING 5----------
+\noindent
+\textbf{Ensemble Model 5 (Blending): Logistic Regression, Naive Bayes, SVM, LSTM, XGBoost as base models and Random Forest as the meta learner. }
 
 \begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Blending with Random Forest as Meta-Learner]
     \begin{lstlisting}[language=Python]
-import pickle
-import numpy as np
-import pandas as pd
-import tensorflow as tf
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
-from tensorflow.keras.models import load_model
-from tensorflow.keras.utils import pad_sequences
-from tensorflow.keras.utils import to_categorical
-\end{lstlisting}
-\end{tcolorbox}
-\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Blending with Random Forest as Meta-Learner]
-    \begin{lstlisting}[language=Python]
-# Load models and vectorizers
-with open('LRmodel.pkl', 'rb') as file:
-    lr_model = pickle.load(file)
-with open('LRvectorizer.pkl', 'rb') as file:
-    lr_vectorizer = pickle.load(file)
-with open('SVMmodel.pkl', 'rb') as file:
-    svm_model = pickle.load(file)
-with open('SVMvectorizer.pkl', 'rb') as file:
-    svm_vectorizer = pickle.load(file)
-with open('xgb_model.pkl', 'rb') as file:
-    xgb_model = pickle.load(file)
-with open('tfidf_vectorizer.pkl', 'rb') as file:
-    tfidf_vectorizer = pickle.load(file)
-with open('label_encoder.pkl', 'rb') as file:
-    label_encoder = pickle.load(file)
-lstm_model = load_model('lstm_model.h5')
-with open('LSTM_tokenizer.pkl', 'rb') as file:
-    lstm_tokenizer = pickle.load(file)
-with open('NBmodel.pkl', 'rb') as file:
-    nb_model = pickle.load(file)
-with open('NBvectorizer.pkl', 'rb') as file:
-    nb_vectorizer = pickle.load(file)
-
-# Load the test dataset
-data = pd.read_csv('preprocessed_mental_health.csv')
-data.dropna(subset=['cleaned_text'], inplace=True)
-X = data['cleaned_text']
-y = data['mental_health_issue']
-y = label_encoder.transform(y)
-
-# Split data into training and holdout sets (for blending)
-X_train, X_holdout, y_train, y_holdout = train_test_split(X, y, test_size=0.2, random_state=42)
-# One-hot encode the labels
-y_train_one_hot = to_categorical(y_train, num_classes=len(label_encoder.classes_))
-y_holdout_one_hot = to_categorical(y_holdout, num_classes=len(label_encoder.classes_))
+# KEEPING THE EXACT SAME IMPLEMENTATION CODE AS THE Ensemble Model 1 BY IMPORTING THE NECESSARY LIBRARIES, LOADING THE MODELS, AND PREPROCESSING THE DATA
 
 # Preprocess the text for the training set
 X_train_lr = lr_vectorizer.transform(X_train)
@@ -1662,10 +1173,7 @@ X_train_nb = nb_vectorizer.transform(X_train)
 X_train_xgb = tfidf_vectorizer.transform(X_train)
 X_train_lstm = lstm_tokenizer.texts_to_sequences(X_train)
 X_train_lstm = pad_sequences(X_train_lstm, maxlen=100, padding='post', truncating='post')
-\end{lstlisting}
-\end{tcolorbox}
-\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Blending with Random Forest as Meta-Learner]
-    \begin{lstlisting}[language=Python]
+
 # Train base models
 lr_model.fit(X_train_lr, y_train)
 svm_model.fit(X_train_svm, y_train)
@@ -1685,6 +1193,10 @@ X_holdout_nb = nb_vectorizer.transform(X_holdout)
 X_holdout_xgb = tfidf_vectorizer.transform(X_holdout)
 X_holdout_lstm = lstm_tokenizer.texts_to_sequences(X_holdout)
 X_holdout_lstm = pad_sequences(X_holdout_lstm, maxlen=100, padding='post', truncating='post')
+\end{lstlisting}
+\end{tcolorbox}
+\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Blending with Random Forest as Meta-Learner]
+    \begin{lstlisting}[language=Python]
 
 # Get predictions from base models on the holdout set
 lr_predictions_proba = lr_model.predict_proba(X_holdout_lr)
@@ -1705,81 +1217,31 @@ meta_learner_rf = RandomForestClassifier(
 
 # Fit the meta-learner using the predictions from the base models (holdout set)
 meta_learner_rf.fit(stacked_features, y_holdout)
-\end{lstlisting}
-\end{tcolorbox}
-\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Blending with Random Forest as Meta-Learner]
-    \begin{lstlisting}[language=Python]
+
 # Save the trained Random Forest meta-learner
 with open('meta_learner_rf_blending.pkl', 'wb') as file:
     pickle.dump(meta_learner_rf, file)
 
 # Predict using the Random Forest meta-learner on the holdout set
 final_predictions_rf = meta_learner_rf.predict(stacked_features)
-
-# Evaluate the Random Forest blending model
-accuracy_rf = accuracy_score(y_holdout, final_predictions_rf)
-report_rf = classification_report(y_holdout, final_predictions_rf, target_names=label_encoder.classes_)
-
-print(f"Random Forest Meta-Learner Accuracy (Blending): {accuracy_rf * 100:.2f}%")
-print("Classification Report (Random Forest):\n", report_rf)
-print("Confusion Matrix (Random Forest):\n", confusion_matrix(y_holdout, final_predictions_rf))
-    \end{lstlisting}
+\end{lstlisting}
 \end{tcolorbox}
 
 \noindent
 This code implements a blending approach to improve classification performance by combining the predictions of multiple base models through a Random Forest meta-learner. Initially, several machine learning models (Logistic Regression, SVM, Naive Bayes, XGBoost, and LSTM) are trained individually using the provided dataset. The dataset is split into training and holdout sets to facilitate the blending process. The models are then evaluated on the holdout set, and their prediction probabilities are obtained. These prediction probabilities from each model are stacked together to create a feature matrix, which is then used as input to a Random Forest classifier, acting as the meta-learner. The goal is to leverage the diversity in predictions from the base models to make more accurate final predictions. The Random Forest meta-learner is trained using this stacked feature matrix, and its performance is evaluated on the holdout set. The final output includes the accuracy, classification report, and confusion matrix of the Random Forest meta-learner, which represents the blended model's effectiveness. By blending the base models’ predictions, the Random Forest meta-learner aims to capture the strengths of each model and improve overall classification performance, reducing the likelihood of errors from any single model.
 
-\pagebreak
-\subsubsection{Ensemble Model 6 (Weighted Voting)}
+\vspace{1em}
 
-\textbf{Base Model : Logistic Regression, Naive Bayes, SVM, LSTM, XGBoost}
+\noindent
+\textbf{Ensemble Model 6 (Weighted Voting): Logistic Regression, Naive Bayes, SVM, LSTM, XGBoost as base models. }
 
 \begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Weighted Voting Ensemble for Classification]
     \begin{lstlisting}[language=Python]
-import pickle
-import numpy as np
-import pandas as pd
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
-from tensorflow.keras.models import load_model
-from tensorflow.keras.utils import pad_sequences
-
-# Load models and vectorizers
-with open('LRmodel.pkl', 'rb') as file:
-    lr_model = pickle.load(file)
-with open('LRvectorizer.pkl', 'rb') as file:
-    lr_vectorizer = pickle.load(file)
-with open('SVMmodel.pkl', 'rb') as file:
-    svm_model = pickle.load(file)
-with open('SVMvectorizer.pkl', 'rb') as file:
-    svm_vectorizer = pickle.load(file)
-with open('xgb_model.pkl', 'rb') as file:
-    xgb_model = pickle.load(file)
-with open('tfidf_vectorizer.pkl', 'rb') as file:
-    tfidf_vectorizer = pickle.load(file)
-with open('label_encoder.pkl', 'rb') as file:
-    label_encoder = pickle.load(file)
-lstm_model = load_model('lstm_model.h5')
-with open('LSTM_tokenizer.pkl', 'rb') as file:
-    lstm_tokenizer = pickle.load(file)
-with open('NBmodel.pkl', 'rb') as file:
-    nb_model = pickle.load(file)
-with open('NBvectorizer.pkl', 'rb') as file:
-    nb_vectorizer = pickle.load(file)
-
-# Load the test dataset
-data = pd.read_csv('preprocessed_mental_health.csv')
-data.dropna(subset=['cleaned_text'], inplace=True)
-X_test = data['cleaned_text']
-y_test = data['mental_health_issue']
-y_test = label_encoder.transform(y_test)
+# KEEPING THE EXACT SAME IMPLEMENTATION CODE AS THE Ensemble Model 1 BY IMPORTING THE NECESSARY LIBRARIES, LOADING THE MODELS, AND PREPROCESSING THE DATA
 
 # Preprocess the text
 X_test_lr = lr_vectorizer.transform(X_test)
 X_test_svm = svm_vectorizer.transform(X_test)
-\end{lstlisting}
-\end{tcolorbox}
-\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Weighted Voting Ensemble for Classification]
-    \begin{lstlisting}[language=Python]
 X_test_nb = nb_vectorizer.transform(X_test)
 X_test_xgb = tfidf_vectorizer.transform(X_test)
 X_test_lstm = lstm_tokenizer.texts_to_sequences(X_test)
@@ -1800,7 +1262,10 @@ weights = {
     'xgb': 0.25, # XGBoost
     'lstm': 0.15 # LSTM
 }
-
+\end{lstlisting}
+\end{tcolorbox}
+\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Weighted Voting Ensemble for Classification]
+    \begin{lstlisting}[language=Python]
 # Weighted sum of probabilities
 final_predictions_proba = (
     weights['lr'] * lr_predictions_proba + weights['svm'] * svm_predictions_proba + weights['nb'] * nb_predictions_proba + weights['xgb'] * xgb_predictions_proba + weights['lstm'] * lstm_predictions_proba
@@ -1808,14 +1273,6 @@ final_predictions_proba = (
 
 # Final predictions based on maximum weighted probability
 final_predictions = np.argmax(final_predictions_proba, axis=1)
-
-# Evaluate weighted voting ensemble
-accuracy = accuracy_score(y_test, final_predictions)
-report = classification_report(y_test, final_predictions, target_names=label_encoder.classes_)
-
-print(f"Weighted Voting Ensemble Accuracy: {accuracy * 100:.2f}%")
-print("Classification Report (Weighted Voting):\n", report)
-print("Confusion Matrix:\n", confusion_matrix(y_test, final_predictions))
     \end{lstlisting}
 \end{tcolorbox}
 
@@ -1823,8 +1280,9 @@ print("Confusion Matrix:\n", confusion_matrix(y_test, final_predictions))
 This code demonstrates the use of a weighted voting ensemble to classify mental health issues based on text data. The main goal of this approach is to combine the outputs from multiple base models—Logistic Regression, SVM, Naive Bayes, XGBoost, and LSTM—into a single, stronger prediction. Each of these models provides predicted probabilities for each class, and these probabilities are then combined using a weighted sum. The weights are assigned based on the individual performance of each model, which can be adjusted based on prior experimentation or evaluation. The ensemble's final prediction is made by taking the class with the highest probability after the weighted sum. This is a form of soft voting where the model probabilities, rather than just the final class labels, are combined. This method allows for more flexibility and the potential for better overall performance compared to simply choosing the most frequent class among the base models (hard voting). The text input is preprocessed for each model using appropriate vectorizers or tokenizers. Logistic Regression, SVM, Naive Bayes, and XGBoost models use TF-IDF or other feature extraction techniques, while the LSTM model processes the text sequences directly. After obtaining predictions from all models, the weighted sum of their probabilities is computed. The final class predictions are derived by selecting the class with the highest weighted probability. The ensemble model’s performance is evaluated on the test set using accuracy, classification report, and confusion matrix. This method takes advantage of the strengths of each individual model while mitigating their weaknesses, aiming for better generalization and accuracy in classifying mental health issues from text.
 
 % ---- ensemble model 7 ------
-
-\subsubsection{Ensemble Model 7 (Stacking and using Transformer)}
+\pagebreak
+\noindent
+\textbf{Ensemble Model 7 (Stacking and using Transformer): Logistic Regression, Naive Bayes, SVM, LSTM, Transformer, XGBoost as base models and Random Forest as the meta learner. }
 
 \begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Ensemble Model 7]
     \begin{lstlisting}[language=Python]
@@ -1838,10 +1296,7 @@ from tensorflow.keras.models import Model, Sequential
 from tensorflow.keras.utils import to_categorical
 from sklearn.model_selection import train_test_split, cross_val_score
 from tensorflow.keras.optimizers import Adam
-\end{lstlisting}
-\end{tcolorbox}
-\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Ensemble Model 7]
-    \begin{lstlisting}[language=Python]
+
 # load all pickle files
 # Load the saved transformer model with custom objects
 custom_objects = {"EmbeddingLayer": EmbeddingLayer,"EncoderLayer": EncoderLayer}
@@ -1881,6 +1336,11 @@ from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.models import Model, Sequential
 from tensorflow.keras.utils import to_categorical
 from sklearn.model_selection import train_test_split, cross_val_score
+\end{lstlisting}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Hierarchical Ensemble Model 1] 
+    \begin{lstlisting}[language=Python]
 from tensorflow.keras.optimizers import Adam
 import tensorflow as tf
 
@@ -1897,25 +1357,25 @@ class EmbeddingLayer(Layer):
         positions_encoding = self.position_embedding(positions)
         words_encoding = self.word_embedding(tokens)
         return positions_encoding + words_encoding
+
+class EncoderLayer(Layer):
+def __init__(self, total_heads, total_dense_units, embed_dim, **kwargs):
+    super(EncoderLayer, self).__init__(**kwargs)
+    self.multihead = MultiHeadAttention(num_heads=total_heads, key_dim=embed_dim)
+    self.nnw = Sequential([Dense(total_dense_units, activation="relu"), Dense(embed_dim)])
+    self.normalize_layer = LayerNormalization()
+
+def call(self, inputs):
+    attn_output = self.multihead(inputs, inputs)
+    normalize_attn = self.normalize_layer(inputs + attn_output)
+    nnw_output = self.nnw(normalize_attn)
+    final_output = self.normalize_layer(normalize_attn + nnw_output)
+    return final_output
     \end{lstlisting}
 \end{tcolorbox}
 
 \begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Hierarchical Ensemble Model 1] 
     \begin{lstlisting}[language=Python]
-class EncoderLayer(Layer):
-    def __init__(self, total_heads, total_dense_units, embed_dim, **kwargs):
-        super(EncoderLayer, self).__init__(**kwargs)
-        self.multihead = MultiHeadAttention(num_heads=total_heads, key_dim=embed_dim)
-        self.nnw = Sequential([Dense(total_dense_units, activation="relu"), Dense(embed_dim)])
-        self.normalize_layer = LayerNormalization()
-
-    def call(self, inputs):
-        attn_output = self.multihead(inputs, inputs)
-        normalize_attn = self.normalize_layer(inputs + attn_output)
-        nnw_output = self.nnw(normalize_attn)
-        final_output = self.normalize_layer(normalize_attn + nnw_output)
-        return final_output
-
 # Helper function to load models and vectorizers
 def load_models_and_vectorizers(prefix):
     with open(f'LRmodel_{prefix}.pkl', 'rb') as file:
@@ -1941,10 +1401,6 @@ def load_models_and_vectorizers(prefix):
         lstm_tokenizer = pickle.load(file)
     with open(f'Tlabel_encoder_{prefix}.pkl', 'rb') as file:
         t_label_encoder = pickle.load(file)
-        \end{lstlisting}
-    \end{tcolorbox}
-    \begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Hierarchical Ensemble Model 1] 
-        \begin{lstlisting}[language=Python]
     with open(f'Tvectorize_layer_{prefix}.pkl', 'rb') as file:
     t_vectorize_layer = pickle.load(file)
     transformer_model = tf.keras.models.load_model(f'Ttransformer_model_{prefix}.h5', custom_objects={
@@ -1955,7 +1411,10 @@ def load_models_and_vectorizers(prefix):
     return (lr_model, lr_vectorizer, nb_model, nb_vectorizer, svm_model, svm_vectorizer,
             xgb_model, tfidf_vectorizer, label_encoder, lstm_model, lstm_tokenizer,
             t_label_encoder, t_vectorize_layer, transformer_model)
-
+    \end{lstlisting}
+    \end{tcolorbox}
+    \begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Hierarchical Ensemble Model 1] 
+        \begin{lstlisting}[language=Python]
 # Function to create meta learner for a given dataset
 def create_meta_learner(dataset_path, prefix, meta_model_path):
     data = pd.read_csv(dataset_path)
@@ -1980,10 +1439,7 @@ def create_meta_learner(dataset_path, prefix, meta_model_path):
     X_lstm = lstm_tokenizer.texts_to_sequences(X)
     X_lstm = pad_sequences(X_lstm, maxlen=100, padding='post', truncating='post')
     X_transformer = t_vectorize_layer(X)
-\end{lstlisting}
-    \end{tcolorbox}
-    \begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Hierarchical Ensemble Model 1] 
-        \begin{lstlisting}[language=Python]
+
     # Get individual model probabilities
     stacked_features = np.hstack((
         lr_model.predict_proba(X_lr),
@@ -1996,19 +1452,18 @@ def create_meta_learner(dataset_path, prefix, meta_model_path):
 
     # Train meta-learner
     X_train, X_test, y_train, y_test = train_test_split(
-        stacked_features, y, test_size=0.2, stratify=y, random_state=42
-    )
-
-    meta_learner = RandomForestClassifier(
-        max_depth=None, min_samples_split=20, min_samples_leaf=1,
-        max_features='sqrt', bootstrap=False, random_state=42
-    )
+        stacked_features, y, test_size=0.2, stratify=y, random_state=42)
+\end{lstlisting}
+    \end{tcolorbox}
+    \begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Hierarchical Ensemble Model 1] 
+        \begin{lstlisting}[language=Python]
+    
+    meta_learner = RandomForestClassifier(max_depth=None, min_samples_split=20, min_samples_leaf=1,max_features='sqrt', bootstrap=False, random_state=42)
     meta_learner.fit(X_train, y_train)
 
     # Save meta-learner
     with open(meta_model_path, 'wb') as file:
         pickle.dump(meta_learner, file)
-
     return stacked_features, y
 
 # Create meta learners for all subsets
@@ -2019,7 +1474,6 @@ for i in range(1, 7):
     dataset_path = f'preprocessed_mental_health_{i}.csv'
     prefix = f'{i}'
     meta_model_path = f'meta_learner_rf_{i}.pkl'
-
     features, labels = create_meta_learner(dataset_path, prefix, meta_model_path)
     meta_features.append(features)
     meta_labels.append(labels)
@@ -2027,24 +1481,16 @@ for i in range(1, 7):
 # Combine meta features and labels for final meta-learner
 meta_features = np.vstack(meta_features)
 meta_labels = np.concatenate(meta_labels)
-\end{lstlisting}
-\end{tcolorbox}
-\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Hierarchical Ensemble Model 1] 
-    \begin{lstlisting}[language=Python]
+
 # Train final meta-learner
-final_meta_learner = RandomForestClassifier(
-    max_depth=None, min_samples_split=20, min_samples_leaf=1,
-    max_features='sqrt', bootstrap=False, random_state=42
-)
+final_meta_learner = RandomForestClassifier(max_depth=None, min_samples_split=20, min_samples_leaf=1,max_features='sqrt', bootstrap=False, random_state=42)
 skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+
 cv_scores = cross_val_score(final_meta_learner, meta_features, meta_labels, cv=skf, scoring='accuracy')
 final_meta_learner.fit(meta_features, meta_labels)
 with open('final_meta_learner_rf.pkl', 'wb') as file:
     pickle.dump(final_meta_learner, file)
-print(f"Cross-Validation Accuracies: {cv_scores}")
-print(f"Mean Validation Accuracy: {np.mean(cv_scores) * 100:.2f}%")
-print(f"Validation Accuracy Std Dev: {np.std(cv_scores) * 100:.2f}%")
-    \end{lstlisting}
+\end{lstlisting}
 \end{tcolorbox}
 
 \noindent
@@ -2061,7 +1507,7 @@ The models' predictions are gathered as probabilities, representing the confiden
 \textbf{Approach 2 : One Ensemble for one type of base model → Final Ensemble Model}
 
 \noindent
-The below code expands upon the hierarchical ensemble approach by constructing a multi-layered ensemble model. The primary goal is to group models of the same type, such as Logistic Regression, SVM, Naive Bayes, XGBoost, LSTM, and Transformer, from different data subsets into dedicated ensemble models. Each ensemble model is trained using Logistic Regression as the meta-learner. First, the dataset is divided into multiple subsets, each containing preprocessed data for training individual models. For every subset, models of various types are trained, and their vectorizers or tokenizers preprocess the input data. The function create\_ensemble\_for\_model\_type then groups models of the same type, collecting predictions across all subsets. These predictions are used to train a Logistic Regression meta-learner for each model type, resulting in six meta-learners, one for each model type. In the second step,
+The below code expands upon the hierarchical ensemble approach by constructing a multi-layered ensemble model. The primary goal is to group models of the same type, such as Logistic Regression, SVM, Naive Bayes, XGBoost, LSTM, and Transformer, from different data subsets into dedicated ensemble models. Each ensemble model is trained using Logistic Regression as the meta-learner. First, the dataset is divided into multiple subsets, each containing preprocessed data for training individual models. For every subset, models of various types are trained, and their vectorizers or tokenizers preprocess the input data. The function create\_ensemble\_for\_model\_type then groups models of the same type, collecting predictions across all subsets. These predictions are used to train a Logistic Regression meta-learner for each model type, resulting in six meta-learners, one for each model type. In the second step, predictions from these meta-learners are combined into a feature set for each dataset subset, capturing the information from all model types. These combined predictions and the labels from all subsets are used to train a Random Forest as the final meta-learner, creating the ultimate ensemble model. This approach improves upon the previous model by providing a hierarchical organization, where first-level meta-learners group models by type, and a second-level meta-learner combines these ensembles into a robust final model. The flexibility of this approach allows fine-tuning at each level, such as optimizing the Logistic Regression for type-specific ensembles and Random Forest for the final ensemble. Additionally, by leveraging the strengths of various model architectures and combining them hierarchically, the model is better equipped to generalize to unseen data.
 
 \begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Hierarchical Ensemble Model 2] 
     \begin{lstlisting}[language=Python]
@@ -2165,7 +1611,7 @@ final_labels = np.concatenate(final_labels)
 \end{tcolorbox}
 
 \noindent
-predictions from these meta-learners are combined into a feature set for each dataset subset, capturing the information from all model types. These combined predictions and the labels from all subsets are used to train a Random Forest as the final meta-learner, creating the ultimate ensemble model. This approach improves upon the previous model by providing a hierarchical organization, where first-level meta-learners group models by type, and a second-level meta-learner combines these ensembles into a robust final model. The flexibility of this approach allows fine-tuning at each level, such as optimizing the Logistic Regression for type-specific ensembles and Random Forest for the final ensemble. Additionally, by leveraging the strengths of various model architectures and combining them hierarchically, the model is better equipped to generalize to unseen data.
+
 
 \pagebreak
 
