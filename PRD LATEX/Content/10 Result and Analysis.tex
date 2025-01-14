@@ -892,7 +892,10 @@ Ultimately, the combination of \textbf{BoW} and \textbf{TFIDF} strikes a balance
 \pagebreak
 
 \subsection{Results from Ensemble Model Training and Testing}
-\subsubsection{Ensemble Model 1}
+
+\vspace{1em}
+\noindent
+\textbf{Ensemble Model 1}
 
 \begin{center}
     \textbf{Cross-Validation Accuracy Scores} \\[0.5em]
@@ -971,7 +974,9 @@ to distinguish between different classes. The AUC score ranges from 0 to 1, with
 This ensemble model, combining Logistic Regression and XGBoost, is highly effective for the mental health classification web application due to its ability to leverage the strengths of both algorithms. Logistic Regression provides a simple yet powerful linear approach to classification, offering interpretability and efficiency, while XGBoost excels at handling complex, non-linear relationships with its gradient boosting framework, enabling better accuracy and robustness. By stacking these models, the ensemble approach mitigates the individual weaknesses of each algorithm—Logistic Regression's limitations in capturing non-linear patterns and XGBoost's susceptibility to overfitting on small datasets—resulting in a more balanced, accurate, and generalizable model. This synergy ensures that the mental health classification web application delivers reliable, high-precision predictions across diverse text-based inputs.
 
 
-\subsubsection{Ensemble Model 2}
+\vspace{1em}
+\noindent
+\textbf{Ensemble Model 2}
 
 \begin{center}
     \textbf{Cross-Validation Accuracy Scores} \\[0.5em]
@@ -1056,8 +1061,9 @@ While using models like XGBoost, SVM, Naive Bayes, and LSTM as meta-learners in 
 
 \pagebreak
 
-\subsubsection{Ensemble Model 3}
 
+\noindent
+\textbf{Ensemble Model 3}
 \begin{center}
     \textbf{Cross-Validation Accuracy Scores} \\[0.5em]
     \begin{tabular}{|c|c|}
@@ -1124,8 +1130,9 @@ While using models like XGBoost, SVM, Naive Bayes, and LSTM as meta-learners in 
 \noindent
 The confusion matrix for the Random Forest model shows the performance of the classifier for each of the five mental health issues. For anxiety, there were 389 true positives, 2 false positives, 4 false negatives, and 2 misclassifications into other classes, demonstrating the model's high precision and recall for this category. Similarly, the bipolar disorder class had 351 true positives, 1 false positive, and 28 misclassifications into other classes, indicating strong but slightly lower recall compared to other categories. Depression exhibited robust performance with 377 true positives, only 6 misclassifications into other classes, and minimal false negatives. The normal class had an outstanding result with 2127 true positives, 8 false positives, and only 1 false negative, highlighting the model’s exceptional accuracy for the majority class. For the PTSD class, there were 386 true positives, 5 misclassifications into other classes, and minimal false positives and negatives, showcasing excellent performance. Overall, the confusion matrix indicates that the Random Forest model is highly effective across all classes, with very few errors. The consistent performance across all classes underscores the model's ability to distinguish between different mental health conditions with high accuracy and reliability. Random Forest is particularly effective at mitigating overfitting because it uses techniques like bootstrapping and random feature selection when constructing decision trees. This ensures that individual trees focus on different aspects of the data, reducing the risk of over-reliance on noise or specific patterns that might lead to overfitting. In contrast, linear models like Logistic Regression are inherently more sensitive to overfitting in high-dimensional spaces or when the data contains multicollinearity. Logistic Regression assumes a linear relationship between features and the target variable, making it less flexible in capturing complex patterns and more prone to memorizing specific data points, especially when regularization techniques are not carefully tuned. Despite experimenting with alternative configurations, such as N-Gram for XGBoost or TF-IDF for SVM, the selected ensemble model remains one of the optimal choices. The minor accuracy gains offered by the selected model are complemented by its computational efficiency, making it a practical solution for deployment. Random Forest’s robust handling of overfitting and ability to generalize effectively across different inputs further solidify its suitability as the meta-learner, ensuring the web application remains both efficient and reliable in its predictive capabilities.
 
-
-\subsubsection{Ensemble Model 4}
+\vspace{1em}
+\noindent
+\textbf{Ensemble Model 4}
 
 \begin{center}
     \textbf{Cross-Validation Accuracy Scores} \\[0.5em]
@@ -1193,12 +1200,16 @@ The confusion matrix for the Random Forest model shows the performance of the cl
 \noindent
 The classification results for the Bagging model demonstrate high performance, with an accuracy of 97.63\%. The classification report highlights strong precision, recall, and F1-scores across all classes, confirming the model's capability to accurately identify and classify mental health states. Notably, the "Normal" class exhibits near-perfect classification with precision, recall, and F1-scores all close to 0.99. Other classes, such as "Anxiety," "Bipolar," and "PTSD," also maintain high performance with minimal errors. The confusion matrix reveals minimal misclassifications. For example, in the "Anxiety" class, only a small number of instances are misclassified into other categories, while the "Bipolar" class shows a slightly higher degree of misclassification but still achieves a recall of 0.90 and an F1-score of 0.92. These results emphasize the robustness of the Random Forest model in handling complex datasets.
 
+\vspace{1em}
+
 \noindent
 Bagging classifiers, while highly effective at improving predictive accuracy, have a tendency to overfit the training data when used as meta-learners in ensemble models. This is due to the way bagging works, which involves training multiple base models on bootstrapped subsets of the training data and averaging their predictions. Although this method reduces variance in individual models, it can inadvertently lead to overfitting. Bagging classifiers aggregate outputs from high-variance base models, and when used as a meta-learner, the bagging process leverages outputs from already strong individual classifiers such as SVM, XGBoost, and LSTM. This additional layer of aggregation may amplify the model's capacity to memorize the training data, particularly when the meta-learner is exposed to intricate patterns that are not generalizable to unseen data. This can result in high accuracy on the training set but poor generalization to new data. The Bagging classifier can achieve an impressive accuracy, such as 99.77\%, but this performance might not hold in real-world scenarios due to its reduced ability to generalize. When the model encounters slight variations in the testing dataset, its overfitting nature can cause the model to fail in maintaining consistent accuracy, leading to unreliable predictions. Bagging classifiers also do not inherently introduce the same level of regularization that Random Forest does. Random Forest uses feature-level randomness, selecting a subset of features for splitting at each node, which helps reduce overfitting by preventing any single feature from dominating the splits. Bagging classifiers, on the other hand, utilize all available features for training, which increases the likelihood of the model fitting noise in the training data, especially in high-dimensional datasets. Moreover, Bagging classifiers can be unstable and sensitive to minor changes in input data or individual base model outputs. This instability can further reduce the reliability of the model in practical applications, where consistency in predictions is crucial. In contrast, Random Forest, despite having slightly lower accuracy than the Bagging classifier, is better suited as a meta-learner. Random Forest introduces feature-level randomness, which prevents overfitting and enables the model to generalize well to unseen data. The bias-variance tradeoff is better balanced in Random Forest, which allows it to perform consistently across different datasets. Another significant advantage of using Random Forest as a meta-learner is its ability to maintain stability when retrained with new data inputs. For example, when retraining with user inputs, the accuracy fluctuations of the Random Forest meta-learner are minimal, indicating its robustness and ensuring stable performance over time. Additionally, Random Forest classifiers are computationally more efficient than Bagging classifiers, making them a more practical choice for real-time systems, such as those in web applications.
 
 \pagebreak
 
-\subsubsection{Ensemble Model 5}
+
+\noindent
+\textbf{Ensemble Model 5}
 
 \begin{center}
     \textbf{Cross-Validation Accuracy Scores} \\[0.5em]
@@ -1269,8 +1280,9 @@ Bagging classifiers, while highly effective at improving predictive accuracy, ha
 The Blending Meta-Learner model exhibits strong performance with a test accuracy of 97.17\%. The classification report highlights solid precision, recall, and F1-scores across all classes, confirming the model's ability to accurately classify mental health conditions. For anxiety, the precision, recall, and F1-score are 0.96, 0.95, and 0.96 respectively, indicating high accuracy in classifying anxiety. The bipolar class shows a precision of 0.94 and recall of 0.89, with an F1-score of 0.92. Depression has an excellent performance with precision, recall, and F1-score of 0.96, 0.95, and 0.95, respectively. The normal class shows near-perfect classification with precision of 0.98, recall of 0.99, and F1-score of 0.99, highlighting the model's ability to accurately predict the majority class. PTSD shows a precision of 0.97, recall of 0.97, and F1-score of 0.97, reflecting strong performance. The accuracy across all classes is 97\%, with the macro average F1-score being 0.96, and the weighted average F1-score being 0.97. The confusion matrix reveals minimal misclassifications, with anxiety, bipolar, and depression showing only a few misclassified instances, and the normal class showing very few errors. The ROC AUC scores indicate excellent model performance in distinguishing between classes, with perfect scores of 1.00 for anxiety, depression, normal, and PTSD, and a score of 0.99 for bipolar. Cross-validation results show consistency, with accuracies ranging from 96.77\% to 97.31\% and a mean validation accuracy of 96.98\%. The standard deviation of validation accuracy is 0.25\%, demonstrating the stability of the model across different folds. These results emphasize the effectiveness and reliability of the Blending Meta-Learner in predicting mental health conditions with minimal misclassifications and high consistency. However, despite these impressive results, stacking ensemble using Random Forest as the meta-learner is often preferred over this Blending model. The main reason for this is that stacking tends to be more effective in generalizing to unseen data because it leverages multiple models for training the meta-learner, which reduces the risk of overfitting. In contrast, Blending may result in overfitting as it typically uses a simpler approach of directly training the meta-learner on the predictions from base models without incorporating a cross-validation step.
 
 
-
-\subsubsection{Ensemble Model 6}
+\vspace{1em}
+\noindent
+\textbf{Ensemble Model 6}
 
 \begin{center}
     \textbf{Cross-Validation Accuracy Scores} \\[0.5em]
@@ -1343,8 +1355,9 @@ The Weighted Voting model achieved an accuracy of 95.15\% on the test set, showc
 \noindent
 While the Weighted Voting ensemble model shows a respectable accuracy of 94.93\% and performs well across all classes, it is not preferred over other models like the Stacking ensemble with Random Forest as the meta-learner. The primary reason for this is that the Weighted Voting model does not fully take advantage of the strength of individual base models in the same way as the Stacking ensemble does. In Weighted Voting, the predictions of base models are combined based on their weighted contribution, but this method does not allow for the optimal learning of inter-model relationships that Stacking does. In the Stacking model, the Random Forest meta-learner is specifically designed to handle interactions between different base models, learning how to combine their strengths in a way that minimizes overfitting while maintaining high accuracy. In contrast, Weighted Voting simply assigns a weight to each model based on its performance, without a deeper mechanism to adjust for overfitting or to learn from the diversity of base models. This lack of fine-tuning in model interaction limits its ability to generalize as effectively as Stacking. Furthermore, the Weighted Voting model's performance may suffer when dealing with more complex relationships between features, as it relies on the simplicity of averaging the weighted predictions. While it is computationally efficient, it does not provide the robustness that Stacking offers through a more sophisticated meta-learning approach. As a result, despite the relatively high accuracy, the Weighted Voting ensemble model is considered less optimal for the given task when compared to more powerful models like Stacking.
 
-
-\subsubsection{Ensemble Model 7}
+\vspace{1em}
+\noindent
+\textbf{Ensemble Model 7}
 
 \begin{center}
     \textbf{Cross-Validation Accuracy Scores} \\[0.5em]
@@ -1423,8 +1436,7 @@ The ensemble model, which leverages a Transformer-based model as the base learne
 \vspace{1em}
 
 \noindent
-Incorporating a custom Transformer-based model as part of the ensemble brings significant advantages in the classification task. Transformer models are particularly effective in handling sequential data due to their self-attention mechanism, which allows the model to focus on important features and long-range dependencies within the input data. This makes them particularly suited for tasks like natural language processing or time-series classification, where context plays a crucial role. By integrating a Transformer as a base model in an ensemble, the model can capture complex patterns and relationships that other models, such as Logistic Regression or Naive Bayes, may overlook. The ensemble approach benefits from the Transformer’s ability to learn sophisticated representations, while the meta-learner, in this case, Random Forest, effectively combines the outputs of various base models to enhance overall performance. This combination not only boosts accuracy but also improves the robustness and generalization capabilities of the model, making it more reliable for real-world applications. The Transformer architecture is fundamentally different from traditional models due to its self-attention mechanism, which allows the model to weigh the importance of different tokens in a sequence regardless of their distance from each other. Unlike recurrent neural networks (RNNs) or long short-term memory (LSTM) networks, which process data sequentially, Transformers are capable of processing entire sequences in parallel, which significantly speeds up training. In a Transformer, each input token is transformed into an embedding, and the self-attention mechanism computes a weighted sum of all tokens, allowing the model to capture contextual relationships between distant elements. This allows the Transformer to learn both local and global patterns effectively. For classification tasks, this ability to understand long-range dependencies in the data is crucial. For example, in text classification, words in a sentence may carry meaning only when considered in the context of other words. A Transformer can efficiently model these relationships, regardless of how far apart the words are in the input sequence. In an ensemble, the Transformer’s ability to learn complex, high-dimensional feature representations complements the more straightforward models, which may not be able to capture such intricate patterns. When used as a base model, the Transformer generates rich feature vectors, which are then processed by the meta-learner. In this case, Random Forest, a robust ensemble method, takes the output of the base models, including the Transformer, and uses it to make the final classification decision. The meta-learner helps in reducing overfitting and improving generalization by aggregating the predictions of multiple models, leading to better performance across different data distributions. By leveraging the strengths of the Transformer’s ability to understand complex relationships and the Random Forest’s ability to combine multiple models, the ensemble approach becomes highly effective in complex classification tasks.
-
+Incorporating a custom Transformer-based model as part of the ensemble brings significant advantages in the classification task. Transformer models are particularly effective in handling sequential data due to their self-attention mechanism, which allows the model to focus on important features and long-range dependencies within the input data. This makes them particularly suited for tasks like natural language processing or time-series classification, where context plays a crucial role. By integrating a Transformer as a base model in an ensemble, the model can capture complex patterns and relationships that other models, such as Logistic Regression or Naive Bayes, may overlook. The ensemble approach benefits from the Transformer’s ability to learn sophisticated representations, while the meta-learner, in this case, Random Forest, effectively combines the outputs of various base models to enhance overall performance. This combination not only boosts accuracy but also improves the robustness and generalization capabilities of the model, making it more reliable for real-world applications. When used as a base model, the Transformer generates rich feature vectors, which are then processed by the meta-learner. In this case, Random Forest, a robust ensemble method, takes the output of the base models, including the Transformer, and uses it to make the final classification decision. The meta-learner helps in reducing overfitting and improving generalization by aggregating the predictions of multiple models, leading to better performance across different data distributions. By leveraging the strengths of the Transformer’s ability to understand complex relationships and the Random Forest’s ability to combine multiple models, the ensemble approach becomes highly effective in complex classification tasks.
 
 \vspace{1em}
 
@@ -1438,8 +1450,6 @@ Below is a comparison of all the ensemble models for reference
     \label{lstm arch}  % Label for referencing the figure
 \end{figure}
 
-
-\pagebreak
 
 \subsection{Result from hierarchical Ensemble Models}
 
@@ -1472,7 +1482,7 @@ The hierarchical ensemble model implemented in this project addresses the challe
 \vspace{1em}
 
 \noindent
-The hierarchical structure of this approach aligns with distributed systems by effectively implementing data parallelism and task parallelism. By dividing the dataset into subsets, the computational load is distributed, preventing memory bottlenecks and ensuring resource optimization. Each subset is processed independently, enabling a modular design where tasks are decoupled. This design also enhances fault tolerance, as the failure of a single subset’s processing does not affect the others. Moreover, the scalability of the approach allows it to adapt to varying resource constraints. Adding more computational nodes makes it feasible to handle additional subsets or process the data faster, showcasing its adaptability and efficiency. The project also emphasizes the potential of this design to be implemented on distributed computing frameworks such as Apache Spark, TensorFlow Distributed, or PyTorch Distributed. These frameworks provide tools to split datasets, distribute tasks, and aggregate results seamlessly across multiple nodes. The distributed nature of the architecture ensures high throughput and reduces training time, making it suitable for scenarios involving large-scale datasets. The hierarchical ensemble model design is a future-ready solution that can transition seamlessly to distributed platforms, leveraging cloud services or on-premises high-performance computing clusters. The methodology combines the strengths of ensemble learning with the efficiencies of distributed systems to create a robust and scalable solution for modern data science challenges.
+The hierarchical structure of this approach aligns with distributed systems by effectively implementing data parallelism and task parallelism. By dividing the dataset into subsets, the computational load is distributed, preventing memory bottlenecks and ensuring resource optimization. Each subset is processed independently, enabling a modular design where tasks are decoupled. This design also enhances fault tolerance, as the failure of a single subset’s processing does not affect the others. Moreover, the scalability of the approach allows it to adapt to varying resource constraints. Adding more computational nodes makes it feasible to handle additional subsets or process the data faster, showcasing its adaptability and efficiency. The distributed nature of the architecture ensures high throughput and reduces training time, making it suitable for scenarios involving large-scale datasets. The hierarchical ensemble model design is a future-ready solution that can transition seamlessly to distributed platforms, leveraging cloud services or on-premises high-performance computing clusters. The methodology combines the strengths of ensemble learning with the efficiencies of distributed systems to create a robust and scalable solution for modern data science challenges.
 
 \vspace{1em}
 
@@ -1524,11 +1534,6 @@ The choice of \( n = 6 \) is reasonable given the following factors:
 
 \noindent
 3. \textbf{Performance and Aggregation}: With \( n = 6 \), both architectures remain computationally feasible. In Architecture 1, \( n = 6 \) leads to six independent intermediate ensemble models, which are aggregated into the final ensemble. In Architecture 2, models of the same type from all six subsets are combined into six intermediate ensemble models, one for each base model type.
-
-\vspace{1em}
-
-\noindent
-The choice of \( n = 6 \) also ensures that the dataset is sufficiently divided to prevent memory bottlenecks while allowing each subset to contribute meaningful insights to the ensemble. Larger values of \( n \) would reduce the subset size but increase the number of models to train, leading to longer execution times. Conversely, smaller values of \( n \) would increase the subset size, risking memory overflow in Colab. Here, the RAM usage per record is approximated based on empirical testing, and \( n \) can be dynamically adjusted if needed. Given that \( S \approx 27,833 \) records per subset fits comfortably within 12GB of RAM, the choice of \( n = 6 \) is both optimal and practical.
 
 \pagebreak
 
