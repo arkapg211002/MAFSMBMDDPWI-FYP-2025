@@ -30,7 +30,7 @@ The Requirement Matrix is a comprehensive tool used to track and manage the key 
 \textbf{\emph{Priority: High}} \\
 \textbf{\emph{Category: Functional}} \\
 \noindent
-The system requires an ability to collect and ingest a large dataset of Reddit posts using Python Reddit API Wrapper. The data should include text content from tweets, associated sentiment labels, and other metadata such as timestamp and user details. This will serve as the primary source of information for mental health disorder detection. The system must ensure that the dataset is loaded correctly into the machine learning environment, and any discrepancies in the structure should be handled with pre-processing steps like cleaning, normalization. \\
+The system requires an ability to collect and ingest a large dataset of Reddit posts using Python Reddit API Wrapper. The data should include text content from reddit posts along with the mental health category. This will serve as the primary source of information for mental health disorder detection. The system must ensure that the dataset is loaded correctly into the machine learning environment, and any discrepancies in the structure should be handled with pre-processing steps like cleaning, normalization. \\
 
 \noindent
 \textbf{\emph{Requirement ID: FR-002}} \\ 
@@ -38,7 +38,7 @@ The system requires an ability to collect and ingest a large dataset of Reddit p
 \textbf{\emph{Priority: High}} \\
 \textbf{\emph{Category: Functional}} \\
 \noindent
-The system must include modules to clean the raw data, such as removing irrelevant characters, handling missing data, and tokenizing text. For the social media posts, it is essential to remove URLs, stopwords, and unnecessary punctuation. The pre-processing pipeline should also convert the text into a suitable numerical format using Term Frequency-Inverse Document Frequency (TF-IDF) for further analysis. Proper pre-processing ensures that the data is in a form that can be efficiently used by machine learning models. \\
+The system must include modules to clean the raw data, such as removing irrelevant characters, handling missing data, and tokenizing text. For the social media posts, it is essential to remove URLs, stopwords, and unnecessary punctuation. The pre-processing pipeline should also convert the text into a suitable numerical format using Term Frequency-Inverse Document Frequency or Bag Of Words for further analysis. Proper pre-processing ensures that the data is in a form that can be efficiently used by machine learning models. \\
 
 \noindent
 \textbf{\emph{Requirement ID: FR-003}} \\ 
@@ -46,7 +46,7 @@ The system must include modules to clean the raw data, such as removing irreleva
 \textbf{\emph{Priority: High}} \\
 \textbf{\emph{Category: Functional}} \\
 \noindent
-The system needs to implement machine learning algorithms such as Logistic Regression and XGboost to classify social media posts based on text and detect potential signs of mental health disorders. The system must be able to train these models on historical data and then apply them to predict the sentiment and detect mental health-related issues in new posts. \\
+The system needs to implement machine learning algorithms such as Logistic Regression, Naive Bayes, SVM, LSTM, Transformer and XGboost to classify social media posts based on text and detect potential signs of mental health disorders. The system must be able to train these models on historical data and then apply them to predict the sentiment and detect mental health-related issues in new posts. \\
 
 \noindent
 \textbf{\emph{Requirement ID: FR-004}} \\ 
@@ -75,8 +75,5 @@ The addition of testing as a non-functional requirement ensures that the system 
 \noindent
 The system must be deployed considering the potential growth in the amount of social media posts that need to be analyzed. The data processing pipeline should be scalable to handle increasing data size without significant degradation in performance. This could involve implementing parallel processing techniques or leveraging cloud-based infrastructure to ensure that processing large datasets remains feasible even as the dataset scales. 
 
-\vspace{1em}
-\noindent
-The system is designed to support comprehensive mental health disorder detection from social media posts, with key functional and non-functional requirements. It requires the ability to collect and ingest large datasets of Reddit posts using the Python Reddit API Wrapper, capturing text content, sentiment labels, timestamps, and user metadata. This data forms the foundation for analysis, necessitating robust pre-processing steps to ensure quality and consistency. The pre-processing pipeline must clean raw data by removing irrelevant characters, URLs, and stopwords, handling missing values, and tokenizing text. Additionally, text should be converted into numerical formats using techniques like Term Frequency-Inverse Document Frequency (TF-IDF) for model training. The system incorporates machine learning algorithms such as Logistic Regression and XGBoost to classify social media posts and detect potential mental health disorders. It must support training these models on historical data while applying them to predict and classify new posts. To ensure model reliability, the system splits data into training and test sets, evaluating performance using metrics like accuracy, precision, recall, and F1-score. Model fine-tuning, including hyperparameter adjustments, is essential for optimizing performance. Non-functional requirements focus on testing to ensure the system remains maintainable and extensible, enabling future updates without significant disruption. Additionally, deployment considerations emphasize scalability to process increasing volumes of social media posts, leveraging parallel processing and cloud infrastructure to maintain efficiency. Together, these requirements provide a robust framework for effective and scalable mental health detection.
 
 % -------------------- Requirement Analysis Ends -----------------------------
