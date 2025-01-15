@@ -114,13 +114,16 @@ The dataset for mental health classification was compiled from various subreddit
 \vspace{1em}
 
 \noindent
-Given the large size of the original dataset, training and testing the model on the entire dataset would require significant computational resources, including memory and processing power. Such constraints can lead to prolonged training times and potentially infeasible execution on standard hardware. By using a subset of the cleaned dataset, we can significantly reduce the computational load while maintaining a representative sample of the data. This approach strikes a balance between efficiency and performance, enabling the development and evaluation of models in a more manageable and resource-friendly manner. Moreover, working with a subset ensures faster experimentation and fine-tuning cycles, which is crucial for iterative improvement in machine learning workflows.
+Given the large size of the original dataset, training and testing the model on the entire dataset would require significant computational resources, including memory and processing power. Such constraints can lead to prolonged training times and potentially infeasible execution on standard hardware. By using a subset of the cleaned dataset, we can significantly reduce the computational load while maintaining a representative sample of the data. This approach strikes a balance between efficiency and performance, enabling the development and evaluation of models in a more manageable and resource-friendly manner. Moreover, working with a subset ensures faster experimentation which is crucial for iterative improvement.
 
-\pagebreak
+
+
+
+
 
 \subsubsection{Data Preprocessing}
 
-\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Text Preprocessing]
+\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Data Preprocessing]
     \begin{lstlisting}[language=Python]
 import pandas as pd
 import re
@@ -128,20 +131,21 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import nltk
+\end{lstlisting}
+\end{tcolorbox}
 
+\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Data Preprocessing]
+    \begin{lstlisting}[language=Python]
 # Download stopwords (if you haven't already)
 nltk.download('stopwords')
 nltk.download('punkt')
 
 # Load the dataset
 df = pd.read_csv('mental_health.csv')
-
 # 1. Handling Missing Values
 df.dropna(subset=['text'], inplace=True)
-
 # 2. Removing duplicates (if any)
 df.drop_duplicates(subset=['text'], inplace=True)
-
 # 3. Text Preprocessing
 negative_words = {"not", "no", "nor", "never", "nothing", "nowhere", "neither", "cannot", "n't", "without", "barely", "hardly", "scarcely"}
 
@@ -156,29 +160,24 @@ def clean_text(text):
     return clean_text
 
 df['cleaned_text'] = df['text'].apply(clean_text)  # Apply the cleaning function to the 'text' column
-
-\end{lstlisting}
-\end{tcolorbox}
-
-\begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Text Preprocessing]
-\begin{lstlisting}[language=Python]
 # 4. Feature Extraction using TF-IDF Vectorization
 vectorizer = TfidfVectorizer(max_features=10000)  # Adjust the max_features
 X = vectorizer.fit_transform(df['cleaned_text'])  # Fit and transform the cleaned text data
 X_df = pd.DataFrame(X.toarray(), columns=vectorizer.get_feature_names_out())  # Convert the result to a DataFrame for easier understanding
-
 # Save the preprocessed dataset (optional)
 df.to_csv('preprocessed_mental_health.csv', index=False)
-    \end{lstlisting}
+\end{lstlisting}
 \end{tcolorbox}
 
+
 \noindent
-The code snippet above demonstrates the preprocessing steps for a mental health dataset. It handles missing values and duplicates in the text data, performs text cleaning by removing URLs, mentions, and special characters, and applies tokenization. The cleaned text is then vectorized using TF-IDF to convert the textual data into a format suitable for machine learning models. Finally, the preprocessed dataset is saved as a new CSV file for future use in classification tasks.
+The code snippet above demonstrates the preprocessing steps for a mental health dataset. It handles missing values and duplicates in the text data, performs text cleaning by removing URLs, mentions, and special characters, and applies tokenization. The \texttt{cleaned\_text} column from the dataset \texttt{preprocessed\_mental\_health.csv} is used as the main feature for the model training. These column values are then vectorized using TF-IDF (or Bag of Words) to convert the textual data into a format suitable for machine learning models. The \texttt{mental\_health\_issue} column forms the target. Finally, the preprocessed dataset is saved as a new CSV file for future use in classification tasks.
+
 
 \begin{figure}[h!]  
     \centering
     \includegraphics[width=0.9\textwidth]{Images/Data Cleaning and Preprocessing.png}  
-    \caption{Data Collection and Preprocessing}
+    \caption{After TF-IDF Vectorization}
     \label{Data Collection and Preprocessing}  % Label for referencing the figure
 \end{figure}
 
@@ -198,7 +197,7 @@ X = vectorizer.fit_transform(dataset['cleaned_text'])
 \end{tcolorbox}
 
 \noindent
-Bag of Words (BoW) converts text into a matrix of word counts. Each unique word in the corpus becomes a feature, and the value is the word's frequency in the document, ignoring grammar and word order.
+Bag of Words (BoW) converts text into a matrix of word counts. Each unique word in the corpus becomes a feature, and the value is the word's frequency in the document, ignoring order.
 
 % TF-IDF
 \begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=TF-IDF]
@@ -235,38 +234,31 @@ from empath import Empath
 
 # Initialize Empath
 lexicon = Empath()
-
 # Function to get Empath features
 def get_empath_features(text):
     analysis = lexicon.analyze(text, normalize=True)  # Normalize for proportions
     return analysis
-
 # Generate Empath features for each text
 empath_features = dataset['cleaned_text'].apply(get_empath_features)
-
 # Convert Empath features to a DataFrame
 X = pd.DataFrame(empath_features.tolist())
 \end{lstlisting}
 \end{tcolorbox}
 
 \noindent
-LIWC (Linguistic Inquiry and Word Count) analyzes text by categorizing words into meaningful psychological or social dimensions. Empath is a Python library that replicates this functionality with customizable lexicons. Empath is a Python-based natural language processing tool inspired by LIWC (Linguistic Inquiry and Word Count), designed to analyze text and categorize words into psychologically meaningful dimensions such as emotions, cognitive processes, and social themes. This tool is particularly valuable for extracting semantic features that capture the psychological and emotional aspects of textual data, making it ideal for applications in sentiment analysis, mental health studies, and psycholinguistics. By matching words in the text to predefined categories, Empath assigns a proportional representation to each category, indicating the relative frequency of words that belong to it. In the provided code, an \texttt{Empath} object is initialized, which serves as the base for analyzing text against the predefined lexicons. A function named \texttt{get\_empath\_features} is defined to process individual texts from the dataset. This function leverages the \texttt{analyze} method of the \texttt{Empath} object to compute the distribution of words across various categories. The \texttt{normalize=True} parameter ensures that the output represents proportions rather than raw counts, making the results more interpretable and comparable across texts of varying lengths. The function is applied to each piece of cleaned text in the dataset, producing a structured output where each text is represented as a dictionary. Each key in this dictionary corresponds to an Empath category, and the associated value indicates the proportion of words from the text that fall into that category. The list of dictionaries generated through this process is then converted into a DataFrame, where each column represents a category and each row corresponds to a document in the dataset. This transformation allows the extracted features to be seamlessly integrated into machine learning pipelines, where they can serve as predictors for tasks like sentiment analysis, mental health classification.
+LIWC (Linguistic Inquiry and Word Count) analyzes text by categorizing words into meaningful psychological or social dimensions. Empath is a Python library that replicates this functionality with customizable lexicons. Empath is a Python-based natural language processing tool inspired by LIWC (Linguistic Inquiry and Word Count), designed to analyze text and categorize words into psychologically meaningful dimensions such as emotions, cognitive processes, and social themes. This tool is particularly valuable for extracting semantic features that capture the psychological and emotional aspects of textual data, making it ideal for applications in sentiment analysis, mental health studies, and psycholinguistics. By matching words in the text to predefined categories, Empath assigns a proportional representation to each category, indicating the relative frequency of words that belong to it. In the provided code, an \texttt{Empath} object is initialized, which serves as the base for analyzing text against the predefined lexicons. A function named \texttt{get\_empath\_features} is defined to process individual texts from the dataset. This function leverages the \texttt{analyze} method of the \texttt{Empath} object to compute the distribution of words across various categories. The \texttt{normalize=True} parameter ensures that the output represents proportions rather than raw counts, making the results more interpretable and comparable across texts of varying lengths. The function is applied to each piece of cleaned text in the dataset, producing a structured output where each text is represented as a dictionary. Each key in this dictionary corresponds to an Empath category, and the associated value indicates the proportion of words from the text that fall into that category. 
 
 % Word2Vec
 \begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Word2Vec]
 \begin{lstlisting}[language=Python]
 from nltk.tokenize import word_tokenize
 import gensim
-
 # Tokenize the text data into words
 def tokenize_text(text):
     return word_tokenize(text.lower())
-
 dataset['tokens'] = dataset['cleaned_text'].apply(tokenize_text)
-
 # Train a Word2Vec model using the tokenized data
 word2vec_model = gensim.models.Word2Vec(sentences=dataset['tokens'], vector_size=100, window=5, min_count=1, workers=4)
-
 # Function to average Word2Vec vectors for each document
 def get_document_vector(tokens):
     valid_tokens = [word for word in tokens if word in word2vec_model.wv]
@@ -274,7 +266,6 @@ def get_document_vector(tokens):
         return [0] * word2vec_model.vector_size  # Return zero vector for empty documents
     vectors = [word2vec_model.wv[word] for word in valid_tokens]
     return list(np.mean(vectors, axis=0))
-
 # Convert the text data into document vectors
 X = dataset['tokens'].apply(get_document_vector)
 \end{lstlisting}
@@ -294,18 +285,10 @@ The matrix dimensions for Bag of Words are determined by the number of records, 
 \begin{tcolorbox}[colback=gray!5!white, colframe=gray!80!black, boxrule=0.5pt, title=Logistic Regression for Mental Health Classification]
     \begin{lstlisting}[language=Python]
 import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
-
+# IMPORT NECESSARY LIBRARIES FOR TRAIN TEST SPLIT, VECTORIZER, ML ALGORITHM
 # Load the preprocessed dataset
-dataset = pd.read_csv('preprocessed_mental_health.csv')
 # Check if 'cleaned_text' and 'mental_health_issue' columns exist
-if 'cleaned_text' not in dataset.columns or 'mental_health_issue' not in dataset.columns:
-    raise ValueError("The dataset must have 'cleaned_text' and 'mental_health_issue' columns.")
 # Remove rows with missing values in 'cleaned_text' column
-dataset.dropna(subset=['cleaned_text'], inplace=True)
 # Initialize the CountVectorizer and fit/transform the cleaned text
 LRvectorizer = CountVectorizer()
 X = LRvectorizer.fit_transform(dataset['cleaned_text'])
