@@ -1,4 +1,4 @@
-# Analyzing Social Media Posts for Mental Health Disorder Detection
+# Multimodal AI Framework for Social Media based Mental Disorder Detection and Personalized Wellbeing Insights
 
 This repository contains a comprehensive project aimed at detecting mental health disorders through the analysis of social media posts. It leverages machine learning and deep learning techniques alongside Natural Language Processing (NLP) to classify text data into categories such as Normal, Depression, Anxiety, Bipolar Disorder, and PTSD.
 
