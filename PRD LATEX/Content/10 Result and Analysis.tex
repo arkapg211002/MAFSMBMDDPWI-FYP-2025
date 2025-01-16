@@ -1533,7 +1533,12 @@ The choice of \( n = 6 \) is reasonable given the following factors:
 2. \textbf{Sequential Execution}: Since the architectures are implemented sequentially, the number of subsets \( n \) does not need to align with the number of computational nodes. Instead, the goal is to divide the dataset into manageable chunks that reduce training time and memory overhead for each subset.
 
 \noindent
-3. \textbf{Performance and Aggregation}: With \( n = 6 \), both architectures remain computationally feasible. In Architecture 1, \( n = 6 \) leads to six independent intermediate ensemble models, which are aggregated into the final ensemble. In Architecture 2, models of the same type from all six subsets are combined into six intermediate ensemble models, one for each base model type.
+3. \textbf{Performance and Aggregation}: With \( n = 6 \), both architectures remain computationally feasible. In Architecture 1, \( n = 6 \) leads to six independent intermediate ensemble models, which are aggregated into the final ensemble. In Architecture 2, models of the same type from all six subsets are combined into six intermediate ensemble models, one for each type of algorithm.
+
+\vspace{1em}
+
+\noindent
+The web application does not use the model for bigger dataset but focuses on the model received from the first intermediate node of Architecture 1. The reason being that the model for the bigger dataset takes a lot of time, more than 20 minutes, if the user chooses for retraining the model after an input.
 
 \pagebreak
 
