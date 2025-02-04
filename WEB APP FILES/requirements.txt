@@ -34,3 +34,4 @@ matplotlib
 scipy
 networkx
 yt-dlp
+pdf2image 
