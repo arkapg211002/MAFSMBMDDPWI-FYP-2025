@@ -1,4 +1,3 @@
-
 import pickle
 import streamlit as st
 import joblib
@@ -45,6 +44,8 @@ import networkx as nx
 import yt_dlp
 import io
 from pdf2image import convert_from_bytes
+import random
+import time
 # import soundfile as sf
 
 from tensorflow.keras.models import load_model, Model, Sequential
@@ -199,7 +200,7 @@ reddit = praw.Reddit(client_id='fgsA4XN83I9FEZdiZvRDtw',
                      user_agent='Mental Health')
 
 # Initialize Twitter API
-BEARER_TOKEN = "AAAAAAAAAAAAAAAAAAAAAMgWxAEAAAAAX8N3vVqfFFMFmseSG8sYr0hCzFM%3DVy1NzwAB1cId2SvIyUYP5ZcbYviqffcwheGt7rCigZ97TgHGmP"
+BEARER_TOKEN = "AAAAAAAAAAAAAAAAAAAAAP5ivAEAAAAAhk%2BBxS3W7EJbjNjUxgKEQ73xcUI%3DjnSuDwdvy0kqOoVpziGzD9LNVaMPCamGS2cf2OngdckiLZSZ1h"
 client = tweepy.Client(bearer_token=BEARER_TOKEN)
 
 # Configure Gemini API for wellbeing insights
@@ -670,35 +671,52 @@ def extract_audio_from_video(video_path):
     except Exception as e:
         return f"Error extracting audio: {str(e)}"
 
+
 # Function to analyze audio mood based on extracted audio
 def analyze_audio_mood(video_path):
     try:
-        # Extract audio from the video (assuming extract_audio_from_video is implemented)
-        audio_path = extract_audio_from_video(video_path)
-        # Load the audio file using librosa
-        y, sr = librosa.load(audio_path)
-        # Extract MFCCs (Mel-frequency cepstral coefficients) from the audio signal
-        mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=13)
-        # Divide the MFCC array into 4 frequency bands and calculate scalar mean for each band
-        # Low Frequencies: MFCC 0, 1, 2
-        low_freq_mfcc = np.mean(mfcc[0:3], axis=1)
-        mean_low = np.mean(low_freq_mfcc)  # Scalar mean for low frequencies
-        # Mid-Low Frequencies: MFCC 3, 4
-        mid_low_freq_mfcc = np.mean(mfcc[3:5], axis=1)
-        mean_mid_low = np.mean(mid_low_freq_mfcc)  # Scalar mean for mid-low frequencies
-        # Mid-High Frequencies: MFCC 5, 6, 7
-        mid_high_freq_mfcc = np.mean(mfcc[5:8], axis=1)
-        mean_mid_high = np.mean(mid_high_freq_mfcc)  # Scalar mean for mid-high frequencies
-        # High Frequencies: MFCC 8, 9, 10, 11, 12
-        high_freq_mfcc = np.mean(mfcc[8:13], axis=1)
-        mean_high = np.mean(high_freq_mfcc)  # Scalar mean for high frequencies
         myfile = genai.upload_file(audio_path)
         prompt = "Classify the tone and mood of the given audio file based on the following conditions: For **tone**, choose from Calm (moderate pitch, smooth energy, consistent speech rate), Excited (high pitch, rapid speech, dynamic energy), Tense (strained voice, high zero-crossing rate, uneven energy), Flat (low pitch variation, monotone delivery, low spectral contrast), Confident (strong energy, clear articulation, stable rhythm), Fearful (high pitch, irregular pauses, trembling voice), Sad (low pitch, slow speech rate, reduced spectral brightness), or Angry (loud volume, fast speech rate, sharp spectral edges). For **mood**, choose from Relaxed (low tempo, smooth rhythm, low spectral variance), Happy (bright spectral centroid, high tempo, energetic rhythm), Worried (irregular rhythm, increased pauses, unstable pitch), Stressed (high energy, rapid speech, high zero-crossing rate), Melancholic (low tempo, soft volume, monotone delivery), Agitated (fast tempo, irregular pitch changes, high loudness), Detached (low energy, slow speech, long silences), or Energetic (high tempo, bright pitch, strong spectral roll-off). Provide a compact response with the classified tone and mood, and a concise summary of the analysis."
         result = gemini_model.generate_content([myfile, prompt])
         st.info(result.text)
 
     except Exception as e:
-        st.error(f"Error analyzing audio mood: {str(e)}")
+        try:
+            # st.error(f"Error analyzing audio mood: {str(e)}")
+            # Extract audio from the video (assuming extract_audio_from_video is implemented)
+            audio_path = extract_audio_from_video(video_path)
+            # Load the audio file using librosa
+            y, sr = librosa.load(audio_path)
+            # Extract MFCCs (Mel-frequency cepstral coefficients) from the audio signal
+            mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=13)
+            # Divide the MFCC array into 4 frequency bands and calculate scalar mean for each band
+            # Low Frequencies: MFCC 0, 1, 2
+            low_freq_mfcc = np.mean(mfcc[0:3], axis=1)
+            mean_low = np.mean(low_freq_mfcc)  # Scalar mean for low frequencies
+            # Mid-Low Frequencies: MFCC 3, 4
+            mid_low_freq_mfcc = np.mean(mfcc[3:5], axis=1)
+            mean_mid_low = np.mean(mid_low_freq_mfcc)  # Scalar mean for mid-low frequencies
+            # Mid-High Frequencies: MFCC 5, 6, 7
+            mid_high_freq_mfcc = np.mean(mfcc[5:8], axis=1)
+            mean_mid_high = np.mean(mid_high_freq_mfcc)  # Scalar mean for mid-high frequencies
+            # High Frequencies: MFCC 8, 9, 10, 11, 12
+            high_freq_mfcc = np.mean(mfcc[8:13], axis=1)
+            mean_high = np.mean(high_freq_mfcc)  # Scalar mean for high frequencies
+            # Now use these scalar means for classification
+            if mean_high <= mean_low and mean_high <= mean_mid_low and mean_high <= mean_mid_high:
+                st.info("Audio sounds normal, with no dominant emotion detected")
+            elif mean_mid_high <= mean_low and mean_mid_high <= mean_mid_low and mean_mid_high <= mean_high:
+                st.info("Audio sounds neutral, calm, or peaceful")
+            elif mean_mid_low <= mean_low and mean_mid_low <= mean_mid_high and mean_mid_low <= mean_high:
+                st.info("Audio sounds slightly melancholic or neutral")
+            elif mean_low <= mean_mid_low and mean_low <= mean_mid_high and mean_low <= mean_high:
+                st.info("Audio sounds calm or melancholic, with less intensity")
+            elif mean_high > mean_low and mean_high > mean_mid_low and mean_high <= mean_mid_high:
+                st.info("Audio sounds depressive or anxious in nature")
+            else :
+                st.info("Audio sounds upbeat and energetic (Happy)")
+        except Exception as e:
+            st.error(f"Error analyzing audio mood: The video / audio is corrupted or do not exist.")
 
 # ----------------- Adding Retrain Model functionality
 # File path for dataset
@@ -999,16 +1017,21 @@ def analyze_emotions_from_frames(frames):
     return emotion_counts, frame_emotions
 
 def display_emotion_summary(emotion_counts):
-    # Convert the emotion counts to a DataFrame for display and plotting
-    emotion_df = pd.DataFrame(list(emotion_counts.items()), columns=['Emotion', 'Count'])
-    st.write("Emotion Analysis Summary:")
+    try:
+        # Convert the emotion counts to a DataFrame for display and plotting
+        emotion_df = pd.DataFrame(list(emotion_counts.items()), columns=['Emotion', 'Count'])
+        st.write("Emotion Analysis Summary:")
 
-    # Add a bar chart for emotion counts
-    fig = px.bar(emotion_df, x='Emotion', y='Count',
-                 color='Emotion',
-                 title="Emotion Counts",
-                 labels={'Emotion': 'Detected Emotions', 'Count': 'Frequency'})
-    st.plotly_chart(fig)
+        # Add a bar chart for emotion counts
+        fig = px.bar(emotion_df, x='Emotion', y='Count',
+                    color='Emotion',
+                    title="Emotion Counts",
+                    labels={'Emotion': 'Detected Emotions', 'Count': 'Frequency'})
+        
+        unique_key = f"emotion_chart_{int(time.time() * 1000)}"
+        st.plotly_chart(fig, key=unique_key)
+    except Exception as e:
+        print(f"Error displaying emotion summary: {e}")
 
     # Return the dominant emotion
     return max(emotion_counts, key=emotion_counts.get)
@@ -1050,6 +1073,7 @@ def detect_emotions_from_image(image):
         result = DeepFace.analyze(image, actions=['emotion'], enforce_detection=False)
         return result[0]['dominant_emotion']
     except Exception as e:
+        st.error(f"No expression or error detecting emotion: {e}")
         print(f"No expression or error detecting emotion: {e}")
         return None
 
@@ -1455,13 +1479,62 @@ def get_user_posts_with_videos(username, max_items=10):
         st.error(f"Error fetching user data: {e}")
         return []
 
+# --------------- User response to image option -------------------
+def describe_image(image_path):
+    try:
+        chat_session = gemini_model.start_chat(history=[])
+        prompt = f"""You are given an image. Analyze the image and provide a detailed description."""
+        img = Image.open(image_path)
+        response = gemini_model.generate_content([prompt, img])
+        return f"**The image description is:** {response.text}"
+    except Exception as e:
+        st.error(f"Error retrieving description: {e}")
+        return ""
+
+# Define the image directory
+IMAGE_DIR = "images"
+RANDOM_IMAGE_PATH = os.path.join("./", "randim.png")
+filename = "number.txt"
+# st.write(RANDOM_IMAGE_PATH)
+randnum = 10
+# Function to generate or retrieve the random image
+def get_random_image():
+    if not os.path.exists(RANDOM_IMAGE_PATH):
+        # st.write("hello")
+        random_number = random.randint(0, 9)
+        # st.write(random_number)
+        selected_image = os.path.join(IMAGE_DIR, f"{random_number}.png")
+
+        if os.path.exists(selected_image):
+            # Open selected image and write its content to "randim.png"
+            with open(selected_image, "rb") as src_file:
+                with open(RANDOM_IMAGE_PATH, "wb") as dest_file:
+                    # st.write("hello2")
+                    dest_file.write(src_file.read())
+        else:
+            st.error(f"Image {selected_image} not found in {IMAGE_DIR}.")
+        return RANDOM_IMAGE_PATH, random_number
+    else:
+        # st.write("hello3")
+        return RANDOM_IMAGE_PATH, randnum
+
+# Define Rorschach test questions
+questions = [
+    "What do you see in this image?",
+    "What emotions does this image evoke in you?",
+    "Does this image remind you of anything from your past?",
+    "If this image had a story, what would it be?",
+    "Do you see anything changing in the image over time?"
+]
+
+
 # Define the Streamlit app
 def run_app():
     st.title("Mental Health Disorder Detection")
 
     option = st.sidebar.selectbox(
         "Choose an option",
-        ["Text Input", "Image Upload", "Video Upload", "PDF Upload", "Reddit Username Analysis", "Twitter Username Analysis"]
+        ["Text Input", "Image Upload", "Video Upload", "PDF Upload", "Responses to Image", "Reddit Username Analysis", "Twitter Username Analysis"]
     )
 
     # Text Input
@@ -1631,12 +1704,12 @@ def run_app():
 
         input_text = ""
         if uploaded_file:
-            
+
             # Convert PDF to images
             images = convert_from_bytes(uploaded_file.read())
-            
+
             extracted_text = ""
-            
+
             # Display pages in an expander
             with st.expander("Extracted Pages", expanded=False):
                 for i, img in enumerate(images):
@@ -1653,7 +1726,7 @@ def run_app():
             else:
                 # Display extracted text
                 st.text_area("Detected Text", extracted_text, height=300)
-                
+
                 translated_text = GoogleTranslator(source='auto', target='en').translate(extracted_text)
                 st.subheader("Translated Text (English):")
                 st.text_area("Translated Text", translated_text, height=300)
@@ -1671,7 +1744,160 @@ def run_app():
                 st.write("No text found in the PDF")
             else:
                 translated_text = GoogleTranslator(source='auto', target='en').translate(input_text)
-                classify_text_retrain_model(translated_text)    
+                classify_text_retrain_model(translated_text)
+
+
+    # User respond to Image
+    if option == 'Responses to Image':
+        st.subheader("Describe Image and Classify Responses")
+        # Display the selected image
+        rand_num = 10
+        image_path, randnum = get_random_image()
+
+        # Check if the file exists
+        if not os.path.exists(filename):
+            # Create the file and write the number
+            with open(filename, "w") as file:
+                file.write(str(randnum))
+        else:
+            pass
+
+        if randnum != 10:
+          rand_num = randnum
+
+        if os.path.exists(image_path):
+            st.image(image_path, caption=f"Look at the image and answer the questions.", use_container_width=True)
+        else:
+            st.error(f"Image not found in {IMAGE_DIR}.")
+
+        # Collect responses
+        responses = {}
+        st.subheader("Answer the following questions:")
+        for i, question in enumerate(questions):
+            responses[f"Q{i+1}"] = st.text_area(question, key=f"q{i+1}")
+
+        # Submit button
+        combined_response = ""
+        if st.button("Classify Responses"):
+            st.success("Responses submitted successfully!")
+            st.write("Here are your responses:")
+
+            with st.expander("Your Responses", expanded=False):
+              i=0
+              for q, ans in responses.items():
+                combined_response += f"{ans}\n"
+                st.write(f"**{q}** ANS : {ans}")
+                i+=1
+                # st.write(f"\n\n {combined_response}")
+
+            image_description = describe_image(image_path)
+            st.info(image_description)
+            st.image(image_path, use_container_width=True)
+            # response_from_gemini = get_image_description(RANDOM_IMAGE_PATH, combined_response)
+
+            TEST = ""
+            stored_number = 10
+
+            with open(filename, "r") as file:
+                stored_number = int(file.read())
+
+            if stored_number == 0:
+                TEST = "anxiety"
+            elif stored_number == 1:
+                TEST = "anxiety"
+            elif stored_number == 2:
+                TEST = "bipolar"
+            elif stored_number == 3:
+                TEST = "bipolar"
+            elif stored_number == 4:
+                TEST = "depression"
+            elif stored_number == 5:
+                TEST = "depression"
+            elif stored_number == 6:
+                TEST = "normal"
+            elif stored_number == 7:
+                TEST = "normal"
+            elif stored_number == 8:
+                TEST = "ptsd"
+            else:
+                TEST = "ptsd"
+
+            st.warning(f"The image was used to test: **{TEST}**")
+
+            # Clean up the temporary files at the end of execution
+            if os.path.exists(RANDOM_IMAGE_PATH) and os.path.exists("./number.txt"):
+                os.remove(RANDOM_IMAGE_PATH)
+                os.remove("./number.txt")
+
+            if combined_response.strip() == "":
+                st.write("Please enter your responses.")
+            else:
+                translated_text = GoogleTranslator(source='auto', target='en').translate(combined_response)
+                st.write("Combined Responses (Translated if not in English):")
+                st.info(translated_text)
+                st.header("Based on the responses :")
+                classify_text(translated_text)
+
+        # Adding model retraining
+        elif st.button("Classify Responses and Retrain Model"):
+            st.success("Responses submitted successfully!")
+            st.write("Here are your responses:")
+
+            with st.expander("Your Responses", expanded=False):
+              i=0
+              for q, ans in responses.items():
+                combined_response += f"{ans}\n"
+                st.write(f"**{q}** ANS : {ans}")
+                i+=1
+                # st.write(f"\n\n {combined_response}")
+
+            image_description = describe_image(image_path)
+            st.info(image_description)
+            st.image(image_path, use_container_width=True)
+            # response_from_gemini = get_image_description(RANDOM_IMAGE_PATH, combined_response)
+
+            TEST = ""
+            stored_number = 10
+
+            with open(filename, "r") as file:
+                stored_number = int(file.read())
+
+            if stored_number == 0:
+                TEST = "anxiety"
+            elif stored_number == 1:
+                TEST = "anxiety"
+            elif stored_number == 2:
+                TEST = "bipolar"
+            elif stored_number == 3:
+                TEST = "bipolar"
+            elif stored_number == 4:
+                TEST = "depression"
+            elif stored_number == 5:
+                TEST = "depression"
+            elif stored_number == 6:
+                TEST = "normal"
+            elif stored_number == 7:
+                TEST = "normal"
+            elif stored_number == 8:
+                TEST = "ptsd"
+            else:
+                TEST = "ptsd"
+
+            st.warning(f"The image was used to test: **{TEST}**")
+
+            # Clean up the temporary files at the end of execution
+            if os.path.exists(RANDOM_IMAGE_PATH) and os.path.exists("./number.txt"):
+                os.remove(RANDOM_IMAGE_PATH)
+                os.remove("./number.txt")
+
+            if combined_response.strip() == "":
+                st.write("Please enter your responses.")
+            else:
+                translated_text = GoogleTranslator(source='auto', target='en').translate(combined_response)
+                st.subheader("Combined Responses ( Translated if not in English):")
+                st.info(translated_text)
+                st.header("Based on the responses :")
+                classify_text_retrain_model(translated_text)
 
 
     # Reddit Username Analysis
