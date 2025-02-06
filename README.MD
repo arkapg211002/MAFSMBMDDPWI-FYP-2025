@@ -27,6 +27,8 @@ Mental health disorders affect millions of people globally. With the rise of soc
 - **Text Analysis:** Detect mental health issues based on textual inputs.
 - **Image Upload Analysis:** Extract text from images, analyze it, detect any expression or gestures and classify mental health concerns.
 - **Video Upload Analysis:** Convert video content to audio, process it into text, analyze video frames for text extraction, and perform facial expression recognition to aid classification.
+- **PDF Upload Analysis:** Analyse a typed or handwritten PDF text and predict mental issues
+- **User Response to Image Shown:** Image is shown to user, questions from Rorschach Inkblot Test is asked to gather responses and prediction is done on these responses
 - **Image Caption:** Added feature to generate image descriptions using transformers to aid in mental wellbeing mapping.
 - **Reddit and Twitter User Analysis:** Fetch and classify posts made by Reddit or Twitter users for mental health analysis.
 - **Audio Input Support:** Convert audio extracted from video to text, analyze the tone or mood using MFCC, and classify mental health concerns.
