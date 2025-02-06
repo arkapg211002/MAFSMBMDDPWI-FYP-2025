@@ -1,4 +1,6 @@
-### SEM-7 : `WebAppV11-6.ipynb`
+### SEM-7 : `WebAppV11-6.ipynb` 
+`Note : Due to nvidia driver updates and google colab new release the above webapp might show errors in Audio mood analysis, Prediction and Emotion Graphs. All these have been updated in the WebAppV12-1.ipynb`
+
 ### SEM-8 : `WebAppV12-1.ipynb`
 
 ```
