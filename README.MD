@@ -33,11 +33,12 @@ Mental health disorders affect millions of people globally. With the rise of soc
 - **Reddit and Twitter User Analysis:** Fetch and classify posts made by Reddit or Twitter users for mental health analysis.
 - **Audio Input Support:** Convert audio extracted from video to text, analyze the tone or mood using MFCC, and classify mental health concerns.
 - **Multilingual Support:** Analyze posts in non-English languages by translating them to English before processing.
-- **Mental Wellbeing:** Map the classified mental issues with wellbeing insights based on Ryff's Scale of Psychological Wellbeing.
+- **Mental Wellbeing:** Map the classified mental issues with wellbeing insights based on Ryff's Scale of Psychological Wellbeing using an association matrix between wellbeing parameters and mental health issues.
 - **Visualization:** Generate confusion matrices and performance metrics for each model.
 - **Ensemble Model:** Leveraged high accuracy of Logistic regression, Naive Bayes, SVM, LSTM, Transformer and XGBoost to create an ensemble model with accuracy of 98.2% (train-test split) and 98.07% (Stratified K-Fold Cross Validation). Used this model in the web application.
 - **Model Retraining:** Allow users with the option to retrain the existing model using the input data in the application along with the result obtained.
-- **Hierarchical Ensemble Model:** Sequentially tested distributed architecture for model creation with bigger datasets and achieved an accuracy of 96.25%
+- **Hierarchical Ensemble Model:** Sequentially tested distributed architecture for model creation with bigger datasets and achieved an accuracy of 96.25%.
+- **Wellbeing Survey:** Allows users to fill a survey form and get overall scores based on responses using Ryff's Scale Of Psychological Wellbeing.
 ---
 
 ## Technologies Used
