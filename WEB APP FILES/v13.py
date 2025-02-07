@@ -46,6 +46,9 @@ import io
 from pdf2image import convert_from_bytes
 import random
 import time
+import datetime
+from sklearn.metrics.pairwise import cosine_similarity # new added
+from scipy.spatial.distance import euclidean  # New import
 # import soundfile as sf
 
 from tensorflow.keras.models import load_model, Model, Sequential
@@ -63,6 +66,11 @@ import pytesseract
 # Configure Tesseract and FFMPEG
 pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
 os.environ["FFMPEG_BINARY"] = "/usr/bin/ffmpeg"
+
+# Define file paths in Colab
+csv_file_path = "/content/response.csv"
+image_path_survey = "/content/intro.png"
+am_file_path = "/content/am.csv"
 
 # Load Whisper model for audio transcription
 # whisper_model = whisper.load_model("base")
@@ -568,6 +576,18 @@ def classify_text(text):
     # Pass to a custom insight function if needed
     get_wellbeing_insight(text, top_issue)
 
+    # Show original table
+    st.subheader("Association Matrix")
+    st.table(df)
+
+    weighted_sum_index, weighted_sum_row_name = weighted_sum_analysis(matrix, probabilities)
+    cosine_similarity_index, cosine_similarity_row_name = cosine_similarity_analysis(matrix, probabilities)
+    euclidian_distance_index, euclidian_distance_row_name = euclidian_distance_analysis(matrix, probabilities)
+
+    consensus_string = get_consensus_string(weighted_sum_row_name, cosine_similarity_row_name, euclidian_distance_row_name)
+    # st.info(consensus_string)
+    get_parameter_insight(consensus_string, top_issue)
+
 # ---------------- CHANGED AS PER ENSEMBLE MODEL -----------------
 # Function to get wellbeing insights from Gemini model
 def get_wellbeing_insight(text, top_issue):
@@ -578,6 +598,18 @@ def get_wellbeing_insight(text, top_issue):
         response = chat_session.send_message(prompt)
 
         st.write("### Wellbeing Insight:")
+        st.write(response.text)
+    except Exception as e:
+        st.write(f"Error retrieving wellbeing insights: {e}")
+
+def get_parameter_insight(text, top_issue):
+    try:
+        chat_session = gemini_model.start_chat(history=[])
+        prompt = f""" The specific parameters from Ryff Scale of Psychological wellbeing that affects the user are {text}. Based on these parameters {text} and mental issue {top_issue} provide practical advice on how a person with {top_issue} mental issue should work on {text} to improve himself/herself. """
+
+        response = chat_session.send_message(prompt)
+
+        st.write("### Specific Parameter Based Insight:")
         st.write(response.text)
     except Exception as e:
         st.write(f"Error retrieving wellbeing insights: {e}")
@@ -988,8 +1020,21 @@ def classify_text_retrain_model(text):
     # Pass to a custom insight function if needed
     get_wellbeing_insight(text, top_issue)
 
+    # Show original table
+    st.subheader("Association Matrix")
+    st.table(df)
+
+    weighted_sum_index, weighted_sum_row_name = weighted_sum_analysis(matrix, probabilities)
+    cosine_similarity_index, cosine_similarity_row_name = cosine_similarity_analysis(matrix, probabilities)
+    euclidian_distance_index, euclidian_distance_row_name = euclidian_distance_analysis(matrix, probabilities)
+
+    consensus_string = get_consensus_string(weighted_sum_row_name, cosine_similarity_row_name, euclidian_distance_row_name)
+    # st.info(consensus_string)
+    get_parameter_insight(consensus_string, top_issue)
+
     # Adding Model Retraining Functionality
     update_and_retrain(text, top_issue)
+
 # ---------------- CHANGED AS PER ENSEMBLE MODEL -----------------
 # ----------------- Adding Retrain Model functionality
 
@@ -1027,7 +1072,7 @@ def display_emotion_summary(emotion_counts):
                     color='Emotion',
                     title="Emotion Counts",
                     labels={'Emotion': 'Detected Emotions', 'Count': 'Frequency'})
-        
+
         unique_key = f"emotion_chart_{int(time.time() * 1000)}"
         st.plotly_chart(fig, key=unique_key)
     except Exception as e:
@@ -1217,6 +1262,18 @@ def classify_text_with_desc(text,text2):
 
     get_wellbeing_insight(text+" "+text2, top_issue)
 
+    # Show original table
+    st.subheader("Association Matrix")
+    st.table(df)
+
+    weighted_sum_index, weighted_sum_row_name = weighted_sum_analysis(matrix, probabilities)
+    cosine_similarity_index, cosine_similarity_row_name = cosine_similarity_analysis(matrix, probabilities)
+    euclidian_distance_index, euclidian_distance_row_name = euclidian_distance_analysis(matrix, probabilities)
+
+    consensus_string = get_consensus_string(weighted_sum_row_name, cosine_similarity_row_name, euclidian_distance_row_name)
+    # st.info(consensus_string)
+    get_parameter_insight(consensus_string, top_issue)
+
 def classify_text_retrain_model_desc(text,text2):
     # Preprocess the input for each base model
     lr_features = lr_vectorizer.transform([text])  # For Logistic Regression
@@ -1275,6 +1332,18 @@ def classify_text_retrain_model_desc(text,text2):
     create_knowledge_graph(text+" "+text2, classifications, probabilities)
 
     get_wellbeing_insight(text+" "+text2, top_issue)
+
+    # Show original table
+    st.subheader("Association Matrix")
+    st.table(df)
+
+    weighted_sum_index, weighted_sum_row_name = weighted_sum_analysis(matrix, probabilities)
+    cosine_similarity_index, cosine_similarity_row_name = cosine_similarity_analysis(matrix, probabilities)
+    euclidian_distance_index, euclidian_distance_row_name = euclidian_distance_analysis(matrix, probabilities)
+
+    consensus_string = get_consensus_string(weighted_sum_row_name, cosine_similarity_row_name, euclidian_distance_row_name)
+    # st.info(consensus_string)
+    get_parameter_insight(consensus_string, top_issue)
 
     # Adding Model Retraining Functionality
     update_and_retrain(text, top_issue)
@@ -1403,6 +1472,18 @@ def classify_alltext(text):
     # Pass to a custom insight function if needed
     get_wellbeing_insight(text, top_issue)
 
+    # Show original table
+    st.subheader("Association Matrix")
+    st.table(df)
+
+    weighted_sum_index, weighted_sum_row_name = weighted_sum_analysis(matrix, probabilities)
+    cosine_similarity_index, cosine_similarity_row_name = cosine_similarity_analysis(matrix, probabilities)
+    euclidian_distance_index, euclidian_distance_row_name = euclidian_distance_analysis(matrix, probabilities)
+
+    consensus_string = get_consensus_string(weighted_sum_row_name, cosine_similarity_row_name, euclidian_distance_row_name)
+    # st.info(consensus_string)
+    get_parameter_insight(consensus_string, top_issue)
+
     return top_issue
 
 # ------------------ reddit -----------------
@@ -1518,23 +1599,257 @@ def get_random_image():
         # st.write("hello3")
         return RANDOM_IMAGE_PATH, randnum
 
-# Define Rorschach test questions
-questions = [
-    "What do you see in this image?",
-    "What emotions does this image evoke in you?",
-    "Does this image remind you of anything from your past?",
-    "If this image had a story, what would it be?",
-    "Do you see anything changing in the image over time?"
+
+
+# for survey form
+# Getting the overall score from the responses
+def overall_score(responses):
+    scores = {
+        "Self Acceptance": responses["Q1"] + abs(7 - responses["Q2"]),
+        "Positive Relations with Others": responses["Q3"] + abs(7 - responses["Q4"]),
+        "Autonomy": responses["Q5"] + abs(7 - responses["Q6"]),
+        "Environmental Mastery": responses["Q7"] + abs(7 - responses["Q8"]),
+        "Purpose in Life": responses["Q9"] + abs(7 - responses["Q10"]),
+        "Personal Growth": responses["Q11"] + abs(7 - responses["Q12"]),
+    }
+
+    p_values = {
+        "p1": responses["Q1"] + abs(7 - responses["Q2"]),
+        "p2": responses["Q3"] + abs(7 - responses["Q4"]),
+        "p3": responses["Q5"] + abs(7 - responses["Q6"]),
+        "p4": responses["Q7"] + abs(7 - responses["Q8"]),
+        "p5": responses["Q9"] + abs(7 - responses["Q10"]),
+        "p6": responses["Q11"] + abs(7 - responses["Q12"])
+    }
+
+    # Assign p1 to p6 values
+    for key, value in p_values.items():
+        responses[key] = value
+
+    descriptions = {
+        "Self Acceptance": {
+            "High": "Possesses a positive attitude toward the self; acknowledges and accepts multiple aspects of self, including good and bad qualities; feels positive about past life.",
+            "Medium": "Generally content with self but sometimes struggles with self-doubt; recognizes strengths but occasionally fixates on weaknesses.",
+            "Low": "Feels dissatisfied with self; is disappointed with past life; is troubled about certain personal qualities; wishes to be different."
+        },
+        "Positive Relations with Others": {
+            "High": "Has warm, satisfying, trusting relationships; concerned about the welfare of others; capable of strong empathy, affection, and intimacy.",
+            "Medium": "Has meaningful relationships but sometimes struggles with trust or emotional openness; values connections but may not always nurture them deeply.",
+            "Low": "Has few close relationships; finds it difficult to be warm, open, and concerned about others; is isolated and frustrated in interpersonal relationships."
+        },
+        "Autonomy": {
+            "High": "Is self-determining and independent; able to resist social pressures; regulates behavior from within and follows personal standards.",
+            "Medium": "Balances independence with societal expectations; makes personal choices but occasionally influenced by external opinions.",
+            "Low": "Is concerned about the expectations of others; relies on judgments of others; conforms to social pressures."
+        },
+        "Environmental Mastery": {
+            "High": "Has a sense of mastery in managing the environment; makes effective use of opportunities; adapts surroundings to personal needs.",
+            "Medium": "Generally manages daily life well but sometimes struggles with external challenges; adapts but may not always feel in control.",
+            "Low": "Has difficulty managing everyday affairs; feels unable to change or improve surroundings; lacks sense of control over external world."
+        },
+        "Purpose in Life": {
+            "High": "Has goals and a sense of directedness; finds meaning in present and past life; has aims and objectives for living.",
+            "Medium": "Seeks purpose but occasionally feels uncertain; has goals but may struggle with long-term direction or motivation.",
+            "Low": "Lacks a sense of meaning; has few goals or aims; does not see purpose in past life; has no outlook or beliefs that give life meaning."
+        },
+        "Personal Growth": {
+            "High": "Feels continuous development; open to new experiences; realizes personal potential; sees self-improvement over time.",
+            "Medium": "Has a desire to grow but sometimes feels stuck; enjoys learning but may not actively seek change or self-improvement.",
+            "Low": "Feels personal stagnation; lacks a sense of improvement; feels uninterested with life; unable to develop new attitudes or behaviors."
+        },
+    }
+
+    st.subheader("Overall Scores (Max: 12 for each parameter) and Interpretation :")
+    for category, score in scores.items():
+        score_level = score // 2  # Dividing score by 2
+
+        # Determine scorer type
+        if score_level in [1, 2]:
+            level = "Low"
+            color = "red"
+        elif score_level in [3, 4]:
+            level = "Medium"
+            color = "orange"
+        else:
+            level = "High"
+            color = "green"
+
+        # Display the result
+        st.markdown(f"<span style='color:{color}; font-weight:bold;'>**{category}: {score} ({level} Scorer)**</span>", unsafe_allow_html=True)
+        st.info(descriptions[category][level])  # Show description based on category and score level
+
+def update_am_csv(response_csv_path, am_csv_path):
+    # Mapping of response.csv columns to am.csv rows
+    param_mapping = {
+        "p1": "self acceptance",
+        "p2": "positive relations with others",
+        "p3": "autonomy",
+        "p4": "environmental mastery",
+        "p5": "purpose in life",
+        "p6": "personal growth"
+    }
+
+    # Load response.csv
+    response_df = pd.read_csv(response_csv_path)
+
+    # Load am.csv
+    am_df = pd.read_csv(am_csv_path, index_col=0)
+
+    # Get unique issue types and convert to lowercase
+    issue_types = response_df["issue"].unique()
+    print(issue_types)
+
+    for issue in issue_types:
+        for param, am_row in param_mapping.items():
+            # Extract values where issue matches
+            param_values = response_df.loc[response_df["issue"] == issue, param]
+
+            if param_values.empty:
+                continue  # Skip if no matching rows
+
+            # Divide by 2
+            divided_values = param_values // 2
+            print(issue)
+            print(divided_values)
+
+            # Compute mean value of divided values
+            mean_value = divided_values.mean()
+
+            # Ensure final_value is an integer
+            final_value = int(round(mean_value))
+
+            # Update am.csv and force integer type
+            am_df.loc[am_row, issue.lower()] = final_value
+
+            # Convert entire column to integer type
+            am_df[issue.lower()] = am_df[issue.lower()].astype(int)
+
+    # Save the updated am.csv
+    am_df.to_csv(am_csv_path)
+    st.success("Updated Association Matrix successfully.")
+
+    st.subheader("Updated Association Matrix:")
+    am_df = pd.read_csv(am_file_path, index_col=0)
+    # Display the dataframe as a table (no scrollbars)
+    st.table(am_df)
+
+# Using association matrix ----------------------------
+file_path = "/content/am.csv"
+df = pd.read_csv(file_path)
+# Define row names (assuming they are in order in the dataset)
+row_names = [
+    "self acceptance", "positive relations with others", "autonomy",
+    "environmental mastery", "purpose in life", "personal growth"
 ]
 
+# Extract the probability columns (assumed order: anxiety, bipolar, depression, normal, ptsd)
+issue_columns = ["anxiety", "bipolar", "depression", "normal", "ptsd"]
+matrix = df[issue_columns].values  # Convert to NumPy matrix
+
+def weighted_sum_analysis(matrix,probabilities):
+    # Compute weighted sums for each row
+    weighted_sums = np.dot(matrix, probabilities)
+
+    # Find the index of the row with the highest weighted sum
+    max_index = np.argmax(weighted_sums)
+    max_row_name = row_names[max_index]
+
+    with st.expander("Weighted Sum Analysis"):
+
+      # Display results in Streamlit
+      st.title("Weighted Sum Analysis")
+
+      # Show computed weighted sums
+      st.subheader("Weighted Sums")
+      df["Weighted Sum"] = weighted_sums
+      st.dataframe(df[["Weighted Sum"]])
+
+      # Display the highest weighted sum row
+      st.subheader("Row with Highest Weighted Sum")
+      st.success(f"""
+      **Index:** {max_index}  \n
+      **Row Name:** {max_row_name}  \n
+      **Weighted Sum:** {weighted_sums[max_index]}
+      """)
+
+    return max_index, max_row_name
+
+def cosine_similarity_analysis(matrix, probabilities):
+    # Define example probabilities (vector to compare against)
+    probabilities = np.array(probabilities).reshape(1, -1)
+
+    # Compute cosine similarity for each row
+    cosine_similarities = cosine_similarity(matrix, probabilities).flatten()
+
+    # Find the index of the row with the highest cosine similarity
+    max_index = np.argmax(cosine_similarities)
+    max_row_name = row_names[max_index]
+
+    with st.expander("Cosine Similarity Analysis"):
+      # Display results in Streamlit
+      st.title("Cosine Similarity Analysis")
+
+      # Show computed cosine similarities
+      st.subheader("Cosine Similarities")
+      df["Cosine Similarity"] = cosine_similarities
+      st.dataframe(df[["Cosine Similarity"]])
+
+      # Display the highest similarity row
+      st.subheader("Row with Highest Cosine Similarity")
+      st.success(f"""
+      **Index:** {max_index}  \n
+      **Row Name:** {max_row_name}  \n
+      **Cosine Similarity Score:** {cosine_similarities[max_index]}
+      """)
+
+    return max_index, max_row_name
+
+def euclidian_distance_analysis(matrix, probabilities):
+    # Compute Euclidean distances for each row
+    euclidean_distances = np.array([euclidean(row, probabilities) for row in matrix])
+
+    # Find the index of the row with the smallest Euclidean distance
+    min_index = np.argmin(euclidean_distances)
+    min_row_name = row_names[min_index]
+
+    with st.expander("Euclidean Distance Analysis"):
+
+      # Display results in Streamlit
+      st.title("Euclidean Distance Analysis")
+
+      # Show computed Euclidean distances
+      st.subheader("Euclidean Distances")
+      df["Euclidean Distance"] = euclidean_distances
+      st.dataframe(df[["Euclidean Distance"]])
+
+      # Display the closest row (smallest Euclidean distance)
+      st.subheader("Row with Smallest Euclidean Distance")
+      st.success(f"""
+      **Index:** {min_index}  \n
+      **Row Name:** {min_row_name}  \n
+      **Euclidean Distance:** {euclidean_distances[min_index]}
+      """)
+
+    return min_index, min_row_name
+
+def get_consensus_string(weighted_sum_row_name, cosine_similarity_row_name, euclidean_distance_row_name):
+    row_names = [weighted_sum_row_name, cosine_similarity_row_name, euclidean_distance_row_name]
+    unique_names = list(set(row_names))  # Get unique row names
+
+    if len(unique_names) == 1:
+        return unique_names[0]  # All three are the same
+    elif len(unique_names) == 2:
+        return " and ".join(unique_names)  # Two names are the same
+    else:
+        return ", ".join(unique_names)  # All three are different
 
 # Define the Streamlit app
 def run_app():
     st.title("Mental Health Disorder Detection")
 
     option = st.sidebar.selectbox(
-        "Choose an option",
-        ["Text Input", "Image Upload", "Video Upload", "PDF Upload", "Responses to Image", "Reddit Username Analysis", "Twitter Username Analysis"]
+       "Choose an option",
+       ["Text Input", "Image Upload", "Video Upload", "PDF Upload", "Responses to Image", "Reddit Username Analysis", "Twitter Username Analysis", "Well-being Survey"]
     )
 
     # Text Input
@@ -1750,6 +2065,16 @@ def run_app():
     # User respond to Image
     if option == 'Responses to Image':
         st.subheader("Describe Image and Classify Responses")
+
+        # Define Rorschach test questions
+        questions = [
+            "What do you see in this image?",
+            "What emotions does this image evoke in you?",
+            "Does this image remind you of anything from your past?",
+            "If this image had a story, what would it be?",
+            "Do you see anything changing in the image over time?"
+        ]
+        
         # Display the selected image
         rand_num = 10
         image_path, randnum = get_random_image()
@@ -2407,6 +2732,96 @@ def run_app():
 
                 else:
                     st.write("No valid text found for analysis.")
+
+    # Well-being Survey  
+    elif option == "Well-being Survey":
+        st.subheader("Well-being Survey")
+
+        # Display the image
+        if os.path.exists(image_path_survey):
+            st.image(image_path_survey, use_container_width=True)
+        else:
+            st.warning("Intro image not found!")
+
+        st.info("If you are not sure, predict your probable mental issue using any one of the 6 options available on the left before filling.")
+
+        st.warning(
+            "There a total of 12 questions : 2 for each of the 6 paramters from Ryff's Scale of Psychological Wellbeing. The Overall Scores are displayed at the end along with the updated Association Matrix.  \n\n"
+            "Questions with (R) are reversed scored. \n\n"
+            "1 → Strongly Disagree  \n"
+            "2 → Disagree  \n"
+            "3 → Slightly Disagree  \n"
+            "4 → Slightly Agree  \n"
+            "5 → Agree  \n"
+            "6 → Strongly Agree"
+        )
+
+        # Load existing data or create a new CSV file if it doesn't exist
+        try:
+            df = pd.read_csv(csv_file_path)
+        except FileNotFoundError:
+            df = pd.DataFrame(columns=["Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8", "Q9", "Q10", "Q11", "Q12",
+                                      "issue", "p1", "p2", "p3", "p4", "p5", "p6", "Date"])
+
+        # Dictionary to store responses
+        responses = {}
+
+        # First question with different options
+        st.markdown(f"**Q00.** What is Your Predicted Mental Issue?")
+        responses["issue"] = st.radio("", options=["Anxiety", "Bipolar", "Depression", "Normal", "PTSD"], index=2)
+
+        # Display remaining questions with radio buttons (1-5 scale)
+        questions = [
+            " When I look at the story of my life, I am pleased with how things have turned out.",
+            " In many ways I feel disappointed about my achievements in life. (R)",
+            " People would describe me as a giving person, willing to share my time with others.",
+            " Maintaining close relationships has been difficult and frustrating for me. (R)",
+            " I have confidence in my own opinions, even if they are different from the way most other people think.",
+            " I tend to be influenced by people with strong opinions. (R)",
+            " In general, I feel I am in charge of the situation in which I live.",
+            " The demands of everyday life often get me down. (R)",
+            " Some people wander aimlessly through life, but I am not one of them.",
+            " I sometimes feel as if I’ve done all there is to do in life. (R)",
+            " For me, life has been a continuous process of learning, changing, and growth.",
+            " I gave up trying to make big improvements or changes in my life a long time ago. (R)"
+        ]
+
+        for i, question in enumerate(questions, start=1):
+            st.markdown(f"**Q{i:02}.** {question}")  # Fix: Display full question correctly
+            responses[f"Q{i}"] = st.radio("", options=[1, 2, 3, 4, 5, 6], index=2, horizontal=True, key=f"q{i}")
+            st.write("\n")  # Add a blank line after each question
+
+        # Add current date
+        responses["Date"] = datetime.datetime.now().strftime("%Y-%m-%d")
+
+        # Submit button
+        if st.button("Submit Responses"):
+            st.success("Responses Submitted Successfully!")
+
+            # Display overall scores
+            overall_score(responses)
+
+            # Convert responses to DataFrame
+            new_entry = pd.DataFrame([responses])
+
+            # Append new entry to existing DataFrame
+            df = pd.concat([df, new_entry], ignore_index=True)
+
+            # Save updated DataFrame back to CSV
+            df.to_csv(csv_file_path, index=False)
+
+            # Show last five responses
+            with st.expander("View Last 5 Responses:"):
+                last_five = df.tail(5)
+                st.dataframe(last_five)
+
+            # Count total respondents for today
+            today_date = datetime.datetime.now().strftime("%Y-%m-%d")
+            total_today = df[df["Date"] == today_date].shape[0]
+            st.write(f"**Total Number of Respondents ({today_date}):** {total_today}")
+
+            update_am_csv(csv_file_path, am_file_path)
+
 
 # Run the app
 if __name__ == '__main__':
