@@ -3,30 +3,41 @@
 \section{Conclusion}
 % State the project benefits. Outline the future scope for improvements.
 
-\subsection{Project Benefits}
-\noindent
-The project on detecting mental health disorders through social media analysis offers a wide array of significant benefits, both immediate and long-term, across multiple dimensions. First and foremost, it addresses a critical issue in mental health care—early detection and intervention. Social media has become a ubiquitous platform where people express their thoughts, feelings, and emotional states, often unconsciously. By leveraging the vast amounts of data available on social media platforms, our project seeks to tap into this resource to identify early signs of mental health disorders such as anxiety, depression, and more severe conditions like bipolar disorder or schizophrenia. The ability to detect mental health issues through real-time social media data is a game-changer for public health systems, mental health practitioners, and even individuals who may not realize they are at risk. Early detection enables timely intervention, reducing the overall burden of mental health disorders on society by preventing escalation into more severe conditions that often lead to hospitalization, self-harm, or even suicide. In this sense, the project aligns with global health initiatives that emphasize early diagnosis and preventive care. 
-
-\vspace{1em}
-\noindent
-Moreover, this project holds significant potential for improving the accuracy and efficiency of mental health diagnostics. Traditional diagnostic methods are often time-consuming, subjective, and reliant on self-reporting, which can lead to underdiagnosis or misdiagnosis. By utilizing machine learning algorithms and natural language processing techniques, our project automates the process of sentiment and behavioral analysis on social media platforms, offering a more objective and data-driven approach. This automated system can process large volumes of data much faster than human professionals, providing insights that would be impossible to glean from manual analysis. The algorithms developed as part of this project can be easily scaled to analyze millions of social media posts, enabling a broader reach in monitoring public mental health trends. Additionally, the project offers practical benefits for mental health professionals, allowing them to focus on treatment and intervention rather than diagnosis. It provides a tool that can be integrated into telehealth systems, offering mental health screening at scale, which is particularly valuable in underserved or rural areas where access to mental health professionals is limited. From a technological standpoint, the project offers a host of reusable components and methodologies. The machine learning models developed, the sentiment analysis tools, and the overall data pipeline are designed to be scalable and modular. These components can be adapted and extended to other domains beyond mental health, such as market sentiment analysis, public opinion monitoring, or even detecting harmful behavior like cyberbullying and harassment online. By advancing the state of the art in social media analytics, this project contributes to the growing field of AI-driven health care solutions. Furthermore, it provides a blueprint for future interdisciplinary work that integrates data science, psychology, and public health. 
-
-\subsection{Future Scope for Improvements}
-\noindent
-While this project offers numerous immediate benefits, there is substantial room for future enhancements that can broaden its applicability, accuracy, and effectiveness. Currently, the project focuses on analyzing Reddit data using PRAW, which is limited to a specific social media platform and dataset. In the future, incorporating data from other platforms like Facebook, Instagram and even niche forums could provide a more comprehensive understanding of an individual’s mental health status. Different platforms cater to different demographics and social behaviors, and expanding the dataset will allow for a more holistic analysis of mental health indicators across various user bases. Moreover, future improvements could focus on integrating real-time data analysis capabilities. Currently, our project is based on batch processing of historical data. However, in future iterations, the system could be developed to perform real-time monitoring, offering immediate feedback and potentially alerting health professionals or loved ones when someone shows signs of mental distress. This real-time capability would be invaluable in emergency situations, allowing for immediate intervention. Another significant future enhancement could involve incorporating ethical considerations and improving user privacy. As mental health is a sensitive subject, ensuring that the system is designed with robust privacy protections is critical. Future work could focus on using differential privacy or other anonymization techniques to ensure that user data remains confidential while still allowing for effective analysis. Moreover, collaborating with psychologists, ethicists, and legal experts could help refine the system to ensure it adheres to ethical guidelines and avoids potential harm, such as misdiagnosis or privacy violations.
-
-\vspace{1em}
-
-\noindent
-\textbf{Probable Method for implementation of Distributed Architecture}
-\newline
-\noindent
-The dataset is divided into subsets for parallel processing in a distributed system. Data partitioning can be performed using distributed data storage systems such as Hadoop HDFS, Amazon S3, or Google Cloud Storage. Tools like Apache Spark or Dask are particularly effective for splitting datasets into logical subsets based on criteria such as size, record count, or specific data attributes like time ranges, regions, or categories. Each subset is then assigned to a worker node for processing. Alternatively, data sharding can be used at the database level, where SQL queries or shard keys in databases like MongoDB or Cassandra create logical partitions of the dataset. Each worker node is responsible for training base models on its assigned subset. Worker nodes are typically implemented using containers such as Docker or virtual machines, each equipped with necessary machine learning frameworks like Scikit-learn, TensorFlow, or PyTorch. A central master node, acting as the orchestrator, distributes tasks such as training models like Logistic Regression, SVM, and others to these workers. Frameworks such as Apache Spark MLlib or TensorFlow Distributed Strategy facilitate this process. Each worker independently processes its subset, training multiple base models in parallel, while periodically reporting training statuses back to the master node. After training the base models for each subset, a subset-specific ensemble is created. This is typically done by employing a meta learner like Random Forest to aggregate the outputs of the base models within each worker. Frameworks like Scikit-learn or XGBoost can be utilized locally on the workers for this purpose. The trained subset-specific ensembles are then saved to distributed storage systems such as S3 or HDFS for later aggregation into a final ensemble model. To create the final ensemble model, predictions or model weights from all subset-specific ensembles are collected by the master node. The aggregation process can use techniques such as weighted averaging or stacking, implemented through another meta learner. In cases where the number of subset-specific ensembles is large, the aggregation itself can be distributed using paradigms like MapReduce. The final model is saved to shared storage to facilitate deployment. Once the final ensemble model is created, it is deployed using distributed inference platforms like TensorFlow Serving, Kubernetes, or AWS SageMaker, ensuring scalability by serving the model across multiple instances. Monitoring tools such as Prometheus or Grafana are employed to track the performance and resource utilization of the distributed system, ensuring reliable operation. For implementing such a system, various technologies are available. Distributed computing frameworks like Apache Spark or Dask are ideal for parallel data processing and machine learning. TensorFlow Distributed Strategy or PyTorch Distributed are suitable for scalable training of deep learning models. Task orchestration can be managed using tools like Apache Airflow or Prefect, while Kubernetes is used for container orchestration and scaling worker nodes. Storage and sharding can be handled by systems like Hadoop HDFS, Amazon S3, or databases like Cassandra and MongoDB. For managing communication between nodes, message-passing systems such as RabbitMQ or Kafka are employed. Network overhead must be minimized to avoid communication bottlenecks between the master node and workers. Fault tolerance is critical, and distributed frameworks with built-in recovery mechanisms should be used.
-
-\vspace{1em}
-
-\noindent
-The implementation of threading in the web application presents a significant opportunity for future improvements, particularly in enhancing the scalability and efficiency of the system. Threading can address several real-world challenges by allowing the application to handle multiple tasks concurrently, thereby improving responsiveness and reducing bottlenecks. Functions involving heavy I/O operations, such as downloading videos or images, extracting audio, or transcribing speech, can be threaded to overlap network and disk operations. This would minimize the idle time caused by waiting for these tasks to complete, allowing the system to serve multiple user requests simultaneously. 
+\begin{table}[H]
+    \caption*{Project Summary: Benefits, Future Scope, Distributed Architecture, and Threading Enhancements}
+    \label{tab:project_summary}
+    \begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3cm}|X|}
+    \hline
+    \textbf{Aspect} & \textbf{Summary} \\ \hline
+    \textbf{Project Benefits} & 
+    \begin{itemize}[noitemsep, leftmargin=*, topsep=0pt]
+        \item Early detection and intervention through social media analysis.
+        \item Leverages ML/DL to process large-scale data for objective, scalable diagnostics.
+        \item Reduces mis-/under-diagnosis by providing real-time insights.
+        \item Offers reusable components applicable in other domains (e.g., market sentiment, cyberbullying detection).
+    \end{itemize} \\ \hline
+    \textbf{Future Scope} & 
+    \begin{itemize}[noitemsep, leftmargin=*, topsep=0pt]
+        \item Incorporate additional data sources (Facebook, Instagram, niche forums) for comprehensive analysis.
+        \item Integrate real-time monitoring and feedback capabilities.
+        \item Enhance user privacy using techniques like differential privacy.
+        \item Collaborate with psychologists and ethicists to refine ethical and diagnostic guidelines.
+    \end{itemize} \\ \hline
+    \textbf{Distributed Architecture} & 
+    \begin{itemize}[noitemsep, leftmargin=*, topsep=0pt]
+        \item Partition dataset using Hadoop HDFS, Amazon S3, or Google Cloud Storage.
+        \item Use Apache Spark or Dask for parallel processing and training on worker nodes (Docker/VMs).
+        \item Train base models (e.g., Logistic Regression, SVM) in parallel and aggregate them via a meta learner (Random Forest, XGBoost).
+        \item Aggregate subset-specific ensembles using stacking or weighted averaging, and deploy the final model via TensorFlow Serving, Kubernetes, or AWS SageMaker.
+    \end{itemize} \\ \hline
+    \textbf{Threading Enhancements} & 
+    \begin{itemize}[noitemsep, leftmargin=*, topsep=0pt]
+        \item Implement threading to handle I/O-heavy tasks (e.g., video/image downloading, audio extraction, transcription) concurrently.
+        \item Overlap network and disk operations to reduce idle time.
+        \item Improve scalability and responsiveness, enabling the system to serve multiple requests simultaneously.
+    \end{itemize} \\ \hline
+    \end{tabularx}
+\end{table}
 
 
 \pagebreak
