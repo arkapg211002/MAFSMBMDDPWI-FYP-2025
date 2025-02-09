@@ -219,8 +219,10 @@ The technical environment for the project "Multimodal AI Framework for Social Me
     \label{dfdl1234}  % Label for referencing the figure
 \end{figure}
 
+\vspace{2em}
 
-\subsection{Image Description}
+\noindent
+\textbf{Image Description}
 
 \begin{figure}[h!]  
     \centering
@@ -232,7 +234,10 @@ The technical environment for the project "Multimodal AI Framework for Social Me
 \noindent
 The image captioning process using Python’s Transformers module and the ViT-GPT2 model involves several key steps. The user uploads an image, which is preprocessed by resizing to \(224 \times 224\) pixels, normalizing pixel values, and converting it into a tensor format. The Vision Transformer (ViT) divides the image into \(16 \times 16\) patches, embeds them, and processes them through transformer layers to extract visual features. The resulting embedding is passed to GPT-2, which generates a sequence of text tokens iteratively using its language model. Tokens are decoded back into human-readable text using the GPT-2 tokenizer, cleaned for readability, and output as a concise description. This pipeline leverages ViT for feature extraction and GPT-2 for language generation, enabling efficient and almost accurate image captioning.
 
-\subsection{Emotion Detection Functionality}
+\vspace{2em}
+
+\noindent
+\textbf{Emotion Detection Functionality}
 
 \begin{figure}[h!]  
     \centering
@@ -246,7 +251,8 @@ DeepFace analysis processes facial features from uploaded images or video frames
 
 \pagebreak
 
-\subsection{Extract Text From Image}
+\noindent
+\textbf{Extract Text From Image}
 
 \begin{figure}[h!]  
     \centering
@@ -258,7 +264,10 @@ DeepFace analysis processes facial features from uploaded images or video frames
 \noindent
 The process of extracting text from an image using Tesseract-OCR begins with preprocessing the uploaded image. The image is converted to grayscale, noise is reduced using Gaussian or Median Blur, and binarization (e.g., Otsu’s thresholding) isolates text from the background. Text regions are detected using contour analysis or connected components. The processed image is then passed to Tesseract, which uses an LSTM-based neural network to recognize characters and generate machine-readable text, enhanced by language models for accuracy. Postprocessing corrects errors via spell-checking and rule-based replacements (e.g., \texttt{0} $\rightarrow$ \texttt{O}), and formats the text into paragraphs or lines. The final output, displayed or saved as \texttt{.txt} or \texttt{.docx}, is ready for applications like document analysis. This pipeline combines image enhancement, deep learning, and text correction for high-quality results.
 
-\subsection{Translation to English}
+\vspace{2em}
+
+\noindent
+\textbf{Translation to English}
 
 \begin{figure}[h!]  
     \centering
@@ -270,7 +279,10 @@ The process of extracting text from an image using Tesseract-OCR begins with pre
 \noindent
 The process of translating text to English using DeepTranslator begins with preprocessing the input to clean unwanted characters and detect the source language using machine learning models like Google’s Compact Language Detector. The prepared text is passed to DeepTranslator, which interfaces with APIs like Google Translate or Microsoft Translator. These APIs use neural machine translation (NMT) with encoder-decoder architectures and attention mechanisms to translate the text into English. Transformer-based models enhance accuracy by capturing context and long-range dependencies. Postprocessing ensures quality by validating completeness, correcting errors, and preserving formatting. The final translated text is displayed or saved, ensuring accuracy and readability. This pipeline integrates NLP, deep learning, and error handling for reliable translations.
 
-\subsection{Audio Mood Analysis}
+\vspace{2em}
+
+\noindent
+\textbf{Audio Mood Analysis}
 
 \begin{figure}[h!]  
     \centering
@@ -279,10 +291,15 @@ The process of translating text to English using DeepTranslator begins with prep
     \label{dfdl671}  % Label for referencing the figure
 \end{figure}
 
+\pagebreak
+
 \noindent
 The \texttt{analyze\_audio\_mood} function begins with the user providing a video file path. The audio is extracted using the \texttt{extract\_audio\_from\_video} function and loaded into memory with the Librosa library. Mel-frequency cepstral coefficients (MFCCs) are computed using \texttt{librosa.feature.mfcc} to capture frequency patterns for mood analysis. The MFCC array is segmented into four frequency bands—low, mid-low, mid-high, and high—and the scalar mean of each band is calculated to simplify data for classification. The mood is classified (e.g., normal, calm, anxious) based on the dominant frequency characteristics. Results can be further enhanced using the Gemini API to provide tone, mood, and summary details for the audio. This process combines audio feature extraction and classification for comprehensive mood analysis.
 
-\subsection{Prediction to Wellbeing Mapping}
+\vspace{2em}
+
+\noindent
+\textbf{Prediction to Wellbeing Mapping}
 
 \begin{figure}[h!]  
     \centering
