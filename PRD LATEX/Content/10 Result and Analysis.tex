@@ -53,54 +53,46 @@
 
 \pagebreak
 
-\noindent
-The metrics used for evaluating the performance of the classification models include Precision, Recall, F1-Score, and Support, along with the Confusion Matrix. These metrics are crucial for assessing how well the models are able to differentiate between various classes, providing insight into their accuracy, ability to capture relevant instances, and the overall balance between precision and recall. By analyzing these metrics, a comprehensive understanding of the model's performance can be obtained, enabling informed decisions for further optimization and tuning.
-
-\subsection{Classification Metrics and Confusion Matrix}
-
-\begin{itemize}
-    \item \textbf{Precision:} Precision is the ratio of correctly predicted positive observations to the total predicted positives. It can be calculated as:
+\begin{table}[H]
+    \caption*{Metrics for Evaluation}
+    \label{tab:metrics}
+    \centering
+    \begin{tabularx}{\textwidth}{|p{3cm}|>{\raggedright\arraybackslash}X|}
+    \hline
+    \textbf{Metric} & \textbf{Definition and Formula} \\ \hline
+    Precision & The ratio of correctly predicted positive observations to the total predicted positives.
     \[
     \text{Precision} = \frac{TP}{TP + FP}
     \]
-    where \( TP \) represents True Positives, and \( FP \) represents False Positives.
-
-    \item \textbf{Recall:} Recall is the ratio of correctly predicted positive observations to all observations in the actual class:
+    where \(TP\) = True Positives, \(FP\) = False Positives. \\ \hline
+    Recall & The ratio of correctly predicted positive observations to all observations in the actual class.
     \[
     \text{Recall} = \frac{TP}{TP + FN}
     \]
-    where \( TP \) is True Positives, and \( FN \) is False Negatives.
-
-    \item \textbf{F1-Score:} F1-Score is the harmonic mean of Precision and Recall, calculated as:
+    where \(TP\) = True Positives, \(FN\) = False Negatives. \\ \hline
+    F1-Score & The harmonic mean of Precision and Recall.
     \[
     \text{F1-Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
-    \]
-
-    \item \textbf{Support:} Support refers to the number of actual occurrences of each class in the dataset:
+    \] \\ \hline
+    Support & The number of actual occurrences of each class in the dataset.
     \[
     \text{Support} = \text{Number of samples in the true class}
-    \]
-
-    \item \textbf{Confusion Matrix:} A confusion matrix is used to evaluate the performance of a classification model. It is structured as follows:
+    \] \\ \hline
+    Confusion Matrix & A matrix used to evaluate classification performance:
     \[
     \begin{bmatrix}
     TP & FP \\
     FN & TN
     \end{bmatrix}
     \]
-    where:
-    \begin{itemize}
-        \item \( TP \) = True Positives
-        \item \( FP \) = False Positives
-        \item \( FN \) = False Negatives
-        \item \( TN \) = True Negatives
-    \end{itemize}
-\end{itemize}
+    where \(TP\) = True Positives, \(FP\) = False Positives, \(FN\) = False Negatives, and \(TN\) = True Negatives. \\ \hline
+    \end{tabularx}
+\end{table}
 
-\subsection{Results of Logistic Regression}
+\subsection{Results from Base Models}
 
 \begin{center}
-    \textbf{Logistic Regression Classification Report} \\[0.5em]
+    \textbf{Logistic Regression} \\[0.5em]
     \begin{tabular}{|l|c|c|c|c|}
         \hline
         \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
@@ -115,49 +107,11 @@ The metrics used for evaluating the performance of the classification models inc
     \end{tabular}
 \end{center}
 
-\vspace{0.25em}
-
-\begin{center}
-    \textbf{ROC Curve Areas for Each Class} \\[0.5em]
-    \begin{tabular}{|l|c|}
-        \hline
-        \textbf{Class}  & \textbf{ROC AUC} \\ \hline
-        Anxiety         & 0.95            \\ \hline
-        Bipolar         & 0.92            \\ \hline
-        Depression      & 0.96            \\ \hline
-        Normal          & 0.99            \\ \hline
-        PTSD            & 0.95            \\ \hline
-    \end{tabular}
-\end{center}
-
-\vspace{0.25em}
-
-\begin{figure}[h!]
-    \centering
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/LR Confusion Matrix.png}
-        \caption{Confusion Matrix (Logistic Regression)}
-        \label{LRCM}  % Label for referencing the subfigure
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/LR ROC.png}
-        \caption{ROC AUC (Logistic Regression)}
-        \label{LRROC}  % Label for referencing the subfigure
-    \end{subfigure}
-    \caption{Evaluation Results for Logistic Regression}
-    \label{fig:comparison}
-\end{figure}
-
 \pagebreak
 % --------- naive bayes
 
-\subsection{Results of Naive Bayes}
-
 \begin{center}
-    \textbf{Naive Bayes Classification Report} \\[0.5em]
+    \textbf{Naive Bayes} \\[0.2em]
     \begin{tabular}{|l|c|c|c|c|}
         \hline
         \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
@@ -172,49 +126,10 @@ The metrics used for evaluating the performance of the classification models inc
     \end{tabular}
 \end{center}
 
-\vspace{0.25em}
+% -------- svm
 
 \begin{center}
-    \textbf{ROC Curve Areas for Each Class} \\[0.5em]
-    \begin{tabular}{|l|c|}
-        \hline
-        \textbf{Class}  & \textbf{ROC AUC} \\ \hline
-        Anxiety         & 0.92            \\ \hline
-        Bipolar         & 0.89            \\ \hline
-        Depression      & 0.94            \\ \hline
-        Normal          & 0.99            \\ \hline
-        PTSD            & 0.94            \\ \hline
-    \end{tabular}
-\end{center}
-
-\vspace{0.25em}
-
-\begin{figure}[h!]
-    \centering
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/NB Confusion Matrix.png}
-        \caption{Confusion Matrix (Naive Bayes)}
-        \label{NBCM}  % Label for referencing the subfigure
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/NB ROC.png}
-        \caption{ROC AUC (Naive Bayes)}
-        \label{NBROC}  % Label for referencing the subfigure
-    \end{subfigure}
-    \caption{Evaluation Results for Naive Bayes}
-    \label{fig:nb_comparison}
-\end{figure}
-
-\pagebreak
-% ------------- svc
-
-\subsection{Results of Support Vector Machine}
-
-\begin{center}
-    \textbf{SVM Classification Report} \\[0.5em]
+    \textbf{Support Vector Machine} \\[0.2em]
     \begin{tabular}{|l|c|c|c|c|}
         \hline
         \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
@@ -229,49 +144,9 @@ The metrics used for evaluating the performance of the classification models inc
     \end{tabular}
 \end{center}
 
-\vspace{0.25em}
 
 \begin{center}
-    \textbf{ROC Curve Areas for Each Class} \\[0.5em]
-    \begin{tabular}{|l|c|}
-        \hline
-        \textbf{Class}  & \textbf{ROC AUC} \\ \hline
-        Anxiety         & 0.96            \\ \hline
-        Bipolar         & 0.90            \\ \hline
-        Depression      & 0.96            \\ \hline
-        Normal          & 0.98            \\ \hline
-        PTSD            & 0.96            \\ \hline
-    \end{tabular}
-\end{center}
-
-\vspace{0.25em}
-
-\begin{figure}[h!]
-    \centering
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/SVM Confusion Matrix.png}
-        \caption{Confusion Matrix (SVM)}
-        \label{SVMCM}  % Label for referencing the subfigure
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/SVM ROC.png}
-        \caption{ROC AUC (SVM)}
-        \label{SVMROC}  % Label for referencing the subfigure
-    \end{subfigure}
-    \caption{Evaluation Results for SVM}
-    \label{fig:svm_comparison}
-\end{figure}
-
-% ------------- random forest
-\pagebreak
-
-\subsection{Results of Random Forest}
-
-\begin{center}
-    \textbf{Random Forest Classification Report} \\[0.5em]
+    \textbf{Random Forest} \\[0.2em]
     \begin{tabular}{|l|c|c|c|c|}
         \hline
         \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
@@ -286,51 +161,11 @@ The metrics used for evaluating the performance of the classification models inc
     \end{tabular}
 \end{center}
 
-\vspace{0.25em}
-
-\begin{center}
-    \textbf{ROC Curve Areas for Each Class} \\[0.5em]
-    \begin{tabular}{|l|c|}
-        \hline
-        \textbf{Class}  & \textbf{ROC AUC} \\ \hline
-        Anxiety         & 0.96            \\ \hline
-        Bipolar         & 0.89            \\ \hline
-        Depression      & 0.97            \\ \hline
-        Normal          & 0.97            \\ \hline
-        PTSD            & 0.97            \\ \hline
-    \end{tabular}
-\end{center}
-
-\vspace{0.25em}
-
-\begin{figure}[h!]
-    \centering
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/RF Confusion Matrix.png}
-        \caption{Confusion Matrix (Random Forest)}
-        \label{RFCM}  % Label for referencing the subfigure
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/RF ROC.png}
-        \caption{ROC AUC (Random Forest)}
-        \label{RFROC}  % Label for referencing the subfigure
-    \end{subfigure}
-    \caption{Evaluation Results for Random Forest}
-    \label{fig:rf_comparison}
-\end{figure}
-
-\pagebreak
-
 
 % -------- xgb
 
-\subsection{Results of XGBoost}
-
 \begin{center}
-    \textbf{XGBoost Classification Report} \\[0.5em]
+    \textbf{XGBoost} \\[0.2em]
     \begin{tabular}{|l|c|c|c|c|}
         \hline
         \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
@@ -345,50 +180,15 @@ The metrics used for evaluating the performance of the classification models inc
     \end{tabular}
 \end{center}
 
-\vspace{0.25em}
 
-\begin{center}
-    \textbf{ROC Curve Areas for Each Class} \\[0.5em]
-    \begin{tabular}{|l|c|}
-        \hline
-        \textbf{Class}  & \textbf{ROC AUC} \\ \hline
-        Anxiety         & 0.97            \\ \hline
-        Bipolar         & 0.95            \\ \hline
-        Depression      & 0.97            \\ \hline
-        Normal          & 0.99            \\ \hline
-        PTSD            & 0.97            \\ \hline
-    \end{tabular}
-\end{center}
-
-\vspace{0.25em}
-
-\begin{figure}[h!]
-    \centering
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/XG Confusion Matrix.png}
-        \caption{Confusion Matrix (XGBoost)}
-        \label{XGCM}  % Label for referencing the subfigure
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/XG ROC.png}
-        \caption{ROC AUC (XGBoost)}
-        \label{XGROC}  % Label for referencing the subfigure
-    \end{subfigure}
-    \caption{Evaluation Results for XGBoost}
-    \label{fig:xgboost_comparison}
-\end{figure}
 
 \pagebreak
 
 % --------------- knn
 
-\subsection{Results of KNN}
 
 \begin{center}
-    \textbf{KNN Classification Report} \\[0.5em]
+    \textbf{K-Nearest Neighbour} \\[0.2em]
     \begin{tabular}{|l|c|c|c|c|}
         \hline
         \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
@@ -403,50 +203,9 @@ The metrics used for evaluating the performance of the classification models inc
     \end{tabular}
 \end{center}
 
-\vspace{0.25em}
 
 \begin{center}
-    \textbf{ROC Curve Areas for Each Class} \\[0.5em]
-    \begin{tabular}{|l|c|}
-        \hline
-        \textbf{Class}  & \textbf{ROC AUC} \\ \hline
-        Anxiety         & 0.73            \\ \hline
-        Bipolar         & 0.67            \\ \hline
-        Depression      & 0.77            \\ \hline
-        Normal          & 0.80            \\ \hline
-        PTSD            & 0.67            \\ \hline
-    \end{tabular}
-\end{center}
-
-\vspace{0.25em}
-
-\begin{figure}[h!]
-    \centering
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/KNN Confusion Matrix.png}
-        \caption{Confusion Matrix (KNN)}
-        \label{KNNCM}  % Label for referencing the subfigure
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/KNN ROC.png}
-        \caption{ROC AUC (KNN)}
-        \label{KNNROC}  % Label for referencing the subfigure
-    \end{subfigure}
-    \caption{Evaluation Results for KNN}
-    \label{fig:knn_comparison}
-\end{figure}
-
-\pagebreak
-
-% ------ lstm
-
-\subsection{Results of LSTM}
-
-\begin{center}
-    \textbf{LSTM Classification Report} \\[0.5em]
+    \textbf{Long Short Term Memory} \\[0.2em]
     \begin{tabular}{|l|c|c|c|c|}
         \hline
         \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
@@ -461,48 +220,10 @@ The metrics used for evaluating the performance of the classification models inc
     \end{tabular}
 \end{center}
 
-\vspace{0.1em}
-
-\begin{center}
-    \textbf{ROC Curve Areas for Each Class} \\[0.5em]
-    \begin{tabular}{|l|c|}
-        \hline
-        \textbf{Class}  & \textbf{ROC AUC} \\ \hline
-        Anxiety         & 0.95            \\ \hline
-        Bipolar         & 0.92            \\ \hline
-        Depression      & 0.95            \\ \hline
-        Normal          & 0.98            \\ \hline
-        PTSD            & 0.95            \\ \hline
-    \end{tabular}
-\end{center}
-
-\vspace{0.1em}
-
-\begin{figure}[h!]
-    \centering
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/LSTM Confusion Matrix.png}
-        \caption{Confusion Matrix (LSTM)}
-        \label{LSTMCM}  % Label for referencing the subfigure
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/LSTM ROC.png}
-        \caption{ROC AUC (LSTM)}
-        \label{LSTMROC}  % Label for referencing the subfigure
-    \end{subfigure}
-    \caption{Evaluation Results for LSTM}
-    \label{fig:lstm_comparison}
-\end{figure}
-
-\pagebreak
 
 % -------------- Adding transformer
-\subsection{Results from Transformer based model}
 \begin{center}
-    \textbf{Classification Report} \\[0.5em]
+    \textbf{Custom Transformer} \\[0.2em]
     \begin{tabular}{|l|c|c|c|c|}
         \hline
         \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
@@ -517,38 +238,311 @@ The metrics used for evaluating the performance of the classification models inc
     \end{tabular}
 \end{center}
 
+
 \begin{center}
-    \textbf{ROC Curve Areas for Each Class} \\[0.5em]
-    \begin{tabular}{|l|c|}
+    \textbf{Hyperparameter Tuning on Logistic Regression} \\[0.2em]
+    \begin{tabular}{|l|c|c|c|c|}
         \hline
-        \textbf{Class}  & \textbf{ROC AUC} \\ \hline
-        Anxiety         & 0.97            \\ \hline
-        Bipolar         & 0.94            \\ \hline
-        Depression      & 0.98            \\ \hline
-        Normal          & 0.99            \\ \hline
-        PTSD            & 0.97            \\ \hline
+        \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
+        Anxiety        & 0.83               & 0.77            & 0.80              & 379             \\ \hline
+        Bipolar        & 0.74               & 0.55            & 0.64              & 384             \\ \hline
+        Depression     & 0.76               & 0.76            & 0.76              & 373             \\ \hline
+        Normal         & 0.92               & 0.99            & 0.95              & 2183            \\ \hline
+        PTSD           & 0.87               & 0.77            & 0.82              & 394             \\ \hline
+        \textbf{Accuracy} & \multicolumn{4}{|c|}{87.72\%} \\ \hline
+        \textbf{Macro Avg} & 0.83            & 0.77            & 0.79              & 3713            \\ \hline
+        \textbf{Weighted Avg} & 0.87         & 0.88            & 0.87              & 3713            \\ \hline
     \end{tabular}
 \end{center}
+
+\pagebreak
+% ----------- knn hp
+
+\begin{center}
+    \textbf{Hyperparameter Tuning on KNN} \\[0.5em]
+    \begin{tabular}{|l|c|c|c|c|}
+        \hline
+        \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
+        Anxiety        & 0.73               & 0.23            & 0.35              & 379             \\ \hline
+        Bipolar        & 0.18               & 0.60            & 0.27              & 384             \\ \hline
+        Depression     & 0.47               & 0.40            & 0.43              & 373             \\ \hline
+        Normal         & 0.74               & 0.65            & 0.69              & 2183            \\ \hline
+        PTSD           & 0.83               & 0.10            & 0.18              & 394             \\ \hline
+        \textbf{Accuracy} & \multicolumn{4}{|c|}{52.03\%} \\ \hline
+        \textbf{Macro Avg} & 0.59            & 0.40            & 0.39              & 3713            \\ \hline
+        \textbf{Weighted Avg} & 0.66         & 0.52            & 0.53              & 3713            \\ \hline
+    \end{tabular}
+\end{center}
+
+
+\begin{center}
+    \textbf{Hyperparameter Tuning on SVM} \\[0.5em]
+    \begin{tabular}{|l|c|c|c|c|}
+        \hline
+        \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
+        Anxiety        & 0.72               & 0.76            & 0.74              & 379             \\ \hline
+        Bipolar        & 0.62               & 0.61            & 0.61              & 384             \\ \hline
+        Depression     & 0.74               & 0.71            & 0.72              & 373             \\ \hline
+        Normal         & 0.94               & 0.95            & 0.95              & 2183            \\ \hline
+        PTSD           & 0.78               & 0.74            & 0.76              & 394             \\ \hline
+        \textbf{Accuracy} & \multicolumn{4}{|c|}{85.13\%} \\ \hline
+        \textbf{Macro Avg} & 0.76            & 0.75            & 0.76              & 3713            \\ \hline
+        \textbf{Weighted Avg} & 0.85         & 0.85            & 0.85              & 3713            \\ \hline
+    \end{tabular}
+\end{center}
+
+
+
+\begin{center}
+    \textbf{Hyperparameter Tuning on Naive Bayes} \\[0.5em]
+    \begin{tabular}{|l|c|c|c|c|}
+        \hline
+        \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
+        Anxiety        & 0.69               & 0.76            & 0.72              & 379             \\ \hline
+        Bipolar        & 0.75               & 0.55            & 0.64              & 384             \\ \hline
+        Depression     & 0.60               & 0.83            & 0.70              & 373             \\ \hline
+        Normal         & 0.96               & 0.91            & 0.94              & 2183            \\ \hline
+        PTSD           & 0.73               & 0.79            & 0.76              & 394             \\ \hline
+        \textbf{Accuracy} & \multicolumn{4}{|c|}{83.95\%} \\ \hline
+        \textbf{Macro Avg} & 0.75            & 0.77            & 0.75              & 3713            \\ \hline
+        \textbf{Weighted Avg} & 0.85         & 0.84            & 0.84              & 3713            \\ \hline
+    \end{tabular}
+\end{center}
+
+\pagebreak
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/LR Confusion Matrix.png}
+        \caption*{Confusion Matrix (Logistic Regression)}
+        \label{LRCM}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/LR ROC.png}
+        \caption*{ROC AUC (Logistic Regression)}
+        \label{LRROC}  % Label for referencing the subfigure
+    \end{subfigure}
+    \label{fig:comparison}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/NB Confusion Matrix.png}
+        \caption*{Confusion Matrix (Naive Bayes)}
+        \label{NBCM}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/NB ROC.png}
+        \caption*{ROC AUC (Naive Bayes)}
+        \label{NBROC}  % Label for referencing the subfigure
+    \end{subfigure}
+    \label{fig:nb_comparison}
+\end{figure}
+
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/SVM Confusion Matrix.png}
+        \caption*{Confusion Matrix (SVM)}
+        \label{SVMCM}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/SVM ROC.png}
+        \caption*{ROC AUC (SVM)}
+        \label{SVMROC}  % Label for referencing the subfigure
+    \end{subfigure}
+    \label{fig:svm_comparison}
+\end{figure}
+
+\pagebreak
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/RF Confusion Matrix.png}
+        \caption*{Confusion Matrix (Random Forest)}
+        \label{RFCM}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/RF ROC.png}
+        \caption*{ROC AUC (Random Forest)}
+        \label{RFROC}  % Label for referencing the subfigure
+    \end{subfigure}
+    \label{fig:rf_comparison}
+\end{figure}
+
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/XG Confusion Matrix.png}
+        \caption*{Confusion Matrix (XGBoost)}
+        \label{XGCM}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/XG ROC.png}
+        \caption*{ROC AUC (XGBoost)}
+        \label{XGROC}  % Label for referencing the subfigure
+    \end{subfigure}
+    \label{fig:xgboost_comparison}
+\end{figure}
+
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/KNN Confusion Matrix.png}
+        \caption*{Confusion Matrix (KNN)}
+        \label{KNNCM}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/KNN ROC.png}
+        \caption*{ROC AUC (KNN)}
+        \label{KNNROC}  % Label for referencing the subfigure
+    \end{subfigure}
+    \label{fig:knn_comparison}
+\end{figure}
+
+\pagebreak
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/LSTM Confusion Matrix.png}
+        \caption*{Confusion Matrix (LSTM)}
+        \label{LSTMCM}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/LSTM ROC.png}
+        \caption*{ROC AUC (LSTM)}
+        \label{LSTMROC}  % Label for referencing the subfigure
+    \end{subfigure}
+    \label{fig:lstm_comparison}
+\end{figure}
+
 
 \begin{figure}[h!]
     \centering
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Images/T CM.png}
-        \caption{Confusion Matrix for Transformer based Model}
+        \caption*{Confusion Matrix (Transformer based Model)}
         \label{dfdl145}  % Label for referencing the subfigure
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Images/T ROC.png}
-        \caption{ROC AUC for Transformer based Model}
+        \caption*{ROC AUC (Transformer based Model)}
         \label{dfdl146}  % Updated label for referencing the subfigure
     \end{subfigure}
-    \caption{Evaluation Results for Transformer based Model}
     \label{fig:transformer_comparison}
 \end{figure}
 
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/HP LR CM.png}
+        \label{LSTMROC2}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/HP LR ROC.png}
+        \label{LSTMROC3}  % Label for referencing the subfigure
+    \end{subfigure}
+    \vspace{-2em}
+    \caption*{Confusion Matrix and ROC AUC for Logistic Regression with Hyperparameter Tuning}
+    \label{fig:hp_lr_comparison}
+\end{figure}
+
+\pagebreak
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/HP KNN CM.png}
+        \label{LSTMROC4}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/HP KNN ROC.png}
+        \label{LSTMROC5}  % Label for referencing the subfigure
+    \end{subfigure}
+    \vspace{-1.5em}
+    \caption*{Confusion Matrix and ROC AUC for KNN with Hyperparameter Tuning}
+    \label{fig:hp_knn_comparison}
+\end{figure}
+
+
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/HP SVM CM.png}
+        \label{LSTMROC6}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/HP SVM ROC.png}
+        \label{LSTMROC}  % Label for referencing the subfigure
+    \end{subfigure}
+    \vspace{-1.5em}
+    \caption*{Confusion Matrix and ROC AUC for SVM with Hyperparameter Tuning}
+    \label{fig:hp_svm_comparison}
+\end{figure}
+
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/HP NB CM.png}
+        \label{LSTMROC7}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/HP NB ROC.png}
+        \label{LSTMROC8}  % Label for referencing the subfigure
+    \end{subfigure}
+    \vspace{-1.5em}
+    \caption*{Confusion Matrix and ROC AUC for Naive Bayes with Hyperparameter Tuning}
+    \label{fig:hp_nb_comparison}
+\end{figure}
+
+
+\pagebreak
 
 \begin{table}[H]
     \centering
@@ -580,264 +574,6 @@ The metrics used for evaluating the performance of the classification models inc
 \end{table}
 
 
-% ----------- hyperparameter tuning
-
-\pagebreak
-
-\subsection{Results of Hyperparameter Tuning}
-
-\noindent
-\textbf{Logistic Regression}
-\begin{center}
-    \textbf{Hyperparameter Tuning on Logistic Regression} \\[0.5em]
-    \begin{tabular}{|l|c|}
-        \hline
-        \textbf{Best Hyperparameters}  & \textbf{Value} \\ \hline
-        Solver                        & liblinear      \\ \hline
-        Penalty                       & l2             \\ \hline
-        C                              & 1              \\ \hline
-    \end{tabular}
-\end{center}
-
-\begin{center}
-    \textbf{Classification Report} \\[0.5em]
-    \begin{tabular}{|l|c|c|c|c|}
-        \hline
-        \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
-        Anxiety        & 0.83               & 0.77            & 0.80              & 379             \\ \hline
-        Bipolar        & 0.74               & 0.55            & 0.64              & 384             \\ \hline
-        Depression     & 0.76               & 0.76            & 0.76              & 373             \\ \hline
-        Normal         & 0.92               & 0.99            & 0.95              & 2183            \\ \hline
-        PTSD           & 0.87               & 0.77            & 0.82              & 394             \\ \hline
-        \textbf{Accuracy} & \multicolumn{4}{|c|}{87.72\%} \\ \hline
-        \textbf{Macro Avg} & 0.83            & 0.77            & 0.79              & 3713            \\ \hline
-        \textbf{Weighted Avg} & 0.87         & 0.88            & 0.87              & 3713            \\ \hline
-    \end{tabular}
-\end{center}
-
-
-\begin{center}
-    \textbf{ROC Curve Areas for Each Class} \\[0.5em]
-    \begin{tabular}{|l|c|}
-        \hline
-        \textbf{Class}  & \textbf{ROC AUC} \\ \hline
-        Anxiety         & 0.95            \\ \hline
-        Bipolar         & 0.92            \\ \hline
-        Depression      & 0.96            \\ \hline
-        Normal          & 0.99            \\ \hline
-        PTSD            & 0.95            \\ \hline
-    \end{tabular}
-\end{center}
-
-\begin{figure}[h!]
-    \centering
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/HP LR CM.png}
-        \caption{Classification Matrix after Hyperparameter Tuning (Logistic Regression)}
-        \label{LSTMROC2}  % Label for referencing the subfigure
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/HP LR ROC.png}
-        \caption{ROC AUC after Hyperparameter Tuning (Logistic Regression)}
-        \label{LSTMROC3}  % Label for referencing the subfigure
-    \end{subfigure}
-    \caption{Evaluation Results after Hyperparameter Tuning (Logistic Regression)}
-    \label{fig:hp_lr_comparison}
-\end{figure}
-
-\pagebreak
-% ----------- knn hpt
-\vspace{1.5em}
-\noindent
-\textbf{K-Nearest Neighbours}
-\begin{center}
-    \textbf{Hyperparameter Tuning on k-NN} \\[0.5em]
-    \begin{tabular}{|l|c|}
-        \hline
-        \textbf{Best Hyperparameters}  & \textbf{Value} \\ \hline
-        Weights                       & distance       \\ \hline
-        n\_neighbors                  & 10             \\ \hline
-        Metric                        & euclidean      \\ \hline
-    \end{tabular}
-\end{center}
-
-\begin{center}
-    \textbf{Classification Report} \\[0.5em]
-    \begin{tabular}{|l|c|c|c|c|}
-        \hline
-        \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
-        Anxiety        & 0.73               & 0.23            & 0.35              & 379             \\ \hline
-        Bipolar        & 0.18               & 0.60            & 0.27              & 384             \\ \hline
-        Depression     & 0.47               & 0.40            & 0.43              & 373             \\ \hline
-        Normal         & 0.74               & 0.65            & 0.69              & 2183            \\ \hline
-        PTSD           & 0.83               & 0.10            & 0.18              & 394             \\ \hline
-        \textbf{Accuracy} & \multicolumn{4}{|c|}{52.03\%} \\ \hline
-        \textbf{Macro Avg} & 0.59            & 0.40            & 0.39              & 3713            \\ \hline
-        \textbf{Weighted Avg} & 0.66         & 0.52            & 0.53              & 3713            \\ \hline
-    \end{tabular}
-\end{center}
-
-\begin{center}
-    \textbf{ROC Curve Areas for Each Class} \\[0.5em]
-    \begin{tabular}{|l|c|}
-        \hline
-        \textbf{Class}  & \textbf{ROC AUC} \\ \hline
-        Anxiety         & 0.77            \\ \hline
-        Bipolar         & 0.67            \\ \hline
-        Depression      & 0.79            \\ \hline
-        Normal          & 0.79            \\ \hline
-        PTSD            & 0.71            \\ \hline
-    \end{tabular}
-\end{center}
-
-\begin{figure}[h!]
-    \centering
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/HP KNN CM.png}
-        \caption{Classification Matrix after Hyperparameter Tuning (KNN)}
-        \label{LSTMROC4}  % Label for referencing the subfigure
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/HP KNN ROC.png}
-        \caption{ROC AUC after Hyperparameter Tuning (KNN)}
-        \label{LSTMROC5}  % Label for referencing the subfigure
-    \end{subfigure}
-    \caption{Evaluation Results after Hyperparameter Tuning (KNN)}
-    \label{fig:hp_knn_comparison}
-\end{figure}
-
-\pagebreak
-
-\vspace{1.5em}
-\noindent
-\textbf{Support Vector Machine}
-\begin{center}
-    \textbf{Hyperparameter Tuning on SVM} \\[0.5em]
-    \begin{tabular}{|l|c|}
-        \hline
-        \textbf{Best Hyperparameters}  & \textbf{Value} \\ \hline
-        Kernel                        & linear         \\ \hline
-        Gamma                         & scale          \\ \hline
-        C                              & 1              \\ \hline
-    \end{tabular}
-\end{center}
-
-\begin{center}
-    \textbf{Classification Report} \\[0.5em]
-    \begin{tabular}{|l|c|c|c|c|}
-        \hline
-        \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
-        Anxiety        & 0.72               & 0.76            & 0.74              & 379             \\ \hline
-        Bipolar        & 0.62               & 0.61            & 0.61              & 384             \\ \hline
-        Depression     & 0.74               & 0.71            & 0.72              & 373             \\ \hline
-        Normal         & 0.94               & 0.95            & 0.95              & 2183            \\ \hline
-        PTSD           & 0.78               & 0.74            & 0.76              & 394             \\ \hline
-        \textbf{Accuracy} & \multicolumn{4}{|c|}{85.13\%} \\ \hline
-        \textbf{Macro Avg} & 0.76            & 0.75            & 0.76              & 3713            \\ \hline
-        \textbf{Weighted Avg} & 0.85         & 0.85            & 0.85              & 3713            \\ \hline
-    \end{tabular}
-\end{center}
-
-\begin{center}
-    \textbf{ROC Curve Areas for Each Class} \\[0.5em]
-    \begin{tabular}{|l|c|}
-        \hline
-        \textbf{Class}  & \textbf{ROC AUC} \\ \hline
-        Anxiety         & 0.92            \\ \hline
-        Bipolar         & 0.88            \\ \hline
-        Depression      & 0.95            \\ \hline
-        Normal          & 0.98            \\ \hline
-        PTSD            & 0.94            \\ \hline
-    \end{tabular}
-\end{center}
-
-\begin{figure}[h!]
-    \centering
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/HP SVM CM.png}
-        \caption{Classification Matrix after Hyperparameter Tuning (SVM)}
-        \label{LSTMROC6}  % Label for referencing the subfigure
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/HP SVM ROC.png}
-        \caption{ROC AUC after Hyperparameter Tuning (SVM)}
-        \label{LSTMROC}  % Label for referencing the subfigure
-    \end{subfigure}
-    \caption{Evaluation Results after Hyperparameter Tuning (SVM)}
-    \label{fig:hp_svm_comparison}
-\end{figure}
-
-\pagebreak
-
-
-\vspace{1.5em}
-\noindent
-\textbf{Naive Bayes}
-\begin{center}
-    \textbf{Hyperparameter Tuning on Naive Bayes} \\[0.5em]
-    \begin{tabular}{|l|c|}
-        \hline
-        \textbf{Best Hyperparameters}  & \textbf{Value} \\ \hline
-        Alpha                         & 0.2914180608409973 \\ \hline
-    \end{tabular}
-\end{center}
-
-\begin{center}
-    \textbf{Classification Report} \\[0.5em]
-    \begin{tabular}{|l|c|c|c|c|}
-        \hline
-        \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
-        Anxiety        & 0.69               & 0.76            & 0.72              & 379             \\ \hline
-        Bipolar        & 0.75               & 0.55            & 0.64              & 384             \\ \hline
-        Depression     & 0.60               & 0.83            & 0.70              & 373             \\ \hline
-        Normal         & 0.96               & 0.91            & 0.94              & 2183            \\ \hline
-        PTSD           & 0.73               & 0.79            & 0.76              & 394             \\ \hline
-        \textbf{Accuracy} & \multicolumn{4}{|c|}{83.95\%} \\ \hline
-        \textbf{Macro Avg} & 0.75            & 0.77            & 0.75              & 3713            \\ \hline
-        \textbf{Weighted Avg} & 0.85         & 0.84            & 0.84              & 3713            \\ \hline
-    \end{tabular}
-\end{center}
-
-\begin{center}
-    \textbf{ROC Curve Areas for Each Class} \\[0.5em]
-    \begin{tabular}{|l|c|}
-        \hline
-        \textbf{Class}  & \textbf{ROC AUC} \\ \hline
-        Anxiety         & 0.93            \\ \hline
-        Bipolar         & 0.93            \\ \hline
-        Depression      & 0.93            \\ \hline
-        Normal          & 0.99            \\ \hline
-        PTSD            & 0.94            \\ \hline
-    \end{tabular}
-\end{center}
-
-\begin{figure}[h!]
-    \centering
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/HP NB CM.png}
-        \caption{Classification Matrix after Hyperparameter Tuning (Naive Bayes)}
-        \label{LSTMROC7}  % Label for referencing the subfigure
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/HP NB ROC.png}
-        \caption{ROC AUC after Hyperparameter Tuning (Naive Bayes)}
-        \label{LSTMROC8}  % Label for referencing the subfigure
-    \end{subfigure}
-    \caption{Evaluation Results after Hyperparameter Tuning (Naive Bayes)}
-    \label{fig:hp_nb_comparison}
-\end{figure}
 
 \pagebreak
 
@@ -907,27 +643,8 @@ In ensemble learning, combining models like Logistic Regression (LR), Naive Baye
 
 \subsection{Results from Ensemble Model Training and Testing}
 
-\vspace{1em}
-\noindent
-\textbf{Ensemble Model 1}
-
 \begin{center}
-    \textbf{Cross-Validation Accuracy Scores} \\[0.5em]
-    \begin{tabular}{|c|c|}
-        \hline
-        \textbf{Cross-Validation Accuracy Scores} & \textbf{Value} \\ \hline
-        1 & 0.96364126 \\ \hline
-        2 & 0.95744681 \\ \hline
-        3 & 0.96175599 \\ \hline
-        4 & 0.95933208 \\ \hline
-        5 & 0.96202532 \\ \hline
-        \textbf{Mean Validation Accuracy} & \textbf{96.08\%} \\ \hline
-    \end{tabular}
-\end{center}
-
-
-\begin{center}
-    \textbf{Classification Report for Ensemble Model1} \\[0.5em]
+    \textbf{Ensemble Model 1} \\[0.2em]
     \begin{tabular}{|c|c|c|c|c|}
         \hline
         & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
@@ -942,48 +659,9 @@ In ensemble learning, combining models like Logistic Regression (LR), Naive Baye
     \end{tabular}
 \end{center}
 
-\begin{figure}[h!]
-    \centering
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/EM CM.png}
-        \caption{Confusion Matrix for Ensemble Model 1}
-        \label{dfdl3123}  % Label for referencing the subfigure
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/EM ROC.png}
-        \caption{ROC AUC Curve for Ensemble Model 1}
-        \label{dfdl12443}  % Label for referencing the subfigure
-    \end{subfigure}
-    \caption{Evaluation Results for Ensemble Model 1}
-    \label{fig:ensemble_model_comparison}
-\end{figure}
-
-\pagebreak
-
-\vspace{1em}
-\noindent
-\textbf{Ensemble Model 2}
 
 \begin{center}
-    \textbf{Cross-Validation Accuracy Scores} \\[0.5em]
-    \begin{tabular}{|c|c|}
-        \hline
-        \textbf{Cross-Validation Accuracy Scores} & \textbf{Value} \\ \hline
-        1 & 0.980878 \\ \hline
-        2 & 0.97629949 \\ \hline
-        3 & 0.98249394 \\ \hline
-        4 & 0.97522219 \\ \hline
-        5 & 0.97710746 \\ \hline
-        \textbf{Mean Validation Accuracy} & \textbf{97.84\%} \\ \hline
-    \end{tabular}
-\end{center}
-
-
-\begin{center}
-    \textbf{Classification Report for Ensemble Model2} \\[0.5em]
+    \textbf{Ensemble Model 2} \\[0.2em]
     \begin{tabular}{|c|c|c|c|c|}
         \hline
         & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
@@ -998,45 +676,9 @@ In ensemble learning, combining models like Logistic Regression (LR), Naive Baye
     \end{tabular}
 \end{center}
 
-\begin{figure}[h!]
-    \centering
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/EM2 CM.png}
-        \caption{Confusion Matrix for Ensemble Model 2}
-        \label{em2 cm}  % Label for referencing the subfigure
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/EM2 ROC.png}
-        \caption{ROC AUC for Ensemble Model 2}
-        \label{em2 roc}  % Label for referencing the subfigure
-    \end{subfigure}
-    \caption{Evaluation Results for Ensemble Model 2}
-    \label{fig:ensemble_model2_comparison}
-\end{figure}
-
-\pagebreak
-
-\noindent
-\textbf{Ensemble Model 3}
-\begin{center}
-    \textbf{Cross-Validation Accuracy Scores} \\[0.5em]
-    \begin{tabular}{|c|c|}
-        \hline
-        \textbf{Cross-Validation Accuracy Scores} & \textbf{Value} \\ \hline
-        1 & 0.98195529 \\ \hline
-        2 & 0.97549152 \\ \hline
-        3 & 0.98060867 \\ \hline
-        4 & 0.97603016 \\ \hline
-        5 & 0.97629949 \\ \hline
-        \textbf{Mean Validation Accuracy} & \textbf{97.81\%} \\ \hline
-    \end{tabular}
-\end{center}
 
 \begin{center}
-    \textbf{Classification Report for Ensemble Model3} \\[0.5em]
+    \textbf{Ensemble Model 3} \\[0.2em]
     \begin{tabular}{|c|c|c|c|c|}
         \hline
         & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
@@ -1051,47 +693,9 @@ In ensemble learning, combining models like Logistic Regression (LR), Naive Baye
     \end{tabular}
 \end{center}
 
-\begin{figure}[h!]
-    \centering
-    \begin{subfigure}[b]{0.48\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/EM3 CM.png}
-        \caption{Confusion Matrix for Ensemble Model 3}
-        \label{em3 cm}  % Label for referencing the subfigure
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.48\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/EM3 ROC.png}
-        \caption{ROC AUC for Ensemble Model 3}
-        \label{em3 roc}  % Label for referencing the subfigure
-    \end{subfigure}
-    \caption{Evaluation Results for Ensemble Model 3}
-    \label{fig:ensemble_model3_comparison}
-\end{figure}
-
-\pagebreak
-
-\vspace{1em}
-\noindent
-\textbf{Ensemble Model 4}
 
 \begin{center}
-    \textbf{Cross-Validation Accuracy Scores} \\[0.5em]
-    \begin{tabular}{|c|c|}
-        \hline
-        \textbf{Cross-Validation Accuracy Scores} & \textbf{Value} \\ \hline
-        1 & 0.97683814 \\ \hline
-        2 & 0.96821977 \\ \hline
-        3 & 0.97872340 \\ \hline
-        4 & 0.96821977 \\ \hline
-        5 & 0.97225963 \\ \hline
-        \textbf{Mean Validation Accuracy} & \textbf{97.29\%} \\ \hline
-    \end{tabular}
-\end{center}
-
-\begin{center}
-    \textbf{Classification Report for Ensemble Model4} \\[0.5em]
+    \textbf{Ensemble Model 4} \\[0.2em]
     \begin{tabular}{|c|c|c|c|c|}
         \hline
         \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
@@ -1106,47 +710,13 @@ In ensemble learning, combining models like Logistic Regression (LR), Naive Baye
     \end{tabular}
 \end{center}
 
-\begin{figure}[h!]
-    \centering
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/BAG CM.png}
-        \caption{Confusion Matrix for Ensemble Model 4}
-        \label{bag cm}  % Label for referencing the subfigure
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/BAG ROC.png}
-        \caption{ROC AUC for Ensemble Model 4}
-        \label{bag roc}  % Label for referencing the subfigure
-    \end{subfigure}
-    \caption{Evaluation Results for Ensemble Model 4}
-    \label{fig:ensemble_model4_comparison}
-\end{figure}
+
 
 \pagebreak
 
-\noindent
-\textbf{Ensemble Model 5}
 
 \begin{center}
-    \textbf{Cross-Validation Accuracy Scores} \\[0.5em]
-    \begin{tabular}{|c|c|}
-        \hline
-        \textbf{Cross-Validation Accuracy Scores} & \textbf{Value} \\ \hline
-        1 & 0.96768765 \\ \hline
-        2 & 0.97273645 \\ \hline
-        3 & 0.97306397 \\ \hline
-        4 & 0.96801347 \\ \hline
-        5 & 0.96767677 \\ \hline
-        \textbf{Mean Validation Accuracy} & \textbf{96.98\%} \\ \hline
-    \end{tabular}
-\end{center}
-
-
-\begin{center}
-    \textbf{Classification Report for Ensemble Model5} \\[0.5em]
+    \textbf{Ensemble Model 5} \\[0.2em]
     \begin{tabular}{|c|c|c|c|c|}
         \hline
         & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
@@ -1161,47 +731,9 @@ In ensemble learning, combining models like Logistic Regression (LR), Naive Baye
     \end{tabular}
 \end{center}
 
-\begin{figure}[h!]
-    \centering
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/BLD CM.png}
-        \caption{Confusion Matrix for Ensemble Model 5}
-        \label{bld cm}  % Label for referencing the subfigure
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/BLD ROC.png}
-        \caption{ROC AUC for Ensemble Model 5}
-        \label{bld roc}  % Label for referencing the subfigure
-    \end{subfigure}
-    \caption{Evaluation Results for Ensemble Model 5}
-    \label{fig:ensemble_model5_comparison}
-\end{figure}
-
-\pagebreak
-
-\vspace{1em}
-\noindent
-\textbf{Ensemble Model 6}
 
 \begin{center}
-    \textbf{Cross-Validation Accuracy Scores} \\[0.5em]
-    \begin{tabular}{|c|c|}
-        \hline
-        \textbf{Cross-Validation Accuracy Scores} & \textbf{Value} \\ \hline
-        1 & 0.9582547805009426 \\ \hline
-        2 & 0.9477511446269863 \\ \hline
-        3 & 0.9453272286560732 \\ \hline
-        4 & 0.9464045246431457 \\ \hline
-        5 & 0.9488284406140587 \\ \hline
-        \textbf{Mean Validation Accuracy} & \textbf{94.93\%} \\ \hline
-    \end{tabular}
-\end{center}
-
-\begin{center}
-    \textbf{Classification Report for Ensemble Model6} \\[0.5em]
+    \textbf{Ensemble Model 6} \\[0.2em]
     \begin{tabular}{|c|c|c|c|c|}
         \hline
         & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
@@ -1216,47 +748,9 @@ In ensemble learning, combining models like Logistic Regression (LR), Naive Baye
     \end{tabular}
 \end{center}
 
-\begin{figure}[h!]
-    \centering
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/WV CM.png}
-        \caption{Confusion Matrix for Ensemble Model 6}
-        \label{wv cm}  % Label for referencing the subfigure
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/WV ROC.png}
-        \caption{ROC AUC for Ensemble Model 6}
-        \label{wv roc}  % Label for referencing the subfigure
-    \end{subfigure}
-    \caption{Evaluation Results for Ensemble Model 6}
-    \label{fig:ensemble_model6_comparison}
-\end{figure}
-
-\pagebreak
-
-\vspace{1em}
-\noindent
-\textbf{Ensemble Model 7}
 
 \begin{center}
-    \textbf{Cross-Validation Accuracy Scores} \\[0.5em]
-    \begin{tabular}{|c|c|}
-        \hline
-        \textbf{Cross-Validation Accuracy Scores} & \textbf{Value} \\ \hline
-        1 & 0.980878 \\ \hline
-        2 & 0.97899273 \\ \hline
-        3 & 0.98410988 \\ \hline
-        4 & 0.98168597 \\ \hline
-        5 & 0.97764611 \\ \hline
-        \textbf{Mean Validation Accuracy} & \textbf{98.03\%} \\ \hline
-    \end{tabular}
-\end{center}
-
-\begin{center}
-    \textbf{Classification Report for Ensemble Model7} \\[0.5em]
+    \textbf{Ensemble Model 7} \\[0.5em]
     \begin{tabular}{|c|c|c|c|c|}
         \hline
         & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
@@ -1265,42 +759,180 @@ In ensemble learning, combining models like Logistic Regression (LR), Naive Baye
         \textbf{Depression} & 0.97 & 0.97 & 0.97 & 392 \\ \hline
         \textbf{Normal}     & 0.99 & 1.00 & 0.99 & 2136 \\ \hline
         \textbf{PTSD}       & 0.98 & 0.98 & 0.98 & 397 \\ \hline
-        \textbf{Accuracy}   & \multicolumn{4}{c|}{\textbf{98.20\%}} \\ \hline
+        \textbf{Accuracy}   & \multicolumn{4}{c|}{\textbf{98.03\%}} \\ \hline
         \textbf{Macro avg}  & 0.98 & 0.97 & 0.97 & 3713 \\ \hline
         \textbf{Weighted avg} & 0.98 & 0.98 & 0.98 & 3713 \\ \hline
     \end{tabular}
 \end{center}
 
+
+\pagebreak
+
 \begin{figure}[h!]
     \centering
-    \begin{subfigure}[b]{0.49\textwidth}
+    \begin{subfigure}[b]{0.47\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{Images/EM T CM.png}
-        \caption{Confusion Matrix for Ensemble Model 7}
-        \label{em_t cm}  % Label for referencing the subfigure
+        \includegraphics[width=\textwidth]{Images/EM CM.png}
+        \caption*{Confusion Matrix (Ensemble Model 1)}
+        \label{dfdl3123}  % Label for referencing the subfigure
     \end{subfigure}
     \hfill
-    \begin{subfigure}[b]{0.49\textwidth}
+    \begin{subfigure}[b]{0.47\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{Images/EM T ROC.png}
-        \caption{ROC AUC for Ensemble Model 7}
-        \label{em_t roc}  % Label for referencing the subfigure
+        \includegraphics[width=\textwidth]{Images/EM ROC.png}
+        \caption*{ROC AUC (Ensemble Model 1)}
+        \label{dfdl12443}  % Label for referencing the subfigure
     \end{subfigure}
-    \caption{Evaluation Results for Ensemble Model 7}
-    \label{fig:ensemble_model7_comparison}
+    \label{fig:ensemble_model_comparison}
+\end{figure}
+
+\vspace{-1em}
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{0.47\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/EM2 CM.png}
+        \caption*{Confusion Matrix (Ensemble Model 2)}
+        \label{em2 cm}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.47\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/EM2 ROC.png}
+        \caption*{ROC AUC (Ensemble Model 2)}
+        \label{em2 roc}  % Label for referencing the subfigure
+    \end{subfigure}
+    \label{fig:ensemble_model2_comparison}
+\end{figure}
+
+\vspace{-1em}
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{0.47\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/EM3 CM.png}
+        \caption*{Confusion Matrix (Ensemble Model 3)}
+        \label{em3 cm}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.47\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/EM3 ROC.png}
+        \caption*{ROC AUC (Ensemble Model 3)}
+        \label{em3 roc}  % Label for referencing the subfigure
+    \end{subfigure}
+    \label{fig:ensemble_model3_comparison}
 \end{figure}
 
 \pagebreak
 
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/BAG CM.png}
+        \caption*{Confusion Matrix (Ensemble Model 4)}
+        \label{bag cm}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/BAG ROC.png}
+        \caption*{ROC AUC (Ensemble Model 4)}
+        \label{bag roc}  % Label for referencing the subfigure
+    \end{subfigure}
+    \label{fig:ensemble_model4_comparison}
+\end{figure}
+
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/BLD CM.png}
+        \caption*{Confusion Matrix (Ensemble Model 5)}
+        \label{bld cm}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/BLD ROC.png}
+        \caption*{ROC AUC (Ensemble Model 5)}
+        \label{bld roc}  % Label for referencing the subfigure
+    \end{subfigure}
+    \label{fig:ensemble_model5_comparison}
+\end{figure}
+
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/WV CM.png}
+        \caption*{Confusion Matrix (Ensemble Model 6)}
+        \label{wv cm}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/WV ROC.png}
+        \caption*{ROC AUC (Ensemble Model 6)}
+        \label{wv roc}  % Label for referencing the subfigure
+    \end{subfigure}
+    \label{fig:ensemble_model6_comparison}
+\end{figure}
+
+\pagebreak
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/EM T CM.png}
+        \caption*{Confusion Matrix (Ensemble Model 7)}
+        \label{em_t cm}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/EM T ROC.png}
+        \caption*{ROC AUC (Ensemble Model 7)}
+        \label{em_t roc}  % Label for referencing the subfigure
+    \end{subfigure}
+    \label{fig:ensemble_model7_comparison}
+\end{figure}
+
+\begin{figure}[h!]  
+    \centering
+    \includegraphics[width=0.8\textwidth]{Images/EM T RESULT.png}  
+    \caption{Comparison of Base Models and Ensemble Model7}
+    \label{lstm arch}  % Label for referencing the figure
+\end{figure}
+
 \begin{table}[H]
     \centering
-    \caption*{Comparison of Ensemble Models for Mental Health Classification}
+    \caption*{Comparison of all the 7 Ensemble Models}
     \label{tab:ensemble_comparison}
     \begin{tabularx}{\textwidth}{|l|c|X|X|X|}
     \hline
     \textbf{Model} & \textbf{Accuracy} & \textbf{Key Components} & \textbf{Advantages} & \textbf{Limitations} \\
     \hline
-    Ensemble Model 1 & 96.08\% & Logistic Regression + XGBoost & High precision and balanced performance (e.g., Anxiety: Prec=0.97, Rec=0.94, F1=0.95); robust macro/weighted averages & May not fully capture complex, non-linear, context-dependent patterns \\
+    Ensemble Model 1 & 96.08\% & Logistic Regression + XGBoost & Balanced performance (e.g., Anxiety: Prec=0.97, Rec=0.94, F1=0.95); robust macro/weighted averages & May not fully capture complex, non-linear, context-dependent patterns \\
+    \hline
+\end{tabularx}
+\end{table}
+
+\pagebreak
+
+\begin{table}[H]
+    \centering
+    \caption*{Comparison of all the 7 Ensemble Models}
+    \label{tab:ensemble_comparison}
+    \begin{tabularx}{\textwidth}{|l|c|X|X|X|}
+    \hline
+    \textbf{Model} & \textbf{Accuracy} & \textbf{Key Components} & \textbf{Advantages} & \textbf{Limitations} \\
     \hline
     Ensemble Model 2 & 97.93 & XGBoost as meta-learner combining base models (LR, SVM, NB, LSTM) & Near-perfect ROC AUC (1.0 for Anxiety, Normal, PTSD; 0.99 for Bipolar, Depression); effective handling of imbalanced data & Potential overfitting if base model predictions are highly correlated \\
     \hline
@@ -1312,29 +944,11 @@ In ensemble learning, combining models like Logistic Regression (LR), Naive Baye
     \hline
     Ensemble Model 6 & 95.15\% & Weighted Voting ensemble combining base model outputs & Solid overall performance with high recall for “Normal” and computational efficiency & Lacks optimal inter-model learning; struggles with distinguishing bipolar disorder \\
     \hline
-\end{tabularx}
-\end{table}
-
-\begin{table}[H]
-    \centering
-    \caption*{Comparison of Ensemble Models for Mental Health Classification}
-    \label{tab:ensemble_comparison}
-    \begin{tabularx}{\textwidth}{|l|c|X|X|X|}
-    \hline
-    \textbf{Model} & \textbf{Accuracy} & \textbf{Key Components} & \textbf{Advantages} & \textbf{Limitations} \\
-    \hline
     Ensemble Model 7 & 98.03\% & Transformer-based model (base) + meta-learner (Random Forest and others) & Near-perfect ROC AUC (1.0 across classes); excellent accuracy and robust classification & Increased computational complexity due to Transformer integration \\
     \hline
     \end{tabularx}
 \end{table}
 
-    
-\begin{figure}[h!]  
-    \centering
-    \includegraphics[width=1.0\textwidth]{Images/EM T RESULT.png}  
-    \caption{Comparison of Base Models and Ensemble Model7}
-    \label{lstm arch}  % Label for referencing the figure
-\end{figure}
 
 \pagebreak
 
@@ -1378,41 +992,58 @@ Ensemble Model 7 is applied on different subsets of a very large dataset to crea
     \textbf{Note:} The final ensemble models from two different architectures achieved accuracies of \textbf{96.24\%} and \textbf{96.25\%} respectively.
 \end{center}
 
-\noindent
-The hierarchical ensemble model addresses the challenge of handling large datasets by adopting a modular and scalable approach. The dataset is divided into manageable subsets, each treated independently. For each subset, base models like Logistic Regression, Naive Bayes, SVM, LSTM, XGBoost, and Custom Transformers are trained and combined into a subset-specific ensemble using Random Forest as the meta learner. These subset ensembles are then aggregated to form a final global ensemble, capturing comprehensive learning from the entire dataset. This approach ensures efficient handling of large-scale data while maintaining high performance. Although the current implementation is sequential for testing purposes, the design is inherently scalable to a distributed architecture. In such a setup, subsets can be processed in parallel across multiple computational nodes. Each node trains base models, creates a subset ensemble, and sends results to a central controller, which aggregates them into a global ensemble. This parallelized framework aligns with distributed computing principles, making it ideal for real-world, large-scale applications. 
-
-\vspace{1em}
-
-\noindent
-The hierarchical structure of this approach aligns with distributed systems by effectively implementing data parallelism and task parallelism. By dividing the dataset into subsets, the computational load is distributed, preventing memory bottlenecks and ensuring resource optimization. Each subset is processed independently, enabling a modular design where tasks are decoupled. This design also enhances fault tolerance, as the failure of a single subset’s processing does not affect the others. Moreover, the scalability of the approach allows it to adapt to varying resource constraints. Adding more computational nodes makes it feasible to handle additional subsets or process the data faster, showcasing its adaptability and efficiency. The distributed nature of the architecture ensures high throughput and reduces training time, making it suitable for scenarios involving large-scale datasets. The hierarchical ensemble model design is a future-ready solution that can transition seamlessly to distributed platforms, leveraging cloud services or on-premises high-performance computing clusters. The methodology combines the strengths of ensemble learning with the efficiencies of distributed systems to create a robust and scalable solution for modern data science challenges.
-
-\vspace{1em}
+\pagebreak
 
 \begin{figure}[h!]  
     \centering
-    \includegraphics[width=1.0\textwidth]{Images/Distributed.png}  
+    \includegraphics[width=0.9\textwidth]{Images/Distributed.png}  
     \caption{Scalable Distributed Architecture 1}
     \label{lstm archi}  % Label for referencing the figure
 \end{figure}
 
+\begin{table}[H]
+    \caption*{Summary of Architecture 1: Hierarchical Ensemble}
+    \label{tab:arch1}
+    \begin{tabularx}{\textwidth}{|p{3cm}|X|}
+    \hline
+    \textbf{Aspect} & \textbf{Description} \\ \hline
+    Data Partitioning & The dataset is divided into manageable subsets for independent processing. \\ \hline
+    Base Models & Each subset trains base models (Logistic Regression, Naive Bayes, SVM, LSTM, XGBoost, and Custom Transformers). \\ \hline
+    Subset Ensemble & For each subset, a Random Forest meta learner is used to combine the base models into a subset-specific ensemble. \\ \hline
+    Global Aggregation & The subset-specific ensembles are aggregated to form a final global ensemble, capturing comprehensive learning. \\ \hline
+    Scalability & Designed for distributed processing; subsets can be processed in parallel across multiple nodes. \\ \hline
+    Fault Tolerance & Modular design ensures that failure in one subset does not impact the overall ensemble performance. \\ \hline
+    Distributed Processing & Worker nodes independently train base models and report to a central controller that aggregates the results. \\ \hline
+    \end{tabularx}
+\end{table}
+    
+\pagebreak
 
 \begin{figure}[h!]  
     \centering
-    \includegraphics[width=1.0\textwidth]{Images/Distributed2.png}  
+    \includegraphics[width=0.82\textwidth]{Images/Distributed2.png}  
     \caption{Scalable Distributed Architecture 2}
     \label{lstm archi}  % Label for referencing the figure
 \end{figure}
 
+\begin{table}[H]
+    \caption*{Summary of Architecture 2: Optimized Hierarchical Ensemble}
+    \label{tab:arch2}
+    \begin{tabularx}{\textwidth}{|p{3cm}|X|}
+    \hline
+    \textbf{Aspect} & \textbf{Description} \\ \hline
+    Optimized Aggregation & Models of the same type from all subsets are combined into a single intermediate ensemble for that model type. \\ \hline
+    Intermediate Ensembles & Produces six intermediate ensembles (one each for Logistic Regression, Naive Bayes, SVM, XGBoost, LSTM, and Transformer). \\ \hline
+    Final Ensemble & The six intermediate ensembles are aggregated via a meta learner (Random Forest) to form the final ensemble. \\ \hline
+    Fixed Ensemble Count & The number of intermediate ensembles is fixed at six, regardless of the number of subsets, reducing computational overhead. \\ \hline
+    Efficient Resource Utilization & GPUs are reserved for training the computationally intensive LSTM and Transformer ensembles; lightweight meta learners (e.g., Logistic Regression or Random Forest) optimize aggregation. \\ \hline
+    Data Bus Implementation & A structured data bus efficiently transfers models from subsets to intermediate nodes, reducing latency and synchronization overhead. \\ \hline
+    Improved Cross-Validation & Streamlined aggregation minimizes redundancy, resulting in faster cross-validation and training on large datasets. \\ \hline
+    \end{tabularx}
+\end{table}
+    
 
-\noindent
-The second architecture optimizes the hierarchical ensemble approach by restructuring the model aggregation process to enhance scalability and computational efficiency. Instead of creating ensemble models for each of the $n$ subsets independently, models of the same type from all subsets are combined into a single ensemble for that type using Random Forest (or Logistic Regression) as the meta learner. This results in six intermediate ensemble models, one for each model type: Logistic Regression, Naive Bayes, SVM, XGBoost, LSTM, and Transformer. These intermediate ensemble models are then used to form the final ensemble model, where Random Forest acts as the meta learner. This architectural adjustment significantly reduces the number of intermediate ensemble models from $n$ to six while preserving the hierarchical structure, thereby maintaining a consistent three-layer design. The second architecture achieved an accuracy of 96.25\%. However, its design provides distinct advantages when dealing with much larger datasets or a higher number of subsets. As the dataset size increases, the number of subsets and computational nodes may also grow. In the previous architecture, this scaling would lead to a proportional increase in the number of intermediate ensemble models, which could strain computational resources and introduce inefficiencies in model aggregation. In contrast, the second architecture fixes the number of intermediate ensemble models at six, irrespective of the number of subsets, ensuring that the computational load remains manageable while scalability is maintained. Another significant improvement lies in the efficient use of hardware resources. In the second architecture, GPUs are utilized exclusively for training the LSTM and Transformer-based ensemble models, rather than being partially engaged across all intermediate models as in the first architecture. This selective usage of GPUs streamlines resource allocation, ensuring that the most computationally intensive models benefit from accelerated hardware while reducing unnecessary overhead for other model types. The use of Logistic Regression as the meta learner in the intermediate ensemble models further contributes to this efficiency. Logistic Regression is computationally lightweight and linear, making it an excellent choice for aggregating predictions across subsets without introducing excessive complexity. Its linearity ensures faster training while maintaining strong predictive performance, particularly for well-separated data classes. Random Forest as a meta-learner is a better option for considering overfitting issues. A key addition to the second architecture is the implementation of an efficient data bus for transferring models of the same type from different subsets to the respective intermediate nodes responsible for creating the type-specific ensemble. This structured flow of data and models ensures seamless communication between subsets and intermediate nodes, reducing latency and synchronization overhead. By fixing the number of intermediate ensemble models at six, the architecture limits the number of aggregation layers while still leveraging the diversity and complementary strengths of all base models. This design strikes a balance between computational efficiency and predictive performance, making it particularly advantageous for large-scale datasets. The second architecture's streamlined design, efficient resource utilization, and fixed number of intermediate ensemble models make it a robust and scalable solution for modern data science challenges. By addressing the potential bottlenecks of the first architecture while maintaining comparable performance, it provides a practical alternative for real-world applications where scalability and computational efficiency are critical.
-
-\vspace{1em}
-
-\noindent
-Architecture 1 takes more time in cross-validation compared to Architecture 2 due to its decentralized design. In Architecture 1, each subset independently creates its intermediate ensemble model, resulting in a larger number of models being trained and validated. This increases the computational workload and requires more synchronization across subsets. On the other hand, Architecture 2 aggregates models of the same type into a single intermediate ensemble model, reducing the number of intermediate ensembles. This streamlining minimizes redundancy and allows for faster cross-validation while maintaining predictive performance. In Architecture 2, models of the same type are used as base models in the intermediate ensemble to ensure consistency and simplify the aggregation process. Mixing different types of models, such as Logistic Regression from one subset and SVM from another, would introduce heterogeneity in predictions, making the meta-learning process more complex. By grouping models of the same type, the meta-learner can better capture specific patterns and variations unique to each model type. This design also ensures that the strengths of each algorithm are utilized optimally, allowing the final ensemble to benefit from their complementary capabilities. The observation that SMOTE is not required and yields the same results as stratified K-fold cross-validation indicates that the dataset is either balanced or sufficiently robust to handle minor class imbalances. Stratified K-fold cross-validation ensures that each fold maintains the same class distribution as the original dataset, effectively mitigating the impact of class imbalance during training and testing. This suggests that the dataset's inherent balance, combined with the model’s robustness, eliminates the need for synthetic oversampling techniques like SMOTE. Logistic Regression with L1 or L2 regularization is less suited for Architecture 2 because it takes more time to train on the larger, aggregated datasets at the intermediate level. Regularization adds computational overhead by optimizing penalty terms alongside the model's weights, which can slow down training. Furthermore, Logistic Regression may struggle with the diverse, high-dimensional feature space created by aggregated predictions from multiple subsets. Random Forest, as a meta-learner, is a better choice in Architecture 2 because it is less prone to overfitting, can capture nonlinear relationships, and handles high-dimensional data effectively without extensive parameter tuning. Its ensemble-based nature ensures better generalization, making it more efficient and reliable for intermediate and final aggregation.
-
-\vspace{1em}
+\pagebreak
 
 \noindent
 To determine \( n \), the number of subsets, based on the size of the original dataset, it is crucial to consider computational efficiency, memory constraints, and sequential execution. Given that the dataset has \( D = 167,229 \) records and is processed sequentially in Google Colab with 12GB of RAM per node, the number of subsets \( n \) must strike a balance between memory usage and model performance. In this case, you chose \( n = 6 \) subsets, which implies a subset size \( S \) of:
