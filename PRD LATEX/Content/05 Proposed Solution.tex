@@ -1,0 +1,38 @@
+% ----------------------- Proposed Solution ----------------------------------
+
+\section{Proposed Solution}
+\noindent
+This project "Multimodal AI Framework for Social Media-Based Mental Disorder Detection and Personalized Wellbeing Insights," includes the below contributions.
+
+\subsection{Special Contributions}
+\begin{itemize}
+    \item \textbf{Dataset Acquisition}: Reddit data was sourced using PRAW from relevant subreddits (Normal, Depression, Anxiety, Bipolar, PTSD). Extensive preprocessing ensured data integrity.
+    
+    \item \textbf{Text Vectorization}: TF-IDF, Bag-Of-Words model weree used to convert text into numerical format via Scikit-learn, enabling efficient feature extraction and model training. Other vectorization techniques like Word2Vec, LIWC, N-Grams were also explored.
+    
+    \item \textbf{Machine Learning Models}: Logistic Regression, SVM, Naïve Bayes, LSTM, Transformer, and XGBoost were implemented for multi-class classification of mental health conditions.
+    
+    \item \textbf{Model Evaluation}: Accuracy, precision, recall, and F1-score were used to assess performance. Confusion matrices and ROC curves were also generated for model evaluation.
+    
+    \item \textbf{Insights \& Recommendations}: Findings inform mental health professionals and policymakers on probable issues and wellbeing insights.
+    
+    \item \textbf{Documentation \& Reproducibility}: Detailed documentation ensures usability, including methodology, code, and instructions for result reproduction.
+\end{itemize}
+
+\subsection{Reusable Components}
+\begin{itemize}
+    \item \textbf{Data Collection Functions} :
+    \noindent
+    Modular functions designed for data collection, which can be reused across different platforms.
+    \item \textbf{Data preprocessing Module} :
+    \noindent
+    A component that does data cleaning to remove the duplicates and empty rows and add a seperate column for cleaned texts. 
+    \item \textbf{Machine and Deep Learning Model Functions} :
+    \noindent
+    Functions for implementing Logistic Regression, Naive Bayes, Support Vector Machine, Random Forest, XGboost, Long Short Term Memory and Transformer algorithm allowing for easy retraining on varying datasets. These also features various evaluation metrics, making it easy to assess different models' performances.
+    \item \textbf{Deployment Function} :
+    \noindent
+    A seperate function that has the main python file for creating web based application on Streamlit Cloud. This also includes the requirements and package dependencies for deploying the application.
+\end{itemize}
+
+% ----------------------- Proposed Solution Ends -----------------------------
