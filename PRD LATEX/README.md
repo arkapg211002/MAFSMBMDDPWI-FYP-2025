@@ -1,1 +1,1 @@
-### Project Report LaTeX for Final Year Project
+### Project Report for Final Year Project (SEM 8)
