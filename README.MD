@@ -6,16 +6,6 @@
 
 This project leverages artificial intelligence to detect early signs of mental health issues by analyzing multimodal data from social media platforms. By processing text, images, videos, audio, and PDFs, the system uses advanced machine learning and deep learning models to classify mental disorders such as depression, anxiety, bipolar disorder, and PTSD. The framework also generates personalized wellbeing insights by mapping mental health cues to Ryff’s Wellbeing Scale. With an ensemble of algorithms—including Logistic Regression, SVM, Naïve Bayes, LSTM, Transformer, and XGBoost—the system achieves high accuracy and robustness while enabling real-time web-based analysis via Streamlit.
 
----
-
-## Table of Contents
-
-- [Introduction](#introduction)
-- [Features](#features)
-- [Tech Stack and Libraries](#tech-stack-and-libraries)
-- [Project Structure](#project-structure)
-
----
 
 ## Introduction
 
@@ -72,22 +62,3 @@ By combining traditional machine learning with modern deep learning techniques, 
   - Other Tools: `joblib`, `protobuf`, `deep-translator`, `google-generativeai`
 
 ---
-
-## Project Structure
-
-```plaintext
-├── data/
-│   ├── raw/               # Original datasets (e.g., Reddit posts)
-│   ├── processed/         # Cleaned and preprocessed data
-├── models/                # Saved machine learning and deep learning models
-├── notebooks/             # Jupyter notebooks for experimentation
-├── src/
-│   ├── data_collection.py # Scripts for collecting social media data via APIs
-│   ├── data_preprocessing.py # Functions for data cleaning and feature extraction
-│   ├── ml_models.py       # Implementation of traditional ML models
-│   ├── deep_learning.py   # LSTM and Transformer model implementations
-│   ├── ensemble.py        # Ensemble model combining base predictors
-│   └── deployment.py      # Code for deploying the web app using Streamlit
-├── tests/                 # Unit tests and test plans
-├── requirements.txt       # Required Python packages
-└── README.md              # This file
