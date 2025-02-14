@@ -1,10 +1,5 @@
 # Multimodal AI Framework for Social Media Based Mental Disorder Detection and Personalized Wellbeing Insights
 
-![Project Banner](https://via.placeholder.com/1200x300?text=Multimodal+AI+Framework)
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Python Version](https://img.shields.io/badge/Python-3.x-blue.svg)](https://www.python.org/)
-
 ---
 
 ## Abstract
@@ -19,18 +14,6 @@ This project leverages artificial intelligence to detect early signs of mental h
 - [Features](#features)
 - [Tech Stack and Libraries](#tech-stack-and-libraries)
 - [Project Structure](#project-structure)
-- [Installation and Setup](#installation-and-setup)
-- [Data Collection and Preprocessing](#data-collection-and-preprocessing)
-- [Machine Learning Models](#machine-learning-models)
-- [Deep Learning Models](#deep-learning-models)
-- [Ensemble Model](#ensemble-model)
-- [Testing and Results](#testing-and-results)
-- [Deployment](#deployment)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
-- [Acknowledgments](#acknowledgments)
-- [Additional Resources & Contact](#additional-resources--contact)
 
 ---
 
