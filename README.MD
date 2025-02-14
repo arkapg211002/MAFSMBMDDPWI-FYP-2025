@@ -1,118 +1,110 @@
-# Multimodal AI Framework for Social Media based Mental Disorder Detection and Personalized Wellbeing Insights
+# Multimodal AI Framework for Social Media Based Mental Disorder Detection and Personalized Wellbeing Insights
 
-This repository contains a comprehensive project aimed at detecting mental health disorders through the analysis of social media posts. It leverages machine learning and deep learning techniques alongside Natural Language Processing (NLP) to classify text data into categories such as Normal, Depression, Anxiety, Bipolar Disorder, and PTSD.
+![Project Banner](https://via.placeholder.com/1200x300?text=Multimodal+AI+Framework)
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python Version](https://img.shields.io/badge/Python-3.x-blue.svg)](https://www.python.org/)
+
+---
+
+## Abstract
+
+This project leverages artificial intelligence to detect early signs of mental health issues by analyzing multimodal data from social media platforms. By processing text, images, videos, audio, and PDFs, the system uses advanced machine learning and deep learning models to classify mental disorders such as depression, anxiety, bipolar disorder, and PTSD. The framework also generates personalized wellbeing insights by mapping mental health cues to Ryff’s Wellbeing Scale. With an ensemble of algorithms—including Logistic Regression, SVM, Naïve Bayes, LSTM, Transformer, and XGBoost—the system achieves high accuracy and robustness while enabling real-time web-based analysis via Streamlit.
 
 ---
 
 ## Table of Contents
 
-1. [Introduction](#introduction)
-2. [Project Features](#project-features)
-3. [Technologies Used](#technologies-used)
-4. [Setup and Installation](#setup-and-installation)
-5. [Usage Guide](#usage-guide)
-6. [Model Architecture](#model-architecture)
-7. [Dataset Information](#dataset-information)
+- [Introduction](#introduction)
+- [Features](#features)
+- [Tech Stack and Libraries](#tech-stack-and-libraries)
+- [Project Structure](#project-structure)
+- [Installation and Setup](#installation-and-setup)
+- [Data Collection and Preprocessing](#data-collection-and-preprocessing)
+- [Machine Learning Models](#machine-learning-models)
+- [Deep Learning Models](#deep-learning-models)
+- [Ensemble Model](#ensemble-model)
+- [Testing and Results](#testing-and-results)
+- [Deployment](#deployment)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+- [Acknowledgments](#acknowledgments)
+- [Additional Resources & Contact](#additional-resources--contact)
 
 ---
 
 ## Introduction
 
-Mental health disorders affect millions of people globally. With the rise of social media, individuals often unknowingly share insights into their mental health through their posts. This project uses AI techniques to analyze such posts and provide early detection for mental health concerns, enabling better intervention strategies.
+Social media platforms have become a mirror reflecting the mental state of their users. This project addresses the challenge of detecting mental disorders early by analyzing posts and multimedia content on platforms such as Reddit and Twitter. The multimodal approach integrates:
+
+- **Text Analysis:** Natural Language Processing (NLP) for sentiment and context analysis.
+- **Image Analysis:** Optical Character Recognition (OCR) and facial emotion detection.
+- **Video & Audio Analysis:** Extraction of frames and mood analysis via audio features.
+- **PDF Analysis:** Text extraction from documents for mental health cue detection.
+
+By combining traditional machine learning with modern deep learning techniques, the system provides accurate classification and actionable wellbeing insights.
 
 ---
 
-## Project Features
+## Features
 
-- **Text Analysis:** Detect mental health issues based on textual inputs.
-- **Image Upload Analysis:** Extract text from images, analyze it, detect any expression or gestures and classify mental health concerns.
-- **Video Upload Analysis:** Convert video content to audio, process it into text, analyze video frames for text extraction, and perform facial expression recognition to aid classification.
-- **PDF Upload Analysis:** Analyse a typed or handwritten PDF text and predict mental issues
-- **User Response to Image Shown:** Image is shown to user, questions from Rorschach Inkblot Test is asked to gather responses and prediction is done on these responses
-- **Image Caption:** Added feature to generate image descriptions using transformers to aid in mental wellbeing mapping.
-- **Reddit and Twitter User Analysis:** Fetch and classify posts made by Reddit or Twitter users for mental health analysis.
-- **Audio Input Support:** Convert audio extracted from video to text, analyze the tone or mood using MFCC, and classify mental health concerns.
-- **Multilingual Support:** Analyze posts in non-English languages by translating them to English before processing.
-- **Mental Wellbeing:** Map the classified mental issues with wellbeing insights based on Ryff's Scale of Psychological Wellbeing using an association matrix between wellbeing parameters and mental health issues.
-- **Visualization:** Generate confusion matrices and performance metrics for each model.
-- **Ensemble Model:** Leveraged high accuracy of Logistic regression, Naive Bayes, SVM, LSTM, Transformer and XGBoost to create an ensemble model with accuracy of 98.2% (train-test split) and 98.07% (Stratified K-Fold Cross Validation). Used this model in the web application.
-- **Model Retraining:** Allow users with the option to retrain the existing model using the input data in the application along with the result obtained.
-- **Hierarchical Ensemble Model:** Sequentially tested distributed architecture for model creation with bigger datasets and achieved an accuracy of 96.25%.
-- **Wellbeing Survey:** Allows users to fill a survey form and get overall scores based on responses using Ryff's Scale Of Psychological Wellbeing.
----
+- 🔍 **Multimodal Analysis:** Processes text, images, videos, audio, and PDFs.
+- 📊 **Data-Driven Insights:** Uses ensemble learning for robust classification.
+- ⚙️ **Advanced Preprocessing:** Cleans and tokenizes raw social media data.
+- 🧠 **Diverse ML Models:** Implements Logistic Regression, Naïve Bayes, SVM, Random Forest, and XGBoost.
+- 🤖 **Deep Learning Models:** LSTM-based and Transformer-based models for sequential and contextual data.
+- 🌐 **Web Application:** Deployable via Streamlit for real-time analysis.
+- 📈 **Performance Evaluation:** Extensive testing with cross-validation, ROC curves, and confusion matrices.
+- 📋 **Wellbeing Mapping:** Integrates Ryff’s Wellbeing Scale to translate predictions into personalized insights.
 
-## Technologies Used
+### Feature Comparison
 
-### Programming Languages:
-- **Python 3.x**
-
-### Frameworks and Libraries:
-- **NLP and Machine Learning**:
-  - `scikit-learn`, `TensorFlow`, `transformers`, `torch`
-  - `pandas`, `numpy`, `joblib`
-  - `nltk`, `spaCy`, `deep-translator`
-- **OCR and Translation**:
-  - `pytesseract`, `Pillow`, `google-generativeai`
-- **Web Deployment**:
-  - `Streamlit`, `pyngrok`
-- **Audio and Speech Processing**:
-  - `pydub`, `sounddevice`, `SpeechRecognition`, `PyAudio`, `wavio`
-  - `openai-whisper`, `librosa`, `deepface`
-- **Social Media Integration**:
-  - `tweepy`, `praw`
-- **Video and Image Processing**:
-  - `opencv-python`, `Pillow`
-
-### Tools:
-- **Development**: Google Colab, Jupyter Notebook
-- **Version Control**: Git
-- **Deployment**: Streamlit Cloud, ngrok
+| **Feature**         | **Description**                                                                               |
+|---------------------|-----------------------------------------------------------------------------------------------|
+| **Text Analysis**   | Classifies mental health issues from social media posts using NLP techniques.                 |
+| **Image Analysis**  | Extracts text via OCR and detects emotions using DeepFace.                                    |
+| **Video Analysis**  | Extracts frames, analyzes emotions, and transcribes audio for a complete multimedia assessment.|
+| **Audio Analysis**  | Uses MFCC-based features to determine the mood from audio clips.                              |
+| **PDF Analysis**    | Processes documents to extract and analyze text for mental health cues.                       |
 
 ---
 
-## Setup and Installation
+## Tech Stack and Libraries
 
-### Prerequisites:
-1. Python 3.8 or higher installed on your system.
-2. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/your-repo-name.git
-   cd your-repo-name
-3. `pip install -r requirements.txt`
-4. Download Tesseract-OCR for OCR functionality: </br>
-Refer to the official Tesseract installation guide for your operating system. (Follow packages.txt inside Prototype folder for the packages to be installed)
+- **Programming Language:** Python 3.x
+- **Frameworks & Environments:**  
+  - TensorFlow & Keras  
+  - Streamlit  
+  - Google Colab (for GPU-based training)
+- **Key Libraries:**  
+  - Data Processing: `pandas`, `numpy`  
+  - Machine Learning: `scikit-learn`, `xgboost`  
+  - Deep Learning: `tensorflow`, `keras`, `transformers` (Hugging Face)  
+  - NLP: `nltk`, `tiktoken`  
+  - Image & Video Processing: `opencv-python`, `pytesseract`, `deepface`, `ffmpeg`  
+  - Audio Processing: `librosa`, `pydub`, `SpeechRecognition`  
+  - Social Media Integration: `PRAW` (Reddit), `tweepy` (Twitter)  
+  - Visualization: `plotly`, `matplotlib`  
+  - Other Tools: `joblib`, `protobuf`, `deep-translator`, `google-generativeai`
 
-## Usage Guide
+---
 
-### Run the Web App:
-```bash
-streamlit run app.py
-```
+## Project Structure
 
-## Model Architecture
-
-### Machine Learning Models:
-- Logistic Regression (with hyperparameter tuning via RandomizedSearchCV)
-- k-Nearest Neighbors (k-NN)
-- Support Vector Machines (SVM)
-- Naive Bayes
-- Random Forest
-- XGBooost
-
-### Deep Learning Models:
-- LSTM for text classification.
-- Custom Transformer Model
-
-## Dataset Information
-
-- **Source**: Social media posts from Reddit (25396 records).
-- **Dataset File**: `mental_health.csv` (preprocessed as `preprocessed_mental_health.csv`).
-
-### Structure:
-- `text`: The post content.
-- `image`: The post content.
-- `video`: The uploaded file.
-- `audio`: Extracted from video.
-- `mental_health_issue`: Mental health category (Normal, Depression, Anxiety, Bipolar Disorder, PTSD).
-
-![WEB APP](https://github.com/arkapg211002/ASMPFMHDD-FYP-2025/blob/main/WEB%20APP%20IMAGES/01%20Interface.png)
+```plaintext
+├── data/
+│   ├── raw/               # Original datasets (e.g., Reddit posts)
+│   ├── processed/         # Cleaned and preprocessed data
+├── models/                # Saved machine learning and deep learning models
+├── notebooks/             # Jupyter notebooks for experimentation
+├── src/
+│   ├── data_collection.py # Scripts for collecting social media data via APIs
+│   ├── data_preprocessing.py # Functions for data cleaning and feature extraction
+│   ├── ml_models.py       # Implementation of traditional ML models
+│   ├── deep_learning.py   # LSTM and Transformer model implementations
+│   ├── ensemble.py        # Ensemble model combining base predictors
+│   └── deployment.py      # Code for deploying the web app using Streamlit
+├── tests/                 # Unit tests and test plans
+├── requirements.txt       # Required Python packages
+└── README.md              # This file
