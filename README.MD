@@ -40,3 +40,7 @@ This project leverages artificial intelligence to detect early signs of mental h
   - Other Tools: `joblib`, `protobuf`, `deep-translator`, `google-generativeai`
 
 ---
+
+Optional Landing Page 1 Repo : https://github.com/arkapg211002/FYP-LP
+
+Optional Landing Page 2 Repo : https://github.com/arkapg211002/FYP-LP-2
