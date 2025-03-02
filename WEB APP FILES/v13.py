@@ -1,4 +1,3 @@
-
 import pickle
 import streamlit as st
 import joblib
@@ -204,8 +203,8 @@ transformer_model = load_transformer_model()
 # ------------- ENSEMBLE LEARNING REQUIREMENTS -----------------
 
 # Initialize Reddit API
-reddit = praw.Reddit(client_id='fgsA4XN83I9FEZdiZvRDtw',
-                     client_secret='WLahZdE7ybEoPcIgN-MuMSqWurCDHQ',
+reddit = praw.Reddit(client_id='DAOso5_7CHzXzdtd-070fg',
+                     client_secret='JtdGFRDM10avSQFYthzYUQNfLeI8rQ',
                      user_agent='Mental Health')
 
 # Initialize Twitter API
@@ -213,7 +212,7 @@ BEARER_TOKEN = "AAAAAAAAAAAAAAAAAAAAAP5ivAEAAAAAhk%2BBxS3W7EJbjNjUxgKEQ73xcUI%3D
 client = tweepy.Client(bearer_token=BEARER_TOKEN)
 
 # Configure Gemini API for wellbeing insights
-genai.configure(api_key="AIzaSyD-pu0AuG2dbzzspRfgS8DjO10Ffh08JiU")
+genai.configure(api_key="AIzaSyDLMw8vdW36QV36LRLxZRMqgCqNt2czSug")
 generation_config = {
     "temperature": 1,
     "top_p": 0.95,
@@ -222,7 +221,7 @@ generation_config = {
     "response_mime_type": "text/plain",
 }
 gemini_model = genai.GenerativeModel(
-    model_name="gemini-1.5-flash",
+    model_name="gemini-2.0-flash",
     generation_config=generation_config,
 )
 
@@ -708,6 +707,7 @@ def extract_audio_from_video(video_path):
 # Function to analyze audio mood based on extracted audio
 def analyze_audio_mood(video_path):
     try:
+        audio_path = extract_audio_from_video(video_path)
         myfile = genai.upload_file(audio_path)
         prompt = "Classify the tone and mood of the given audio file based on the following conditions: For **tone**, choose from Calm (moderate pitch, smooth energy, consistent speech rate), Excited (high pitch, rapid speech, dynamic energy), Tense (strained voice, high zero-crossing rate, uneven energy), Flat (low pitch variation, monotone delivery, low spectral contrast), Confident (strong energy, clear articulation, stable rhythm), Fearful (high pitch, irregular pauses, trembling voice), Sad (low pitch, slow speech rate, reduced spectral brightness), or Angry (loud volume, fast speech rate, sharp spectral edges). For **mood**, choose from Relaxed (low tempo, smooth rhythm, low spectral variance), Happy (bright spectral centroid, high tempo, energetic rhythm), Worried (irregular rhythm, increased pauses, unstable pitch), Stressed (high energy, rapid speech, high zero-crossing rate), Melancholic (low tempo, soft volume, monotone delivery), Agitated (fast tempo, irregular pitch changes, high loudness), Detached (low energy, slow speech, long silences), or Energetic (high tempo, bright pitch, strong spectral roll-off). Provide a compact response with the classified tone and mood, and a concise summary of the analysis."
         result = gemini_model.generate_content([myfile, prompt])
@@ -2816,12 +2816,13 @@ def run_app():
                 last_five = df.tail(5)
                 st.dataframe(last_five)
 
-            sum(1 for _ in open(csv_file_path)) - 1
+            total_respondents = sum(1 for _ in open(csv_file_path)) - 1
 
             # Count total respondents for today
             today_date = datetime.datetime.now().strftime("%Y-%m-%d")
             total_today = df[df["Date"] == today_date].shape[0]
-            st.write(f"**Total Number of Respondents ({today_date}):** {total_today}")
+            st.write(f"**Total Number of Respondents:** {total_respondents}")
+            st.write(f"**Total Number of Respondents on ({today_date}):** {total_today}")
 
             update_am_csv(csv_file_path, am_file_path)
 
