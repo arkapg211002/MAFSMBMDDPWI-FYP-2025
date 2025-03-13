@@ -6,6 +6,7 @@
 \usepackage{tabularx} % For dynamic column widths
 \usepackage{diagbox} % For diagonal split in a cell
 \usepackage{subcaption}
+\usepackage{microtype} % Improves typography
 \usepackage{amssymb}
 \usepackage{graphicx}
 \usepackage[numbers]{natbib}
@@ -36,24 +37,27 @@
 \definecolor{myblue}{RGB}{0, 0, 255}
 
 
-% Set basic style for listings
-\lstset{basicstyle=\ttfamily\small\color{black}, 
-        breaklines=true % Allow line breaks
-        }
 
-\renewcommand{\contentsname}{%
-  \hfill\bfseries\Large\color{myblue}\underline{Table of Content}\hfill}
-
-% Redefine \section to include color
-\usepackage{titlesec}
-\titleformat{\section}
-  {\color{blue}\normalfont\Large\bfseries} % Format section headings
-  {\thesection}{1em}{}
 
 
 \renewcommand{\headrulewidth}{0pt}% for removing the line under header 
 \fancyhead{} %remove section number from header 
 %\clearpage
+
+
+% Set basic style for listings
+\lstset{basicstyle=\ttfamily\small\color{black}, 
+        breaklines=true % Allow line breaks
+        }
+
+\renewcommand{\contentsname}{\raggedright\bfseries\LARGE Contents}
+
+
+% Redefine \section to include color
+\usepackage{titlesec}
+\titleformat{\section}
+  {\color{black}\normalfont\Large\bfseries} % Format section headings
+  {\thesection}{1em}{}
 
 \usepackage[hidelinks]{hyperref}
 \usepackage{siunitx} % Required for alignment
@@ -86,7 +90,7 @@
 % Add student \textbf{name}
 \def\mysupervisor{Nairanjana Chowdhury}
 % Supervisor designation : Assistant Professor, Associate Professor, Professor
-\def\mysupervisordesig{Professor}
+\def\mysupervisordesig{Assistant Professor}
 
 % Add student names and roll no
 \def\mynameone{SOUMYADEEP NANDY}
@@ -102,7 +106,7 @@
 \def\mydep{Computer Science and Engineering}
 \def\myHODname{Dr. Tapan Chowdhury}
 % HOD designation : Assistant Professor, Associate Professor, Professor
-\def\myHODdesig{Professor}
+\def\myHODdesig{Assistant Professor}
 % Add the date of submission
 \def\mydegreedate{\today}
 
@@ -117,8 +121,8 @@
  \graphicspath{ {./Images/} }
  %Front Matter
  \include{./FrontMatter/titlePage}
- \include{./FrontMatter/approval}
- %\include{./FrontMatter/Certificate}
+ %\include{./FrontMatter/approval}
+ \include{./FrontMatter/Certificate}
  \include{./FrontMatter/acknowledgements}
 % 
  %\include{./FrontMatter/dedication}
@@ -126,10 +130,11 @@
 %
 \pagestyle{fancy}
 \fancyhead[C]{MAFSMBMDDPWI}
-\fancyfoot[L]{ \footnotesize PRD8-V2.6}
+\fancyfoot[L]{ \footnotesize TMSL / CSE / PRD8 / v2.5}
 \vspace{-3\baselineskip}
 \begin{spacing}{0.9}
- { \tableofcontents}
+ { \tableofcontents 
+   \thispagestyle{fancy}}
   %\addtocontents{toc}{~\vspace{-3\baselineskip}}
 \end{spacing}
 
