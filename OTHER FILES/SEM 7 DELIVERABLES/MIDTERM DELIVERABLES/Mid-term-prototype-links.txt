@@ -1,0 +1,3 @@
+GitHub : https://github.com/arkapg211002/Mid-term-prototype
+
+Deployed : https://mid-term-prototype-gghbdjeiyn3vbcfiztts2a.streamlit.app/
