@@ -82,7 +82,7 @@ Below are the flow diagrams for the various options that the web application pro
     \label{tab:algorithm}
     \begin{tabularx}{\textwidth}{|l|X|X|}
     \hline
-    \textbf{Step} & \textbf{Operation} & \textbf{Mathematical Calculation / Formula} \\ \hline
+    \textbf{Step} & \textbf{Operation} & \textbf{Description / Formula} \\ \hline
     1 & \textbf{Initialization:} \newline
     - Define file paths: \texttt{csv\_file\_path}, \texttt{image\_path}, \texttt{am\_file\_path}. \newline
     - Display title \textit{``Well-being Survey''}. & -- \\ \hline
@@ -105,7 +105,7 @@ Below are the flow diagrams for the various options that the web application pro
     4 & \textbf{Load or Create Response Data:} \newline
     - Attempt to load \texttt{response.csv} into a DataFrame. \newline
     - If not found, create a new DataFrame with columns: \{Q1, Q2, \dots, Q12, issue, p1, \dots, p6, Date\}. \newline 
-    - (R) against questions signify reverse scoring & 
+    - (R) against questions \{Q2, Q4, Q6, Q8, Q10, Q12\} signify reverse scoring & 
     \[
     \begin{array}{l}
     \textbf{Q1-Q2} : \text{Self Acceptance} \\
@@ -120,7 +120,9 @@ Below are the flow diagrams for the various options that the web application pro
     5 & \textbf{Collect User Responses:} \newline
     - Initialize an empty dictionary \texttt{responses}. \newline
     - \textbf{Q00:} Record predicted mental issue (via radio buttons with options: Anxiety, Bipolar, Depression, Normal, PTSD). \newline
-    - \textbf{Q01--Q12:} Present 12 survey questions; record responses (scale 1--6). & -- \\ \hline
+    - \textbf{Q01--Q12:} Present 12 survey questions; record responses (scale 1--6). & \textbf{Follow these links for details:} \quad \newline \newline
+    - https://positivepsychology.com/ryff-scale-psychological-wellbeing/ \quad \newline \newline
+    - https://centerofinquiry.org/uncategorized/\newline ryff-scales-of-psychological-well-being/ \\ \hline
     6 & \textbf{Append Current Date:} \newline
     - Add the current date in \texttt{YYYY-MM-DD} format to \texttt{responses}. & \(\text{Date} = \text{current date (YYYY-MM-DD)}\) \\ \hline
     7 & \textbf{Overall Score Calculation:} \newline
@@ -152,7 +154,7 @@ Below are the flow diagrams for the various options that the web application pro
     \label{tab:algorithm}
     \begin{tabularx}{\textwidth}{|l|X|X|}
     \hline
-    \textbf{Step} & \textbf{Operation} & \textbf{Mathematical Calculation / Formula} \\ \hline
+    \textbf{Step} & \textbf{Operation} & \textbf{Description / Formula} \\ \hline
     8 & \textbf{Determine Score Levels:} \newline
     - Compute the score level by dividing each parameter score by 2 (using integer division). \newline
     - Classify as: \textbf{Low} if score level is in \{1,2\}, \textbf{Medium} if in \{3,4\}, and \textbf{High} otherwise. & 
@@ -514,4 +516,3 @@ If any of your related paper(s) were published in a standard journal / presented
 
 
 \end{comment}
-
