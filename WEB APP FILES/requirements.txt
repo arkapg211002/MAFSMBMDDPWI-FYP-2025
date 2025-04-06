@@ -36,3 +36,6 @@ networkx
 yt-dlp
 pdf2image 
 tiktoken
+faiss-cpu
+huggingface-hub
+sentence-transformers
