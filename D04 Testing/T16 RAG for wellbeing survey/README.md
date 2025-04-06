@@ -1,0 +1,1 @@
+## Implementing RAG for faster generation of wellbeing isnights without using any LLM
