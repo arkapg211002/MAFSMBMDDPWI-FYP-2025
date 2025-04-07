@@ -1,4 +1,3 @@
-
 import pickle
 import streamlit as st
 import joblib
@@ -56,6 +55,9 @@ from scipy.spatial.distance import euclidean  # New import
 import json
 import faiss
 from sentence_transformers import SentenceTransformer
+import plotly.graph_objs as go
+from sklearn.manifold import TSNE
+import plotly.offline as pyo
 
 from tensorflow.keras.models import load_model, Model, Sequential
 from tensorflow.keras.utils import pad_sequences, custom_object_scope, to_categorical
@@ -152,7 +154,7 @@ def load_transformer_vectorizer():
 def load_rag_embedding():
     with open("rag_embedding_gpu.pkl", "rb") as f:
         return pickle.load(f)
-    
+
 @st.cache_resource
 def load_global_store():
     with open("global_store_gpu.pkl", "rb") as f:
@@ -164,6 +166,7 @@ store = load_global_store()
 documents = store["documents"]
 outputs = store["outputs"]
 index = store["index"]
+embeddings = store["embeddings"]
 
 # Load all models and resources by calling the above functions
 lr_model = load_lr_model()
@@ -292,7 +295,8 @@ def append_to_json_file(instruction, input_text, output, filename="instruction_d
         pickle.dump({
             "documents": documents,
             "outputs": outputs,
-            "index": index
+            "index": index,
+            "embeddings": embeddings
         }, f)
 
     progress.progress(100, text="All steps completed!")
@@ -310,6 +314,17 @@ def filter_output_by_ryff(output_text, selected_ryff):
                 break
     return " ".join(filtered) if filtered else "⚠️ No insights found for selected Ryff parameters."
 
+def format_hover_text(text, idx, max_len=200, line_width=50):
+    truncated = text[:max_len]
+    # Insert <br> every `line_width` characters for better readability
+    wrapped = '<br>'.join([truncated[i:i+line_width] for i in range(0, len(truncated), line_width)])
+    return f"Index: {idx}<br>Text:<br>{wrapped}"
+
+def format_hover_query(text, label="Text", max_len=200, line_width=50):
+    truncated = text[:max_len]
+    wrapped = '<br>'.join([truncated[i:i+line_width] for i in range(0, len(truncated), line_width)])
+    return f"{label}:<br>{wrapped}"
+
 def rag_wellbeing_insight(input_text, issue, selected_ryff):
     # RAG
     text_input = input_text
@@ -323,8 +338,6 @@ def rag_wellbeing_insight(input_text, issue, selected_ryff):
     if not text_input or not mental_issue:
         st.warning("Please provide both text input and mental issue.")
     else:
-        st.success(f"Loaded {len(documents)} documents from global_store.pkl")
-        
         # Summarize input (no need to summarize works faster and better match)
         summarized = text_input
 
@@ -333,21 +346,135 @@ def rag_wellbeing_insight(input_text, issue, selected_ryff):
         query_embedding = np.array([embedding_model.encode(query)]).astype("float32")
 
         # Retrieve from FAISS
-        D, I = index.search(query_embedding, 1)
+        D, I = index.search(query_embedding, 5)
+        match_score = 1 - D[0][0]
+        matched_instruction_input = documents[I[0][0]]
         retrieved_output = outputs[I[0][0]]
+
+        # Store all the 5 queries
+        all_queries = {
+        i: documents[i].split('.', 1)[1].strip() if '.' in documents[i] else documents[i]
+        for i in I[0]
+        }
 
         # Filter by Ryff parameters
         final_output = filter_output_by_ryff(retrieved_output, selected_ryff)
+        matched_output = final_output
 
-        # Display Results
-        # st.subheader("📘 Summary of your situation:")
+        if selected_ryff == []:
+            selected_ryff = ryff_params
+
+        # USING GEMINI 2.0 FLASH LLM THROUGH API TO REFINE IT BASED ON OBTAINED MATCH
+        # Display matched document and its wellbeing insight
+
+        st.subheader("\n Top Matched Record from RAG Store:")
+        st.info(f"📥 INPUT: {matched_instruction_input}")
+        st.info(f"🧾 OUTPUT: {matched_output}")
+
+        num_lines = len(selected_ryff)
+        # Use Gemini to generate a fresh wellbeing insight
+        prompt = f"""You are a part of RAG System. Based on the retrieved text : {matched_output} make small refinements on the retrieved text for getting wellbeing insights based on Ryff Scale of Psychological Wellbeing for the paramters : {selected_ryff} in exactly {num_lines} lines, one line for each of the {selected_ryff} for the original user text : {text_input} and mental issue : {mental_issue}
+        """
+
+        # Call Gemini model
+        response = gemini_model.generate_content(prompt)
+        generated_output = response.text.strip()
+        final_output = generated_output
+
+        # Output
+        # st.subheader("\n📘 Summary of your situation:")
         # st.write(summarized)
 
-        st.subheader("Wellbeing Insight using RAG")
+        st.subheader("\nWellbeing Insight Using RAG :")
         st.write(final_output)
 
-        st.subheader("Match Score:")
+        st.subheader("🔗 Match Score:")
         st.write(f"{1 - D[0][0]:.4f} (higher is better)")
+
+        # ========== Interactive Graph Section ==========
+        st.subheader("\n📊 Generating interactive match visualization...")
+
+        # Combine query and knowledge base embeddings
+        query_embedding = query_embedding.reshape(1, -1)
+        # embeddings = np.array([embedding_model.encode(doc) for doc in documents]).astype("float32")
+        combined_embeddings = np.vstack([query_embedding, embeddings])
+
+        # Run t-SNE to reduce to 3D
+        reducer = TSNE(n_components=3, random_state=42, perplexity=30, max_iter=1000)
+        reduced_all = reducer.fit_transform(combined_embeddings)
+
+        # Separate reduced points
+        query_3d = reduced_all[0]
+        all_3d = reduced_all[1:]
+        topk_indices = I[0]
+        topk_3d = np.array([all_3d[i] for i in topk_indices])
+
+        # Prepare trace for knowledge base
+        kb_trace = go.Scatter3d(
+            x=all_3d[:, 0], y=all_3d[:, 1], z=all_3d[:, 2],
+            mode='markers',
+            name='Knowledge Base',
+            marker=dict(size=3, color='lightgray', opacity=0.5),
+            hoverinfo='none'
+        )
+
+        # Prepare trace for top-k matches with annotations
+        topk_trace = go.Scatter3d(
+            x=topk_3d[:, 0], y=topk_3d[:, 1], z=topk_3d[:, 2],
+            mode='markers+text',
+            name='Top-k Matches',
+            marker=dict(size=5, color='green'),
+            text=[f"Index {idx}" for idx in topk_indices],
+            textposition='top center',
+            hoverinfo='text',
+            hovertext=[
+                format_hover_text(all_queries.get(idx, 'N/A'), idx)
+                for idx in topk_indices
+            ]
+        )
+
+        # Prepare trace for query point with tooltip
+        query_trace = go.Scatter3d(
+            x=[query_3d[0]], y=[query_3d[1]], z=[query_3d[2]],
+            mode='markers+text',
+            name='Query',
+            marker=dict(size=10, color='red'),
+            text=["Query"],
+            textposition="top center",
+            hoverinfo='text',
+            hovertext=[format_hover_query(query)]
+        )
+        # Prepare dotted lines from query to top-k
+        lines = []
+        for point in topk_3d:
+            lines.append(go.Scatter3d(
+                x=[query_3d[0], point[0]],
+                y=[query_3d[1], point[1]],
+                z=[query_3d[2], point[2]],
+                mode='lines',
+                line=dict(color='gray', dash='dot'),
+                showlegend=False,
+                hoverinfo='none'
+            ))
+
+        # Combine all traces
+        fig = go.Figure(data=[kb_trace, topk_trace, query_trace] + lines)
+
+        # Layout settings
+        fig.update_layout(
+            title="Interactive 3D t-SNE: Query → Top-k Matches",
+            scene=dict(
+                xaxis_title='Component 1',
+                yaxis_title='Component 2',
+                zaxis_title='Component 3'
+            ),
+            legend=dict(x=0, y=1),
+            margin=dict(l=0, r=0, b=0, t=40)
+        )
+
+        # Show the interactive plot
+        # fig.show()
+        st.plotly_chart(fig, use_container_width=False, key=f"plot-{time.time_ns()}")
 
         to_append_instruction = "Provide wellbeing insight for the below text with " + mental_issue + "."
 
@@ -720,7 +847,7 @@ def classify_text(text):
     euclidian_distance_index, euclidian_distance_row_name = euclidian_distance_analysis(matrix, probabilities)
 
     consensus_string, selected_ryff = get_consensus_string(weighted_sum_row_name, cosine_similarity_row_name, euclidian_distance_row_name)
-    
+
     selected_ryff = [
     "Positive Relations" if item == "positive relations with others"
     else "Self-Acceptance" if item == "self acceptance"
@@ -1180,14 +1307,14 @@ def classify_text_retrain_model(text):
 
     consensus_string, selected_ryff = get_consensus_string(weighted_sum_row_name, cosine_similarity_row_name, euclidian_distance_row_name)
     # st.info(consensus_string)
-    
+
     selected_ryff = [
     "Positive Relations" if item == "positive relations with others"
     else "Self-Acceptance" if item == "self acceptance"
     else item
     for item in selected_ryff
     ]
-    
+
     get_parameter_insight(consensus_string, top_issue)
 
     rag_wellbeing_insight(text, top_issue, selected_ryff)
