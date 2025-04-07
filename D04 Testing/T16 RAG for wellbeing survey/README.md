@@ -1,3 +1,7 @@
+# [Run using GPU based files : Recommended]
+```
+The streamlit application code is made based on gpu based files
+```
 ## Implementing RAG for faster generation of wellbeing isnights without using any LLM
 
 ### To use RAG based wellebing insight in GPU based runtime
