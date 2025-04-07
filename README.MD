@@ -19,7 +19,7 @@ This project leverages artificial intelligence to detect early signs of mental h
 - 📈 **Performance Evaluation:** Extensive testing with cross-validation, ROC curves, and confusion matrices.
 - 📋 **Wellbeing Mapping:** Integrates Ryff’s Wellbeing Scale to translate predictions into personalized insights.
 - 🧠 **AI-Powered Wellbeing Insights:** Uses Gemini API to generate personalized wellbeing insights based on predictions.
-- 🔁 **RAG-Style Insights (No LLM):** Employs Retrieval-Augmented Generation using dynamic datasets and similarity-based input matching—no LLM required—for scalable and explainable wellbeing analysis.
+- 🔁 **RAG-Style Insights:** Employs Retrieval-Augmented Generation using dynamic datasets and similarity-based input matching—with Gemini—for scalable and explainable wellbeing analysis.
 
 ---
 
