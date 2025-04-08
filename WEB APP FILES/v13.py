@@ -1,3 +1,4 @@
+
 import pickle
 import streamlit as st
 import joblib
@@ -50,6 +51,14 @@ import datetime
 from sklearn.metrics.pairwise import cosine_similarity # new added
 from scipy.spatial.distance import euclidean  # New import
 # import soundfile as sf
+
+# Added in v14
+import json
+import faiss
+from sentence_transformers import SentenceTransformer
+import plotly.graph_objs as go
+from sklearn.manifold import TSNE
+import plotly.offline as pyo
 
 from tensorflow.keras.models import load_model, Model, Sequential
 from tensorflow.keras.utils import pad_sequences, custom_object_scope, to_categorical
@@ -142,6 +151,29 @@ def load_transformer_label_encoder():
 def load_transformer_vectorizer():
     return joblib.load('Tvectorizer_layer.pkl')
 
+@st.cache_resource
+def load_rag_embedding():
+    with open("rag_embedding_gpu.pkl", "rb") as f:
+        return pickle.load(f)
+
+@st.cache_resource
+def load_global_store():
+    with open("global_store_gpu.pkl", "rb") as f:
+        return pickle.load(f)
+
+# load rag embedding model and global store
+embedding_model = load_rag_embedding()
+store = load_global_store()
+documents = store["documents"]
+outputs = store["outputs"]
+index = store["index"]
+embeddings = store["embeddings"]
+metadatas = []
+for document in documents:
+    match = re.search(r"with (.+)\.", document)  # Adjust regex if needed
+    issue = match.group(1).strip().lower() if match else "unknown"  # Default to 'unknown'
+    metadatas.append({"issue": issue})
+
 # Load all models and resources by calling the above functions
 lr_model = load_lr_model()
 lr_vectorizer = load_lr_vectorizer()
@@ -224,6 +256,263 @@ gemini_model = genai.GenerativeModel(
     model_name="gemini-2.0-flash",
     generation_config=generation_config,
 )
+
+# wellbeing insight using RAG
+# Append new input and response to instruction_data.json
+def append_to_json_file(instruction, input_text, output, filename="instruction_data.json"):
+    progress = st.progress(0, text="Updating...")
+
+    progress.progress(10, text="📄 Appending new record to JSON...")
+    new_record = {
+        "instruction": instruction,
+        "input": input_text,
+        "output": output
+    }
+
+    with open(filename, "r+") as file:
+        content = json.load(file)
+        content.append(new_record)
+        file.seek(0)
+        json.dump(content, file, indent=4)
+
+    st.success(f"New record appended to {filename}")
+
+    progress.progress(30, text="Loading updated instruction_data.json...")
+    # Load instruction data
+    with open("instruction_data.json", "r") as file:
+        data = json.load(file)
+
+    # Rebuild documents and outputs
+    documents = [f"{item['instruction']} {item['input']}" for item in data]
+    outputs = [item["output"] for item in data]
+    st.info(f"Total Records in instruction_data.json: {len(documents)}")
+
+    # Build FAISS index
+    progress.progress(50, text="Encoding documents with embedding model...")
+    embeddings = np.array([embedding_model.encode(doc) for doc in documents]).astype("float32")
+    progress.progress(70, text="Building FAISS Index...")
+    index = faiss.IndexFlatL2(embeddings.shape[1])
+    index.add(embeddings)
+    st.success(f"FAISS Index rebuilt with {index.ntotal} vectors")
+
+    # Save to global_store.pkl
+    progress.progress(90, text="Updating global_store_gpu.pkl...")
+    with open("global_store_gpu.pkl", "wb") as f:
+        pickle.dump({
+            "documents": documents,
+            "outputs": outputs,
+            "index": index,
+            "embeddings": embeddings
+        }, f)
+
+    progress.progress(100, text="All steps completed!")
+    st.success("Updated and saved global store!")
+
+# Ryff filtering ---
+def filter_output_by_ryff(output_text, selected_ryff):
+    if not selected_ryff:
+        return output_text
+    filtered = []
+    for sentence in re.split(r'(?<=[.!?])\s+', output_text):
+        for param in selected_ryff:
+            if param.lower() in sentence.lower():
+                filtered.append(sentence)
+                break
+    return " ".join(filtered) if filtered else "⚠️ No insights found for selected Ryff parameters."
+
+def format_hover_text(text, idx, max_len=200, line_width=50):
+    truncated = text[:max_len]
+    # Insert <br> every `line_width` characters for better readability
+    wrapped = '<br>'.join([truncated[i:i+line_width] for i in range(0, len(truncated), line_width)])
+    return f"Index: {idx}<br>Text:<br>{wrapped}"
+
+def format_hover_query(text, label="Text", max_len=200, line_width=50):
+    truncated = text[:max_len]
+    wrapped = '<br>'.join([truncated[i:i+line_width] for i in range(0, len(truncated), line_width)])
+    return f"{label}:<br>{wrapped}"
+
+def rag_wellbeing_insight(input_text, issue, selected_ryff):
+    # RAG
+    text_input = input_text
+    mental_issue = issue
+
+    ryff_params = [
+    "Autonomy", "Environmental Mastery", "Personal Growth",
+    "Positive Relations", "Purpose in Life", "Self-Acceptance"
+    ]
+
+    if not text_input or not mental_issue:
+        st.warning("Please provide both text input and mental issue.")
+    else:
+        # Summarize input (no need to summarize works faster and better match)
+        summarized = text_input
+
+        # Create query
+        query = f"{summarized} {mental_issue}"
+        query_embedding = np.array([embedding_model.encode(query)]).astype("float32")
+
+        # Retrieve from FAISS
+        D, I = index.search(query_embedding, 5)
+        match_score = 1 - D[0][0]
+        matched_instruction_input = documents[I[0][0]]
+        retrieved_output = outputs[I[0][0]]
+
+        # Store all the 5 queries
+        all_queries = {
+        i: documents[i].split('.', 1)[1].strip() if '.' in documents[i] else documents[i]
+        for i in I[0]
+        }
+
+        # Filter by Ryff parameters
+        final_output = filter_output_by_ryff(retrieved_output, selected_ryff)
+        matched_output = final_output
+
+        if selected_ryff == []:
+            selected_ryff = ryff_params
+
+        # USING GEMINI 2.0 FLASH LLM THROUGH API TO REFINE IT BASED ON OBTAINED MATCH
+        # Display matched document and its wellbeing insight
+
+        st.subheader("\n Top Matched Record from RAG Store:")
+        st.info(f"📥 INPUT: {matched_instruction_input}")
+        st.info(f"🧾 OUTPUT: {matched_output}")
+
+        num_lines = len(selected_ryff)
+        # Use Gemini to generate a fresh wellbeing insight
+        prompt = f"""You are a part of RAG System. Based on the retrieved text : {matched_output} make small refinements on the retrieved text for getting wellbeing insights based on Ryff Scale of Psychological Wellbeing for the paramters : {selected_ryff} in exactly {num_lines} lines, one line for each of the {selected_ryff} for the original user text : {text_input} and mental issue : {mental_issue}
+        """
+
+        # Call Gemini model
+        response = gemini_model.generate_content(prompt)
+        generated_output = response.text.strip()
+        final_output = generated_output
+
+        # Output
+        # st.subheader("\n📘 Summary of your situation:")
+        # st.write(summarized)
+
+        st.subheader("\nWellbeing Insight Using RAG :")
+        st.write(final_output)
+
+        st.subheader("🔗 Match Score:")
+        st.write(f"{1 - D[0][0]:.4f} (higher is better)")
+
+        # ========== Interactive Graph Section ==========
+        st.subheader("\n📊 Generating interactive match visualization...")
+
+        # Combine query and knowledge base embeddings
+        query_embedding = query_embedding.reshape(1, -1)
+        # embeddings = np.array([embedding_model.encode(doc) for doc in documents]).astype("float32")
+        combined_embeddings = np.vstack([query_embedding, embeddings])
+
+        # Run t-SNE to reduce to 3D
+        reducer = TSNE(n_components=3, random_state=42, perplexity=30, n_iter=1000)
+        reduced_all = reducer.fit_transform(combined_embeddings)
+
+        query_3d = reduced_all[0]
+        all_3d = reduced_all[1:]
+        topk_indices = I[0]
+        topk_3d = np.array([all_3d[i] for i in topk_indices])
+
+        # Define issue colors
+        issue_colors = {
+            "normal": "grey",
+            "depression": "orange",
+            "anxiety": "purple",
+            "bipolar": "brown",
+            "PTSD": "cyan"
+        }
+
+        # Group points by issue for colored scatter plot
+        issue_traces = []
+        for issue, color in issue_colors.items():
+            indices = [i for i, meta in enumerate(metadatas) if meta["issue"] == issue]
+            if not indices:
+                continue
+            points = np.array([all_3d[i] for i in indices])
+            trace = go.Scatter3d(
+                x=points[:, 0],
+                y=points[:, 1],
+                z=points[:, 2],
+                mode='markers',
+                name=f"{issue}",
+                marker=dict(size=5, color=color, opacity=0.5),
+                # text=[f"{issue} | {all_queries.get(i, 'N/A')}" for i in indices],
+                hoverinfo='none'
+            )
+            issue_traces.append(trace)
+
+        # Color gradient for top-k matches
+        colorscale = ['#00FF00', '#33FF66', '#66FF99', '#99FFCC', '#CCFFF2']
+        topk_colors = colorscale[:len(topk_indices)]
+
+        topk_trace = go.Scatter3d(
+            x=topk_3d[:, 0],
+            y=topk_3d[:, 1],
+            z=topk_3d[:, 2],
+            mode='markers+text',
+            name='Top-k Matches',
+            marker=dict(size=8, color='green'),
+            text=[f"Index {idx}" for idx in topk_indices],
+            textposition='top center',
+            hoverinfo='text',
+            hovertext=[
+                format_hover_text(all_queries.get(idx, 'N/A'), idx)
+                for idx in topk_indices
+            ]
+        )
+
+        query_trace = go.Scatter3d(
+            x=[query_3d[0]],
+            y=[query_3d[1]],
+            z=[query_3d[2]],
+            mode='markers+text',
+            name='Query',
+            marker=dict(size=11, color='red'),
+            text=["Query"],
+            textposition="top center",
+            hoverinfo='text',
+            hovertext=[format_hover_query(query, "Query")]
+        )
+
+        # Dotted lines from query to top-k
+        lines = []
+        for point in topk_3d:
+            lines.append(go.Scatter3d(
+                x=[query_3d[0], point[0]],
+                y=[query_3d[1], point[1]],
+                z=[query_3d[2], point[2]],
+                mode='lines',
+                line=dict(color='gray', width=2, dash='dot'),
+                showlegend=False,
+                hoverinfo='none'
+            ))
+
+        # Combine all traces
+        fig = go.Figure(data=issue_traces + [topk_trace, query_trace] + lines)
+
+        fig.update_layout(
+            title="🎯 Colored 3D t-SNE by Issue — Query & Top-k Matches",
+            scene=dict(
+                xaxis_title='Component 1',
+                yaxis_title='Component 2',
+                zaxis_title='Component 3',
+            ),
+            legend=dict(x=0.02, y=0.98),
+            margin=dict(l=0, r=0, b=0, t=40)
+        )
+
+
+        # Show the interactive plot
+        # fig.show()
+        st.plotly_chart(fig, use_container_width=False, key=f"plot-{time.time_ns()}")
+
+        to_append_instruction = "Provide wellbeing insight for the below text with " + mental_issue + "."
+
+        # Save to instruction_data.json
+        append_to_json_file(to_append_instruction, summarized, final_output)
+        st.success("Your insight was saved to instruction_data.json")
+
 
 # Twitter
 def fetch_image_content(image_url):
@@ -576,6 +865,10 @@ def classify_text(text):
     # Pass to a custom insight function if needed
     get_wellbeing_insight(text, top_issue)
 
+    # Pass for RAG based insights
+    selected_ryff = []
+    rag_wellbeing_insight(text, top_issue, selected_ryff)
+
     # Show original table
     st.subheader("Association Matrix")
     st.table(df)
@@ -584,9 +877,19 @@ def classify_text(text):
     cosine_similarity_index, cosine_similarity_row_name = cosine_similarity_analysis(matrix, probabilities)
     euclidian_distance_index, euclidian_distance_row_name = euclidian_distance_analysis(matrix, probabilities)
 
-    consensus_string = get_consensus_string(weighted_sum_row_name, cosine_similarity_row_name, euclidian_distance_row_name)
+    consensus_string, selected_ryff = get_consensus_string(weighted_sum_row_name, cosine_similarity_row_name, euclidian_distance_row_name)
+
+    selected_ryff = [
+    "Positive Relations" if item == "positive relations with others"
+    else "Self-Acceptance" if item == "self acceptance"
+    else item
+    for item in selected_ryff
+    ]
+
     # st.info(consensus_string)
     get_parameter_insight(consensus_string, top_issue)
+
+    rag_wellbeing_insight(text, top_issue, selected_ryff)
 
 # ---------------- CHANGED AS PER ENSEMBLE MODEL -----------------
 # Function to get wellbeing insights from Gemini model
@@ -1021,6 +1324,10 @@ def classify_text_retrain_model(text):
     # Pass to a custom insight function if needed
     get_wellbeing_insight(text, top_issue)
 
+    # Pass for RAG based insights
+    selected_ryff = []
+    rag_wellbeing_insight(text, top_issue, selected_ryff)
+
     # Show original table
     st.subheader("Association Matrix")
     st.table(df)
@@ -1029,9 +1336,19 @@ def classify_text_retrain_model(text):
     cosine_similarity_index, cosine_similarity_row_name = cosine_similarity_analysis(matrix, probabilities)
     euclidian_distance_index, euclidian_distance_row_name = euclidian_distance_analysis(matrix, probabilities)
 
-    consensus_string = get_consensus_string(weighted_sum_row_name, cosine_similarity_row_name, euclidian_distance_row_name)
+    consensus_string, selected_ryff = get_consensus_string(weighted_sum_row_name, cosine_similarity_row_name, euclidian_distance_row_name)
     # st.info(consensus_string)
+
+    selected_ryff = [
+    "Positive Relations" if item == "positive relations with others"
+    else "Self-Acceptance" if item == "self acceptance"
+    else item
+    for item in selected_ryff
+    ]
+
     get_parameter_insight(consensus_string, top_issue)
+
+    rag_wellbeing_insight(text, top_issue, selected_ryff)
 
     # Adding Model Retraining Functionality
     update_and_retrain(text, top_issue)
@@ -1263,6 +1580,10 @@ def classify_text_with_desc(text,text2):
 
     get_wellbeing_insight(text+" "+text2, top_issue)
 
+    # Pass for RAG based insights
+    selected_ryff = []
+    rag_wellbeing_insight(text+" "+text2, top_issue, selected_ryff)
+
     # Show original table
     st.subheader("Association Matrix")
     st.table(df)
@@ -1271,9 +1592,19 @@ def classify_text_with_desc(text,text2):
     cosine_similarity_index, cosine_similarity_row_name = cosine_similarity_analysis(matrix, probabilities)
     euclidian_distance_index, euclidian_distance_row_name = euclidian_distance_analysis(matrix, probabilities)
 
-    consensus_string = get_consensus_string(weighted_sum_row_name, cosine_similarity_row_name, euclidian_distance_row_name)
+    consensus_string, selected_ryff = get_consensus_string(weighted_sum_row_name, cosine_similarity_row_name, euclidian_distance_row_name)
     # st.info(consensus_string)
+
+    selected_ryff = [
+    "Positive Relations" if item == "positive relations with others"
+    else "Self-Acceptance" if item == "self acceptance"
+    else item
+    for item in selected_ryff
+    ]
+
     get_parameter_insight(consensus_string, top_issue)
+
+    rag_wellbeing_insight(text, top_issue, selected_ryff)
 
 def classify_text_retrain_model_desc(text,text2):
     # Preprocess the input for each base model
@@ -1334,6 +1665,10 @@ def classify_text_retrain_model_desc(text,text2):
 
     get_wellbeing_insight(text+" "+text2, top_issue)
 
+    # Pass for RAG based insights
+    selected_ryff = []
+    rag_wellbeing_insight(text+" "+text2, top_issue, selected_ryff)
+
     # Show original table
     st.subheader("Association Matrix")
     st.table(df)
@@ -1342,9 +1677,19 @@ def classify_text_retrain_model_desc(text,text2):
     cosine_similarity_index, cosine_similarity_row_name = cosine_similarity_analysis(matrix, probabilities)
     euclidian_distance_index, euclidian_distance_row_name = euclidian_distance_analysis(matrix, probabilities)
 
-    consensus_string = get_consensus_string(weighted_sum_row_name, cosine_similarity_row_name, euclidian_distance_row_name)
+    consensus_string, selected_ryff = get_consensus_string(weighted_sum_row_name, cosine_similarity_row_name, euclidian_distance_row_name)
     # st.info(consensus_string)
+
+    selected_ryff = [
+    "Positive Relations" if item == "positive relations with others"
+    else "Self-Acceptance" if item == "self acceptance"
+    else item
+    for item in selected_ryff
+    ]
+
     get_parameter_insight(consensus_string, top_issue)
+
+    rag_wellbeing_insight(text, top_issue, selected_ryff)
 
     # Adding Model Retraining Functionality
     update_and_retrain(text, top_issue)
@@ -1473,6 +1818,10 @@ def classify_alltext(text):
     # Pass to a custom insight function if needed
     get_wellbeing_insight(text, top_issue)
 
+    # Pass for RAG based insights
+    selected_ryff = []
+    rag_wellbeing_insight(text, top_issue, selected_ryff)
+
     # Show original table
     st.subheader("Association Matrix")
     st.table(df)
@@ -1481,9 +1830,19 @@ def classify_alltext(text):
     cosine_similarity_index, cosine_similarity_row_name = cosine_similarity_analysis(matrix, probabilities)
     euclidian_distance_index, euclidian_distance_row_name = euclidian_distance_analysis(matrix, probabilities)
 
-    consensus_string = get_consensus_string(weighted_sum_row_name, cosine_similarity_row_name, euclidian_distance_row_name)
+    consensus_string, selected_ryff = get_consensus_string(weighted_sum_row_name, cosine_similarity_row_name, euclidian_distance_row_name)
     # st.info(consensus_string)
+
+    selected_ryff = [
+    "Positive Relations" if item == "positive relations with others"
+    else "Self-Acceptance" if item == "self acceptance"
+    else item
+    for item in selected_ryff
+    ]
+
     get_parameter_insight(consensus_string, top_issue)
+
+    rag_wellbeing_insight(text, top_issue, selected_ryff)
 
     return top_issue
 
@@ -1836,13 +2195,14 @@ def euclidian_distance_analysis(matrix, probabilities):
 def get_consensus_string(weighted_sum_row_name, cosine_similarity_row_name, euclidean_distance_row_name):
     row_names = [weighted_sum_row_name, cosine_similarity_row_name, euclidean_distance_row_name]
     unique_names = list(set(row_names))  # Get unique row names
+    specific_ryff =  unique_names
 
     if len(unique_names) == 1:
-        return unique_names[0]  # All three are the same
+        return unique_names[0], specific_ryff  # All three are the same
     elif len(unique_names) == 2:
-        return " and ".join(unique_names)  # Two names are the same
+        return " and ".join(unique_names), specific_ryff  # Two names are the same
     else:
-        return ", ".join(unique_names)  # All three are different
+        return ", ".join(unique_names), specific_ryff  # All three are different
 
 # Define the Streamlit app
 def run_app():
@@ -2747,8 +3107,8 @@ def run_app():
         st.info("If you are not sure, predict your probable mental issue using any one of the 6 options available on the left before filling.")
 
         st.warning(
-            "There a total of 12 questions : 2 for each of the 6 paramters from Ryff's Scale of Psychological Wellbeing. The Overall Scores are displayed at the end along with the updated Association Matrix.  \n\n"
-            "Questions with (R) are reversed scored. \n\n"
+            "There a total of 12 questions : 2 for each of the 6 parameters from Ryff's Scale of Psychological Wellbeing. The Overall Scores are displayed at the end along with the updated Association Matrix.  \n\n"
+            "Questions with (R) are reverse scored. \n\n"
             "1 → Strongly Disagree  \n"
             "2 → Disagree  \n"
             "3 → Slightly Disagree  \n"
