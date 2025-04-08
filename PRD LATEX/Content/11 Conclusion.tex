@@ -18,7 +18,7 @@
     \end{itemize} \\ \hline
     \textbf{Future Scope} & 
     \begin{itemize}[noitemsep, leftmargin=*, topsep=0pt]
-        \item Incorporate additional data sources (Facebook, Instagram, niche forums) for comprehensive analysis.
+        \item Incorporate additional data sources (Facebook, Instagram, niche forums) for comprehensive analysis using bigger datasets.
         \item Integrate real-time monitoring and feedback capabilities.
         \item Enhance user privacy using techniques like differential privacy.
         \item Collaborate with psychologists and ethicists to refine ethical and diagnostic guidelines.
@@ -35,6 +35,13 @@
         \item Implement threading to handle I/O-heavy tasks (e.g., video/image downloading, audio extraction, transcription) concurrently.
         \item Overlap network and disk operations to reduce idle time.
         \item Improve scalability and responsiveness, enabling the system to serve multiple requests simultaneously.
+    \end{itemize} \\ \hline
+    \textbf{Custom SLM (Small Language Model) Challenges in Google Colab} & 
+    \begin{itemize}[noitemsep, leftmargin=*, topsep=0pt]
+        \item Finding proper weights and biases is difficult.
+        \item Epoch 1 takes excessively long, making pretraining or fine-tuning on larger datasets unfeasible.
+        \item Using pre-trained OpenAI weights builds a foundation but fails to generate meaningful texts.
+        \item Generating 1024-token sequences takes approximately 20 minutes, which is impractical.
     \end{itemize} \\ \hline
     \end{tabularx}
 \end{table}

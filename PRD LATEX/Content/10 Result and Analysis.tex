@@ -29,6 +29,8 @@
     }
 \end{table}
 
+\pagebreak
+
 \begin{table}[H]
     \caption*{Test Case Plan Table}
     \centering
@@ -47,6 +49,9 @@
         T13 & Upload a PDF file and analyze its text content. & Extracted text from the PDF is processed and analyzed for mental health cues. & Extracted text from the PDF is processed and analyzed for mental health cues. & \checkmark \\ \hline
         T14 & Capture user response to a displayed image. & User response is captured and correctly classified for emotional analysis. & User response is captured and correctly classified for emotional analysis. & \checkmark \\ \hline
         T15 & Fill out a survey form to update the association matrix. & Survey responses update the association matrix and generate targeted wellbeing insights. & Survey responses update the association matrix and generate targeted wellbeing insights. & \checkmark \\ \hline
+
+        T16 & RAG-based Wellbeing Insights & Synthesizes targeted wellbeing insights by leveraging retrieved context, input prompts, and mental health cues. & Generates refined wellbeing insights using GEMINI-2.0-FLASH based on retrieved data. & \checkmark \\ \hline
+
     \end{tabularx}
     }
 \end{table}
@@ -964,7 +969,7 @@ Below is a comparison of all the ensemble models for reference
 
 
 
-\subsection{Result from hierarchical Ensemble Models}
+\subsection{Results from hierarchical Ensemble Models}
 
 \noindent
 Ensemble Model 7 is applied on different subsets of a very large dataset to create hierarchical ensemble models. The performance of each model is evaluated, and the results are compared to the global ensemble model. 
@@ -1071,8 +1076,287 @@ The choice of \( n = 6 \) is reasonable given the following factors:
 \vspace{1em}
 
 \noindent
-The web application does not use the model for bigger dataset but focuses on the model received from the first intermediate node of Architecture 1. The reason being that the model for the bigger dataset takes a lot of time, more than 20 minutes, if the user chooses for retraining the model after an input.
+The web application uses only the model from the first intermediate node of Architecture 1, as retraining the larger dataset model takes over 20 minutes.
+
+% \vspace{1em}
+
+\subsection{Results and Views in Web Application}
+
+\noindent
+Below are some screenshots from the web application.
+
+\begin{figure}[H]  
+    \centering
+    \includegraphics[width=0.7\textwidth]{App Images/01 Interface.png}  
+    \caption*{Web Application Interface}
+    \label{01i}  % Label for referencing the figure
+\end{figure}
+
 
 \pagebreak
 
+\begin{figure}[h!]
+    \centering
+    % First subfigure: Text Input Option
+    \begin{subfigure}[b]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{App Images/02 Interface.png}
+        \caption*{Text Input Option}
+        \label{fig:02i}
+    \end{subfigure}
+    \hfill
+    % Second subfigure: Upload Image
+    \begin{subfigure}[b]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{App Images/04 Interface.png}
+        \caption*{Upload Image Option}
+        \label{fig:04i}
+    \end{subfigure}
+    \label{fig:app_interfaces}
+\end{figure}
+
+\vspace{-2em}
+
+\begin{figure}[h!]
+    \centering
+    % First subfigure: Upload Video
+    \begin{subfigure}[b]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{App Images/12 Interface.png}
+        \caption*{Upload Video Option}
+        \label{fig:06i4}
+    \end{subfigure}
+    \hfill
+    % Second subfigure: PDF Upload Option
+    \begin{subfigure}[b]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{App Images/20 Interface.png}
+        \caption*{PDF Upload Option}
+        \label{fig:10i23445}
+    \end{subfigure}
+    \label{fig:app_interfaces_upload}
+\end{figure}
+
+\vspace{-2em}
+
+\begin{figure}[h!]
+    \centering
+    % First subfigure: User response to Image Option
+    \begin{subfigure}[b]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{App Images/26 Interface.png}
+        \caption*{User response to Image Option}
+        \label{fig:26Interface}
+    \end{subfigure}
+    \hfill
+    % Second subfigure: Questions related to image
+    \begin{subfigure}[b]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{App Images/27 Interface.png}
+        \caption*{Questions related to image}
+        \label{fig:27Interface}
+    \end{subfigure}
+    \label{fig:imageResponseAndQuestions}
+\end{figure}
+
+\vspace{-2em}
+
+\begin{figure}[H]
+    \centering
+    % First subfigure: Reddit User Analysis
+    \begin{subfigure}[b]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{App Images/06 Interface.png}
+        \caption*{Reddit User Analysis Option}
+        \label{fig:07i}
+    \end{subfigure}
+    \hfill
+    % Second subfigure: Twitter User Analysis
+    \begin{subfigure}[b]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{App Images/08 Interface.png}
+        \caption*{Twitter User Analysis Option}
+        \label{fig:09i}
+    \end{subfigure}
+    \label{fig:reddit_twitter_analysis}
+\end{figure}
+
+\pagebreak
+
+\begin{figure}[h!]
+    \centering
+    % First subfigure: Prediction and Insights
+    \begin{subfigure}[b]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{App Images/03 Interface.png}
+        \caption*{Prediction and Insights}
+        \label{fig:03i}
+    \end{subfigure}
+    \hfill
+    % Second subfigure: Social Media User Analysis
+    \begin{subfigure}[b]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{App Images/07 Interface.png}
+        \caption*{Social Media User Analysis}
+        \label{fig:08i}
+    \end{subfigure}
+    \label{fig:combined_analysis}
+\end{figure}
+
+\vspace{-2em}
+
+\begin{figure}[h!]
+    \centering
+    % First subfigure: Model Retraining Result
+    \begin{subfigure}[b]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{App Images/17 Interface.png}
+        \caption*{Model Retraining Result}
+        \label{fig:10i}
+    \end{subfigure}
+    \hfill
+    % Second subfigure: Emotion analysis
+    \begin{subfigure}[b]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{App Images/12-1 Interface.png}
+        \caption*{Emotion analysis}
+        \label{fig:10i23}
+    \end{subfigure}
+    \label{fig:comparison}
+\end{figure}
+
+\vspace{-2em}
+
+\begin{figure}[h!]
+    \centering
+    % First subfigure: Generate Image Caption
+    \begin{subfigure}[b]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{App Images/18 Interface.png}
+        \caption*{Generate Image Caption}
+        \label{fig:10i234}
+    \end{subfigure}
+    \hfill
+    % Second subfigure: Knowledge Graph after prediction
+    \begin{subfigure}[b]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{App Images/19 Interface.png}
+        \caption*{Knowledge Graph after prediction}
+        \label{fig:10i23445}
+    \end{subfigure}
+    \label{fig:generated_caption_vs_kg}
+\end{figure}
+
+\vspace{-2em}
+
+\begin{figure}[H]
+    \centering
+    % First subfigure: Weighted Sum Analysis
+    \begin{subfigure}[b]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{App Images/22 Interface.png}
+        \caption*{Weighted Sum Analysis}
+        \label{fig:weighted_sum}
+    \end{subfigure}
+    \hfill
+    % Second subfigure: Cosine Similarity Analysis
+    \begin{subfigure}[b]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{App Images/23 Interface.png}
+        \caption*{Cosine Similarity Analysis}
+        \label{fig:cosine_similarity}
+    \end{subfigure}
+    \label{fig:analysis_comparison}
+\end{figure}
+
+\pagebreak
+
+\begin{figure}[h!]
+    \centering
+    % First subfigure: Euclidean Distance Analysis
+    \begin{subfigure}[b]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{App Images/24 Interface.png}
+        \caption*{Euclidean Distance Analysis}
+        \label{fig:euclidean_distance}
+    \end{subfigure}
+    \hfill
+    % Second subfigure: Specific Parameter based Insights
+    \begin{subfigure}[b]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{App Images/25 Interface.png}
+        \caption*{Specific Parameter based Insights}
+        \label{fig:specific_insights}
+    \end{subfigure}
+    \label{fig:analysis_comparison}
+\end{figure}
+
+\vspace{-2em}
+
+\begin{figure}[h!]
+    \centering
+    % First subfigure: Well-being survey questions
+    \begin{subfigure}[b]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{App Images/28 Interface.png}
+        \caption*{Well-being survey option}
+        \label{fig:wellbeing_questions}
+    \end{subfigure}
+    \hfill
+    % Second subfigure: Well-being survey result
+    \begin{subfigure}[b]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{App Images/29 Interface.png}
+        \caption*{Well-being survey questions}
+        \label{fig:wellbeing_result}
+    \end{subfigure}
+    \label{fig:wellbeing_comparison}
+\end{figure}
+
+\vspace{-2em}
+
+\begin{figure}[h!]
+    \centering
+    % First subfigure: Well-being survey questions
+    \begin{subfigure}[b]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{App Images/30 Interface.png}
+        \caption*{Well-being survey result}
+        \label{fig:wellbeing_questions}
+    \end{subfigure}
+    \hfill
+    % Second subfigure: Well-being survey result
+    \begin{subfigure}[b]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{App Images/31 Interface.png}
+        \caption*{Updated Association Matrix after responses}
+        \label{fig:wellbeing_result}
+    \end{subfigure}
+    \label{fig:wellbeing_comparison}
+\end{figure}
+
+\vspace{-2em}
+
+\begin{figure}[H]
+    \centering
+    % First subfigure: Well-being survey questions
+    \begin{subfigure}[b]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{App Images/34 Interface.png}
+        \caption*{RAG based Wellbeing Insights}
+        \label{fig:wellbeing_questions}
+    \end{subfigure}
+    \hfill
+    % Second subfigure: Well-being survey result
+    \begin{subfigure}[b]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{App Images/35 Interface.png}
+        \caption*{Match Visualization and Dataset Updation}
+        \label{fig:wellbeing_result}
+    \end{subfigure}
+    \label{fig:wellbeing_comparison}
+\end{figure}
+
+
+\pagebreak
 % ------------------------ Result and Analysis Ends -------------------------

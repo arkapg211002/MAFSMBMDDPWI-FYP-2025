@@ -166,8 +166,8 @@ The technical environment for the project "Multimodal AI Framework for Social Me
             \item Stop-word removal
             \item Lemmatization or stemming
         \end{itemize} \\
-        \hline
-        \textbf{Feature Extraction} & Converts text into numerical features using:
+        % \hline
+        \textbf{} & Perform feature extraction to convert text into numerical features using:
         \begin{itemize}
             \setlength{\itemsep}{0pt}  % Adjust spacing between items
             \setlength{\parskip}{0pt}
@@ -309,14 +309,69 @@ The \texttt{analyze\_audio\_mood} function begins with the user providing a vide
 \end{figure}
 
 \noindent
-The system first processes user input (text, behavioral data, or health metrics) through preprocessing and feature extraction. Machine learning models then predict the most likely mental health condition along with associated probabilities. The top predicted issue and its probability are then fed into GEMINI 1.5 FLASH with a structured prompt to generate wellbeing insights based on Ryff’s six parameters. To refine these insights, an association matrix maps the probabilities of all predicted issues to specific wellbeing parameters, selecting 1 to 3 key dimensions (e.g., autonomy, personal growth, or self-acceptance). This ensures that the user receives targeted recommendations for improving their psychological wellbeing.
+The system first processes user input (text, behavioral data, or health metrics) through preprocessing and feature extraction. Machine learning models then predict the most likely mental health condition along with associated probabilities. The top predicted issue and its probability are then fed into GEMINI 2.0 FLASH with a structured prompt to generate wellbeing insights based on Ryff’s six parameters. To refine these insights, an association matrix maps the probabilities of all predicted issues to specific wellbeing parameters, selecting 1 to 3 key parameters (e.g., autonomy, personal growth, or self-acceptance). This ensures that the user receives targeted recommendations for improving their psychological wellbeing. There is also an additional feature where Retrieval Augmented Generation (RAG) is used to provide personalized recommendations based on the user’s mental health condition. The system retrieves relevant information from a knowledge base and generates tailored suggestions.
+\vspace{1em}
+
+\noindent
+The above 6 main functionalities are resused in the application for the options available to the user. These include \textbf{Text} analysis, \textbf{Image} analysis, \textbf{Video} analysis, \textbf{PDF} analysis, analysis of \textbf{User response to Image}, analysis of \textbf{Reddit} and \textbf{Twitter} user profiles. \textbf{Wellbeing Survey Option} and \textbf{RAG for wellbeing Insights} have been added under \textit{Implementation} section.
 
 \vspace{1em}
 
 \noindent
-The system enhances mental health classification using ML and DL models, analyzing text, behavioral data, and multimedia inputs. DeepFace aids facial emotion recognition, while text classifiers (Logistic Regression, Naive Bayes, SVM, Transformer, XGBoost, LSTM) process written data. Audio mood analysis (MFCC) and facial expression detection refine emotional assessment. Additionally, real-time social media monitoring provides deeper insights into a user’s mental state.
+Below are the flow diagrams for the various \textit{Analysis} options that the web application provides.
+
+\begin{figure}[H]  
+    \centering
+    \includegraphics[width=0.72\textwidth]{Images/APP TEXT OPTION.png}  
+    \caption*{Text Classification Flow Diagram}
+    \label{012i}  % Label for referencing the figure
+\end{figure}
+
+% -- pdf upload
+\begin{figure}[H]  
+    \centering
+    \includegraphics[width=0.72\textwidth]{Images/APP PDF.png}  
+    \caption*{PDF Upload Flow Diagram}
+    \label{01234i}  % Label for referencing the figure
+\end{figure}
 
 \pagebreak
+
+\begin{figure}[H]  
+    \centering
+    \includegraphics[width=0.77\textwidth]{Images/APP IMAGE OPTION.png}  
+    \caption*{Image Classification Flow Diagram}
+    \label{011232i}  % Label for referencing the figure
+\end{figure}
+
+% -- user response to image
+\begin{figure}[H]  
+    \centering
+    \includegraphics[width=0.77\textwidth]{Images/APP RESPOND.png}  
+    \caption*{User Response to Image Flow Diagram}
+    \label{01234i}  % Label for referencing the figure
+\end{figure}
+
+\pagebreak
+
+\begin{figure}[h!]  
+    \centering
+    \includegraphics[width=1.0\textwidth]{Images/APP VIDEO OPTION.png}  
+    \caption*{Video Classification Flow Diagram}
+    \label{01332i}  % Label for referencing the figure
+\end{figure}
+
+\pagebreak
+\begin{figure}[h!]  
+    \centering
+    \includegraphics[width=0.9\textwidth]{Images/APP REDDIT.png}  
+    \caption*{Reddit and Twitter username Classification Flow Diagram}
+    \label{01234i}  % Label for referencing the figure
+\end{figure}
+
+
+\pagebreak
+
 
 % \noindent
 % Create separate sections for separate modules of design as in Requirement Matrix. Ensure to provide Design Diagrams \textit{(e.g. System overview / DFDs / ERDs etc.; cross-reference to be drawn from Chapter 6), Decision matrix (for algorithm recommendation etc.) }

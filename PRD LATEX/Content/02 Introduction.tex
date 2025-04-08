@@ -19,12 +19,12 @@
 \subsection{Project Overview}
 \vspace{.1in}
 \noindent
-Mental health disorders—including depression, anxiety, bipolar disorder, and PTSD—affect millions of people worldwide, creating a growing public health concern. In today’s digital era, social media platforms have become a ubiquitous space where individuals freely express their emotions, share personal struggles, and document life’s challenges, often without realizing that these expressions can serve as early indicators of mental health issues. This project leverages advanced machine learning and deep learning techniques to analyze social media posts by examining intricate language patterns, contextual cues, and sentiment variations to detect signs of mental distress. By employing a multimodal approach, the framework not only processes text data through methods like TF-IDF, Bag-of-Words, and deep neural networks but also integrates additional data sources such as images, videos, PDFs, and user responses to visual stimuli. This integration allows the system to extract textual information from PDFs using OCR, analyze facial expressions via specialized image processing modules, and incorporate a comprehensive wellbeing survey. The survey responses are then mapped to specific parameters of Ryff’s Wellbeing Scale using an association matrix, which provides personalized insights and actionable recommendations for early intervention. Ultimately, this holistic framework is designed to facilitate timely support and guide individuals towards appropriate mental health services, contributing to a more proactive approach in managing mental health on a global scale.
+Mental health disorders—including depression, anxiety, bipolar disorder, and PTSD—affect millions of people worldwide, creating a growing public health concern. In today’s digital era, social media platforms have become a ubiquitous space where individuals freely express their emotions, share personal struggles, and document life’s challenges, often without realizing that these expressions can serve as early indicators of mental health issues. This project leverages advanced machine learning and deep learning techniques to analyze social media posts by examining intricate language patterns, contextual cues, and sentiment variations to detect signs of mental distress. By employing a multimodal approach, the framework not only processes text data through methods like TF-IDF, Bag-of-Words, and deep neural networks but also integrates additional data sources such as images, videos, PDFs, and user responses to visual stimuli. This integration also allows the system to extract textual information from PDFs using OCR, analyze emotions via specialized image processing modules, and incorporate a comprehensive wellbeing survey. The survey responses are then mapped to specific parameters of Ryff’s Wellbeing Scale using an association matrix, which provides personalized insights and actionable recommendations using Gemini and RAG for early intervention. Ultimately, this holistic framework is designed to facilitate timely support and guide individuals towards appropriate mental health services, contributing to a more proactive approach in managing mental health on a global scale.
 
 \subsection{Project Purpose}
 \vspace{.1in}
 \noindent
-This project aims to develop a web application using machine learning and deep learning models (Logistic Regression, Naive Bayes, SVM, XGBoost, LSTM, Transformer) to detect mental health disorders from text, images, videos, PDFs, user responses to images, and social media profiles. By addressing technical challenges in processing large datasets and optimizing algorithms, the project seeks to enable early detection of mental health issues, contributing to public health improvement through technology. Additionally, the framework integrates multimodal analysis and ensemble techniques to ensure robust and accurate predictions.
+This project aims to develop a web application using machine learning and deep learning models (Logistic Regression, Naive Bayes, SVM, XGBoost, LSTM, Transformer) to detect mental health disorders from text, images, videos, PDFs, user responses to images, and social media profiles. By addressing technical challenges in processing large datasets and optimizing algorithms, the project seeks to enable early detection of mental health issues, contributing to public health improvement through technology.
 
 \subsection{Technical Domain Specifications}
 \vspace{.1in}
@@ -97,7 +97,8 @@ From a business perspective, this project offers significant value in mental hea
   Natural Language Processing (NLP) & A branch of artificial intelligence focused on the interaction between computers and humans through natural language, including tasks like text analysis. \\
 
   \hline 
-  Support Vector Machines (SVM) & A supervised learning algorithm used for classification or regression tasks, focusing on finding a hyperplane that best separates different classes. \\
+  Retrieval-Augmented Generation (RAG) & A hybrid NLP framework that combines information retrieval and text generation by fetching relevant context from a knowledge base before generating responses, improving factual accuracy and relevance. \\
+
 
   \hline 
   Vectorization & The process of converting textual data into numerical form (such as a vector) so that it can be used as input for machine learning models. \\
@@ -152,7 +153,7 @@ From a business perspective, this project offers significant value in mental hea
   Transformers Module & The Transformers module in Python, developed by Hugging Face, is a library for natural language processing (NLP) tasks like text classification, translation, and summarization, using state-of-the-art models like BERT and GPT. \\
 
   \hline
-  Gemini 1.5 Flash & Gemini 1.5 Flash is a cutting-edge AI model developed by Google, capable of performing advanced generative and analytical tasks across text, image, and other modalities. \\
+  Gemini 2.0 Flash & Gemini 2.0 Flash is a cutting-edge AI model developed by Google, capable of performing advanced generative and analytical tasks across text, image, and other modalities. \\
 
   \hline
   FFmpeg & FFmpeg is a multimedia framework used for encoding, decoding, transcoding, streaming, and manipulating audio and video files, supporting a wide range of formats and codecs. \\

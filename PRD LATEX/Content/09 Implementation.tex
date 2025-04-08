@@ -500,4 +500,311 @@ Algorithm like Logistic Regression, K-Nearest Neighbors, Support Vector Machine,
 \end{table}
 
 
+\subsection{Wellbeing Survey and Association Matrix}
+
+\begin{figure}[H]  
+    \centering
+    \includegraphics[width=0.8\textwidth]{App Images/32 Interface.png}  
+    \caption*{Sample Response Collection Sheet}
+    \label{01i}  % Label for referencing the figure
+\end{figure}
+
+\pagebreak
+
+\begin{table}[H]
+    \caption*{Step-by-Step Algorithm for the Well-being Survey Option}
+    \label{tab:algorithm}
+    \begin{tabularx}{\textwidth}{|l|X|X|}
+    \hline
+    \textbf{Step} & \textbf{Operation} & \textbf{Description / Formula} \\ \hline
+    1 & \textbf{Initialization:} \newline
+    - Define file paths: \texttt{csv\_file\_path}, \texttt{image\_path}, \texttt{am\_file\_path}. \newline
+    - Display title \textit{``Well-being Survey''}. & -- \\ \hline
+    2 & \textbf{Display Introductory Image:} \newline
+    - Check if the image file exists at \texttt{image\_path} and display it. & --\\ \hline
+    3 & \textbf{Display Instructions:} \newline
+    - Present informational messages and detailed instructions. \newline
+    - Describe the Ryff Scale & 
+    \[
+    \begin{array}{l}
+    \textbf{1} \quad \rightarrow \quad \text{Strongly Disagree} \\
+    \textbf{2} \quad \rightarrow \quad \text{Disagree} \\
+    \textbf{3} \quad \rightarrow \quad \text{Slightly Disagree} \\
+    \textbf{4} \quad \rightarrow \quad \text{Slightly Agree} \\
+    \textbf{5} \quad \rightarrow \quad \text{Agree} \\
+    \textbf{6} \quad \rightarrow \quad \text{Strongly Agree}
+    \end{array}
+    \]
+    \\ \hline
+    4 & \textbf{Load or Create Response Data:} \newline
+    - Attempt to load \texttt{response.csv} into a DataFrame. \newline
+    - If not found, create a new DataFrame with columns: \{Q1, Q2, \dots, Q12, issue, p1, \dots, p6, Date\}. \newline 
+    - (R) against questions \{Q2, Q4, Q6, Q8, Q10, Q12\} signify reverse scoring & 
+    \[
+    \begin{array}{l}
+    \textbf{Q1-Q2} : \text{Self Acceptance} \\
+    \textbf{Q3-Q4} : \text{Positive relations with others} \\
+    \textbf{Q5-Q6} : \text{Autonomy} \\
+    \textbf{Q7-Q8} : \text{Environmental Mastery} \\
+    \textbf{Q9-Q10} : \text{Purpose In Life} \\
+    \textbf{Q11-Q12} : \text{Personal Growth}
+    \end{array}
+    \]
+    \\ \hline
+    5 & \textbf{Collect User Responses:} \newline
+    - Initialize an empty dictionary \texttt{responses}. \newline
+    - \textbf{Q00:} Record predicted mental issue (via radio buttons with options: Anxiety, Bipolar, Depression, Normal, PTSD). \newline
+    - \textbf{Q01--Q12:} Present 12 survey questions; record responses (scale 1--6). & \textbf{Follow these links for details:} \quad \newline \newline
+    - https://positivepsychology.com/ryff-scale-psychological-wellbeing/ \quad \newline \newline
+    - https://centerofinquiry.org/uncategorized/\newline ryff-scales-of-psychological-well-being/ \\ \hline
+    6 & \textbf{Append Current Date:} \newline
+    - Add the current date in \texttt{YYYY-MM-DD} format to \texttt{responses}. & \(\text{Date} = \text{current date (YYYY-MM-DD)}\) \\ \hline
+    7 & \textbf{Overall Score Calculation:} \newline
+    For each well-being parameter, compute a score using two survey responses. \newline
+    \textbf{Variables:} \newline
+    \(S_{\mathrm{SA}}\): Self Acceptance \newline
+    \(S_{\mathrm{PR}}\): Positive Relations with Others  \newline
+    \(S_{\mathrm{A}}\): Autonomy \newline
+    \(S_{\mathrm{EM}}\): Environmental Mastery \newline
+    \(S_{\mathrm{PL}}\): Purpose in Life  \newline
+    \(S_{\mathrm{PG}}\): Personal Growth
+    & 
+    \[
+    \begin{array}{c}
+    S_{\mathrm{SA}} = Q1 + \left|7 - Q2\right|, \\
+    S_{\mathrm{PR}} = Q3 + \left|7 - Q4\right|, \\
+    S_{\mathrm{A}}  = Q5 + \left|7 - Q6\right|, \\
+    S_{\mathrm{EM}} = Q7 + \left|7 - Q8\right|, \\
+    S_{\mathrm{PL}} = Q9 + \left|7 - Q10\right|, \\
+    S_{\mathrm{PG}} = Q11 + \left|7 - Q12\right|
+    \end{array}
+    \]
+    \\ \hline
+    \end{tabularx}
+\end{table}
+
+\begin{table}[H]
+    \caption*{Step-by-Step Algorithm for the Well-being Survey Option}
+    \label{tab:algorithm}
+    \begin{tabularx}{\textwidth}{|l|X|X|}
+    \hline
+    \textbf{Step} & \textbf{Operation} & \textbf{Description / Formula} \\ \hline
+    8 & \textbf{Determine Score Levels:} \newline
+    - Compute the score level by dividing each parameter score by 2 (using integer division). \newline
+    - Classify as: \textbf{Low} if score level is in \{1,2\}, \textbf{Medium} if in \{3,4\}, and \textbf{High} otherwise. & 
+    \[
+    \text{Score Level} = \left\lfloor \frac{S}{2} \right\rfloor,
+    \]
+    \[
+    \begin{cases}
+    \text{Low} & \text{if } S \in \{1,2\}, \\
+    \text{Medium} & \text{if } S \in \{3,4\}, \\
+    \text{High} & \text{if } S \geq 5.
+    \end{cases}
+    \]
+    \\ \hline
+    9 & \textbf{Update Association Matrix:} \newline
+    - For each parameter (\(p1\) to \(p6\)) and for each unique issue type in the responses, extract the corresponding values. \newline
+    - Divide these values by 2, compute their mean, round the result to obtain an integer, and update the association matrix. & 
+    \[
+    \begin{array}{rcl}
+    \text{For a parameter: } v_i &=& \dfrac{\text{value}}{2}, \\
+    \bar{v} &=& \dfrac{1}{n} \sum_{i=1}^{n} v_i, \\
+    \text{Final Value} &=& \mathrm{round}(\bar{v})
+    \end{array}
+    \] \\ \hline
+    10 & \textbf{Submit Responses and Save Data:} \newline
+    - On clicking the \texttt{Submit Responses} button, display a success message. \newline
+    - Append the new response entry to the DataFrame and update \texttt{response.csv}. \newline
+    - Display the last 5 responses and count today’s respondents. & -- \\ \hline
+    11 & \textbf{Display Updated Association Matrix:} \newline
+    - Call the function to update \texttt{am.csv} based on the latest responses, and display it as a table. & -- \\ \hline
+    \end{tabularx}
+\end{table}
+
+\begin{figure}[H]  
+    \centering
+    \includegraphics[width=0.65\textwidth]{App Images/33 Interface.png}  
+    \caption*{Sample Association Matrix}
+    \label{01i}  % Label for referencing the figure
+\end{figure}
+
+\pagebreak
+
+\begin{table}[H]
+    \centering
+    \caption*{Step-by-Step Algorithm for Association Matrix Analysis}
+    \label{tab:algorithm}
+    \begin{tabularx}{\textwidth}{|c|p{6cm}|>{\raggedright\arraybackslash}X|}
+    \hline
+    \textbf{Step} & \textbf{Operation} & \textbf{Mathematical Formula / Description} \\ \hline
+    1 & \textbf{Load Dataset} & Read the CSV file (e.g., \texttt{am.csv}) to obtain the association matrix data. \\ \hline
+    2 & \textbf{Define Row Names and Issue Columns} & Set row names: 
+    \begin{tabular}[t]{@{}l@{}}self acceptance, positive relations with \\ others, autonomy, environmental mastery,\\ purpose in life, personal growth\end{tabular} \\ \hline
+    3 & \textbf{Extract Association Matrix} & Let \( \displaystyle A \in \mathbb{R}^{6 \times 5}, \quad A_{ij} \text{ is the value for the } i\text{-th parameter} \) and j-th issue with issue columns ordered as: anxiety, bipolar, depression, normal, ptsd. \\ \hline
+    4 & \textbf{Define Probabilities Vector} & Define the probability vector where \(I_j\) refers to the mental issue probabilities. \newline
+    \( \displaystyle \vec{p} = \begin{bmatrix} I1 \\ I2 \\ I3 \\ I4 \\ I5 \end{bmatrix}, \)
+    which satisfies \( \displaystyle \sum_{j=1}^{5} I_j = 1 \).\newline \\ \hline
+    5 & \textbf{Weighted Sum Analysis} & Compute the weighted sum for each row: 
+    \( \displaystyle w_i = \sum_{j=1}^{5} A_{ij}\, p_j, \quad i=1,\dots,6. \)
+    Identify the row index with maximum \(w_i\), i.e., \( \displaystyle i^* = \arg\max_{i}\, w_i. \) \\ \hline
+    6 & \textbf{Cosine Similarity Analysis} & For each row vector \( \vec{a}_i \) of \(A\), compute:
+    \( \displaystyle s_i = \frac{\vec{a}_i \cdot \vec{p}}{\|\vec{a}_i\|\,\|\vec{p}\|}, \quad i=1,\dots,6. \)
+    Determine \( \displaystyle i^* = \arg\max_{i}\, s_i. \) \\ \hline
+    7 & \textbf{Euclidean Distance Analysis} & For each row, compute the Euclidean distance:
+    \( \displaystyle d_i = \sqrt{\sum_{j=1}^{5} \left(A_{ij} - p_j\right)^2}, \quad i=1,\dots,6. \)
+    Find the row index with the smallest distance:
+    \( \displaystyle i^* = \arg\min_{i}\, d_i. \) \newline \\ \hline
+    8 & \textbf{Consensus Decision} & Compare the row names identified by the three analyses. If all three methods return the same row name, that is the consensus; otherwise, list the unique names obtained. \\ \hline
+\end{tabularx}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption*{Step-by-Step Algorithm for Association Matrix Analysis}
+    \label{tab:algorithm}
+    \begin{tabularx}{\textwidth}{|c|p{6cm}|>{\raggedright\arraybackslash}X|}
+    \hline
+    \textbf{Step} & \textbf{Operation} & \textbf{Mathematical Formula / Description} \\ \hline
+    9 & \textbf{Display Results} & Use Streamlit to display:
+    \begin{itemize}[noitemsep, topsep=0pt]
+        \item The original Association Matrix.
+        \item The computed weighted sums, cosine similarity scores, and Euclidean distances.
+        \item The row(s) corresponding to the maximum weighted sum, highest cosine similarity, and smallest Euclidean distance.
+        \item The consensus result.
+    \end{itemize} \\ \hline
+    \end{tabularx}
+\end{table}
+
+\subsection{RAG for Wellbeing Insights}
+
+\begin{figure}[H]  
+    \centering
+    \includegraphics[width=0.8\textwidth]{Images/RAG_FLOW.png}  
+    \caption*{RAG OVERVIEW FOR GENERATING INSIGHTS}
+    \label{01i}  % Label for referencing the figure
+\end{figure}
+
+\begin{table}[H]
+    \centering
+    \caption*{Step-by-Step Algorithm for RAG-based Wellbeing Insight Generation}
+    \label{tab:algorithm}
+    \begin{tabularx}{\textwidth}{|c|p{3cm}|X|}
+        \hline
+        \textbf{Step} & \textbf{Operation} & \textbf{Mathematical Formula / Description} \\ \hline
+        1 & \textbf{Import Libraries} & Import necessary packages: \texttt{streamlit}, \texttt{json}, \texttt{pickle}, \texttt{numpy}, \texttt{faiss}, \texttt{sentence\_transformers}, \texttt{transformers}, \texttt{google.generativeai}, \texttt{plotly}, \texttt{sklearn.manifold.TSNE}, etc. \\ \hline
+        2 & \textbf{Configure Gemini API} & Set the generation configuration parameters and initialize the Gemini model. \\ \hline
+        3 & \textbf{Generate Instruction Dataset} & Create a dataset \texttt{instruction\_data.json} with \texttt{text}, \texttt{issue}, and \texttt{response} using Gemini API through batching and rate limiting. \\ \hline
+    \end{tabularx}
+\end{table}
+
+\pagebreak
+
+\begin{table}[H]
+    \centering
+    \caption*{Step-by-Step Algorithm for RAG-based Wellbeing Insight Generation}
+    \label{tab:algorithm}
+    \begin{tabularx}{\textwidth}{|c|p{3cm}|X|}
+        \hline
+        \textbf{Step} & \textbf{Operation} & \textbf{Mathematical Formula / Description} \\ \hline
+        
+        4 & \textbf{Build FAISS Index} & Load the saved model via: \texttt{embedding\_model = pickle.load("rag\_embedding\_gpu.pkl")}. Then load the instruction data from \texttt{instruction\_data.json} to form \texttt{documents = \{instruction + input\}} and \texttt{outputs = \{output\}}. Next, encode the documents using \texttt{embeddings = np.array([embedding\_model.encode(doc)])} so that embeddings $\in \mathbb{R}^{n \times d}$. Build the FAISS L2-index by setting \texttt{index = faiss.IndexFlatL2(d)} and calling \texttt{index.add(embeddings)}. Finally, save the tuple \texttt{\{documents, outputs, index, embeddings\}} into \texttt{"global\_store\_gpu.pkl"}. \\ \hline
+
+
+        5 & \textbf{Load Global Store} & Retrieve data from \texttt{global\_store\_gpu.pkl} (documents, indices, oputputs and embeddings).
+        \\ \hline
+        
+        6 & \textbf{Compute Query Embedding} & Create the query by concatenating user text and mental issue. Encode it with:
+        \[
+        \mathbf{v}_q = \text{embedding\_model.encode}(\text{query})
+        \]
+        and cast to a float32 NumPy array. \\ \hline
+        
+        7 & \textbf{FAISS Retrieval (Top-\(k\))} & Retrieve the top \(k=5\) matches using FAISS. The distance metric is the squared Euclidean (L2) norm:
+        \[
+        d(\mathbf{v}_q, \mathbf{v}_i) = \|\mathbf{v}_q - \mathbf{v}_i\|^2
+        \]
+        The query is processed as:
+        \[
+        (D, I) = \text{index.search}(\mathbf{v}_q, 5)
+        \]
+        where \(I\) contains the indices of the top matches. \\ \hline
+        
+        8 & \textbf{Filter by Ryff Parameters} & Apply text filtering to the retrieved output. For each sentence in the output, check if it contains any selected Ryff parameters (e.g., Autonomy, Positive Relations, etc.). \\ \hline
+        
+        9 & \textbf{Generate Refined Insight} & Construct a prompt for the Gemini model based on the retrieved text and selected parameters. Generate a refined insight:
+        \[
+        \text{generated\_output} = \text{gemini\_model.generate\_content}(\text{prompt})
+        \] 
+        \vspace{-2em}
+        \\ \hline
+        
+        10 & \textbf{3D t-SNE Visualization} & Combine the query embedding with the document embeddings and reduce the dimensionality using t-SNE:
+        \[
+        \text{reduced} = \text{TSNE}(n\_components=3)(\text{combined\_embeddings})
+        \]
+        Separate the query and top-\(k\) points for visualization via Plotly. \\ \hline
+        
+        11 & \textbf{Plot Interactive Graph} & Plot the 3D scatter plot with annotations for the query, top-\(k\) matches, and connecting dotted lines. \\ \hline
+    \end{tabularx}
+\end{table}
+
+\pagebreak
+
+\begin{table}[H]
+    \centering
+    \caption*{Step-by-Step Algorithm for RAG-based Wellbeing Insight Generation}
+    \label{tab:algorithm}
+    \begin{tabularx}{\textwidth}{|c|p{3cm}|X|}
+        \hline
+        \textbf{Step} & \textbf{Operation} & \textbf{Mathematical Formula / Description} \\ \hline
+        12 & \textbf{Append New Record} & Append a new record to \texttt{instruction\_data.json} and rebuild the FAISS index. In this step, the updated documents are:
+        \[
+        \text{documents} = \{ \texttt{instruction} + \texttt{input} \}
+        \]
+        and the FAISS index is rebuilt with the new embeddings. \\ \hline
+    \end{tabularx}
+\end{table}
+
+
+\begin{figure}[H]
+    \centering
+    % First subfigure: Well-being survey questions
+    
+    % Second subfigure: Well-being survey result
+    \begin{subfigure}[b]{0.496\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/RAG_NEAR.png}
+        \caption*{Nearest Neighbours among the Embeddings}
+        \label{fig:wellbeing_result}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.496\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/RAG_MATCHSCORE.png}
+        \caption*{Count of Matches and Top Score}
+        \label{fig:wellbeing_questions}
+    \end{subfigure}
+   
+    \label{fig:wellbeing_comparison}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Images/RAG_WBEMBED.png}
+    \caption*{Instruction Embeddings in 2D space}
+    \label{fig:wellbeing_questions}
+\end{figure}
+
+\pagebreak
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Images/RAG_KNOWLEDGE.png}
+    \caption*{Visualization of Query and Top-\(k\) Matches}
+    \label{fig:wellbeing_questions}
+\end{figure}
+
+
 % ------------------------- Implementation Ends -----------------------------
