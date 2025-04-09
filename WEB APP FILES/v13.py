@@ -1,5 +1,3 @@
-%%writefile v13.py
-
 import pickle
 import streamlit as st
 import joblib
