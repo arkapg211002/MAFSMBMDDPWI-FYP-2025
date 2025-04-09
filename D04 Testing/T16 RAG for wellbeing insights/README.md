@@ -4,9 +4,8 @@ The streamlit application code is made based on gpu based files
 ```
 ## Implementing RAG for faster generation of wellbeing isnights without using any LLM
 
-### To use RAG based wellebing insight in GPU based runtime
+### SAVING THE EMBEDDING MODEL
 ```python
-# Saving the embedding model for cuda device
 from sentence_transformers import SentenceTransformer
 import pickle
 
@@ -19,10 +18,10 @@ with open("rag_embedding_gpu.pkl", "wb") as f:
 
 print("✅ Saved embedding_model to pkl")
 
-# --------------------------------------
+```
 
-# Storing global store again as the embedding has changed based on cuda
-
+### SAVING THE GLOBAL STORE FOR DOCUMENTS OUTPUT AND FAISS INDICES
+```python
 import json
 import numpy as np
 import faiss
@@ -49,8 +48,23 @@ index.add(embeddings)
 print(f"📦 FAISS Index rebuilt with {index.ntotal} vectors")
 
 # Save to .pkl
-with open("global_store.pkl", "wb") as f:
-    pickle.dump({"documents": documents, "outputs": outputs, "index": index}, f)
-print("💾 Saved updated global_store.pkl")
+with open("global_store_gpu.pkl", "wb") as f:
+    pickle.dump({"documents": documents, "outputs": outputs, "index": index, "embeddings": embeddings}, f)
+print("💾 Saved updated global_store_gpu.pkl")
+```
+
+### STORE THE CROSS ENCODER
+```python
+from sentence_transformers import CrossEncoder
+import pickle
+
+# Load the cross-encoder model (use device='cuda' if using GPU runtime)
+cross_encoder_model = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2', device='cuda')
+
+# Save it to a pickle file
+with open("cross_encoder_gpu.pkl", "wb") as f:
+    pickle.dump(cross_encoder_model, f)
+
+print("✅ Saved cross_encoder_model to pkl")
 
 ```
