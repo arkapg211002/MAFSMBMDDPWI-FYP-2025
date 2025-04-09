@@ -711,16 +711,21 @@ Algorithm like Logistic Regression, K-Nearest Neighbors, Support Vector Machine,
         4 & \textbf{Build FAISS Index} & Load the saved model via: \texttt{embedding\_model = pickle.load("rag\_embedding\_gpu.pkl")}. Then load the instruction data from \texttt{instruction\_data.json} to form \texttt{documents = \{instruction + input\}} and \texttt{outputs = \{output\}}. Next, encode the documents using \texttt{embeddings = np.array([embedding\_model.encode(doc)])} so that embeddings $\in \mathbb{R}^{n \times d}$. Build the FAISS L2-index by setting \texttt{index = faiss.IndexFlatL2(d)} and calling \texttt{index.add(embeddings)}. Finally, save the tuple \texttt{\{documents, outputs, index, embeddings\}} into \texttt{"global\_store\_gpu.pkl"}. \\ \hline
 
 
-        5 & \textbf{Load Global Store} & Retrieve data from \texttt{global\_store\_gpu.pkl} (documents, indices, oputputs and embeddings).
+        5 & \textbf{Load Global Store} & Retrieve data from \texttt{global\_store\_gpu.pkl} (documents, indices, outputs and embeddings).
         \\ \hline
         
-        6 & \textbf{Compute Query Embedding} & Create the query by concatenating user text and mental issue. Encode it with:
+        6 & \textbf{Compute Query Embedding} & Create the query by concatenating user text and mental issue. Encode it and and cast to a float32 NumPy array:
+        \vspace{-1em}
         \[
         \mathbf{v}_q = \text{embedding\_model.encode}(\text{query})
         \]
-        and cast to a float32 NumPy array. \\ \hline
+        \vspace{-1.5em}
+        \\ \hline
         
-        7 & \textbf{FAISS Retrieval (Top-\(k\))} & Retrieve the top \(k=5\) matches using FAISS. The distance metric is the squared Euclidean (L2) norm:
+        7 & \textbf{FAISS Retrieval (Top-\(k\))} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{spacing}{0.4}
+        Retrieve the top \(k=10\) matches using FAISS. The distance metric is the squared Euclidean (L2) norm:
         \[
         d(\mathbf{v}_q, \mathbf{v}_i) = \|\mathbf{v}_q - \mathbf{v}_i\|^2
         \]
@@ -728,24 +733,40 @@ Algorithm like Logistic Regression, K-Nearest Neighbors, Support Vector Machine,
         \[
         (D, I) = \text{index.search}(\mathbf{v}_q, 5)
         \]
-        where \(I\) contains the indices of the top matches. \\ \hline
+        \end{spacing}
+        \end{minipage} \\ \hline
         
-        8 & \textbf{Filter by Ryff Parameters} & Apply text filtering to the retrieved output. For each sentence in the output, check if it contains any selected Ryff parameters (e.g., Autonomy, Positive Relations, etc.). \\ \hline
-        
-        9 & \textbf{Generate Refined Insight} & Construct a prompt for the Gemini model based on the retrieved text and selected parameters. Generate a refined insight:
+        8 & \textbf{Re-ranking} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{spacing}{0.3}
+        Re-rank the top \(n=5\) from the initially retrieved \(k\) documents to improve relevance using \texttt{ms-marco-MiniLM-L-6-v2}. \newline
+        \begin{enumerate}[leftmargin=*, label=(\roman*)]
+            \item Extract text for each candidate:
+            \[
+            \text{retrieved\_docs\_text} = \{ \text{documents}[i] \mid i \in \text{initial\_indices} \}.
+            \]
+            \item Form pairs by concatenating the query with each document:
+            \[
+            \text{cross\_inp} = \{ [\text{query},\; \text{doc\_text}] \}.
+            \]
+            \item Compute cross-encoder scores:
+            \[
+            \text{cross\_scores} = \text{cross\_encoder.predict}(\text{cross\_inp}).
+            \]
+            \item Sort candidates by score in descending order
+        \end{enumerate}
+        \end{spacing}
+        \end{minipage} \\ \hline
+
+        9 & \textbf{Filter by Ryff Parameters} & Apply text filtering to the retrieved output of the top candidate. Check if it contains any selected Ryff parameters (e.g., Autonomy, Positive Relations, etc.). \\ \hline
+
+        10 & \textbf{Generate Refined Insight} & Construct a prompt for the Gemini model based on the retrieved text and selected parameters. Generate a refined insight:
+        \vspace{-1em}
         \[
         \text{generated\_output} = \text{gemini\_model.generate\_content}(\text{prompt})
         \] 
         \vspace{-2em}
         \\ \hline
-        
-        10 & \textbf{3D t-SNE Visualization} & Combine the query embedding with the document embeddings and reduce the dimensionality using t-SNE:
-        \[
-        \text{reduced} = \text{TSNE}(n\_components=3)(\text{combined\_embeddings})
-        \]
-        Separate the query and top-\(k\) points for visualization via Plotly. \\ \hline
-        
-        11 & \textbf{Plot Interactive Graph} & Plot the 3D scatter plot with annotations for the query, top-\(k\) matches, and connecting dotted lines. \\ \hline
     \end{tabularx}
 \end{table}
 
@@ -758,7 +779,16 @@ Algorithm like Logistic Regression, K-Nearest Neighbors, Support Vector Machine,
     \begin{tabularx}{\textwidth}{|c|p{3cm}|X|}
         \hline
         \textbf{Step} & \textbf{Operation} & \textbf{Mathematical Formula / Description} \\ \hline
-        12 & \textbf{Append New Record} & Append a new record to \texttt{instruction\_data.json} and rebuild the FAISS index. In this step, the updated documents are:
+    
+        11 & \textbf{3D t-SNE Visualization} & Combine the query embedding with the document embeddings and reduce the dimensionality using t-SNE:
+        \[
+        \text{reduced} = \text{TSNE}(n\_components=3)(\text{combined\_embeddings})
+        \]
+        Separate the query and top-\(k\) points for visualization via Plotly. \\ \hline
+        
+        12 & \textbf{Plot Interactive Graph} & Plot the 3D scatter plot with annotations for the query, top-\(k\) matches, and connecting dotted lines. \\ \hline
+        
+        13 & \textbf{Append New Record} & Append a new record to \texttt{instruction\_data.json} and rebuild the FAISS index. In this step, the updated documents are:
         \[
         \text{documents} = \{ \texttt{instruction} + \texttt{input} \}
         \]
@@ -782,7 +812,7 @@ Algorithm like Logistic Regression, K-Nearest Neighbors, Support Vector Machine,
     \begin{subfigure}[b]{0.496\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Images/RAG_MATCHSCORE.png}
-        \caption*{Count of Matches and Top Score}
+        \caption*{Count of Matches and Top Score for an input}
         \label{fig:wellbeing_questions}
     \end{subfigure}
    
@@ -792,7 +822,7 @@ Algorithm like Logistic Regression, K-Nearest Neighbors, Support Vector Machine,
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{Images/RAG_WBEMBED.png}
+    \includegraphics[width=0.65\textwidth]{Images/RAG_WBEMBED.png}
     \caption*{Instruction Embeddings in 2D space}
     \label{fig:wellbeing_questions}
 \end{figure}
