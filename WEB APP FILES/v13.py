@@ -1,3 +1,4 @@
+%%writefile v13.py
 
 import pickle
 import streamlit as st
@@ -52,13 +53,13 @@ from sklearn.metrics.pairwise import cosine_similarity # new added
 from scipy.spatial.distance import euclidean  # New import
 # import soundfile as sf
 
-# Added in v14
+# Added in v13-5
+import plotly.offline as pyo
 import json
 import faiss
-from sentence_transformers import SentenceTransformer
 import plotly.graph_objs as go
 from sklearn.manifold import TSNE
-import plotly.offline as pyo
+from sentence_transformers import SentenceTransformer, CrossEncoder
 
 from tensorflow.keras.models import load_model, Model, Sequential
 from tensorflow.keras.utils import pad_sequences, custom_object_scope, to_categorical
@@ -151,28 +152,218 @@ def load_transformer_label_encoder():
 def load_transformer_vectorizer():
     return joblib.load('Tvectorizer_layer.pkl')
 
-@st.cache_resource
-def load_rag_embedding():
-    with open("rag_embedding_gpu.pkl", "rb") as f:
-        return pickle.load(f)
+# -------------------------- FOR RAG --------------------
 
+EMBEDDING_MODEL_PKL = "rag_embedding_gpu.pkl"
+GLOBAL_STORE_PKL = "global_store_gpu.pkl"
+INSTRUCTION_DATA_JSON = "instruction_data.json"
+# Load CrossEncoder FROM THE PICKLE FILE (as per previous steps)
+CROSS_ENCODER_PKL = 'cross_encoder_gpu.pkl'
+INITIAL_RETRIEVAL_K = 10 # Retrieve more candidates initially from FAISS
+RE_RANKED_TOP_N = 5 # Use top N re-ranked results for LLM context
+ISSUE_KEYWORDS = ["normal", "anxiety", "bipolar", "ptsd", "depression"]
+
+# --- Color Mapping for Plot --- ADDED
+issue_colors = {
+    "normal": "#1f77b4",     # Strong blue
+    "depression": "#ff7f0e", # Vivid orange
+    "anxiety": "#9467bd",    # Medium purple
+    "bipolar": "#8c564b",    # Muted brown
+    "ptsd": "#17becf",       # Teal / Cyan
+    "unknown": "#7f7f7f"     # Neutral gray
+}
+
+DEFAULT_PLOT_COLOR = "silver" # Fallback color if issue not in map
+
+# Load models ONCE at the start
 @st.cache_resource
+def load_models():
+    embedding_model = None
+    cross_encoder = None
+    with open(EMBEDDING_MODEL_PKL, "rb") as f:
+        embedding_model = pickle.load(f)
+
+    with open(CROSS_ENCODER_PKL, "rb") as f:
+        cross_encoder = pickle.load(f)
+    return embedding_model, cross_encoder
+
+embedding_model, cross_encoder = load_models()
+
 def load_global_store():
-    with open("global_store_gpu.pkl", "rb") as f:
-        return pickle.load(f)
+    # print(f"\n--- Loading Knowledge Base from {GLOBAL_STORE_PKL} ---")
+    try:
+        with open(GLOBAL_STORE_PKL, "rb") as f:
+            store = pickle.load(f)
+        required_keys = {"documents", "outputs", "index", "embeddings"}
+        if not required_keys.issubset(store.keys()):
+            st.error(f"🚨 ERROR: Global store file {GLOBAL_STORE_PKL} is missing required keys.")
+            return None, None, None, None, None # Indicate failure + metadatas
+        documents = store.get("documents", [])
+        outputs = store.get("outputs", [])
+        index = store.get("index")
+        embeddings = store.get("embeddings")
+        st.success(f"🔁 Loaded {len(documents)} documents.")
+        if not isinstance(index, faiss.Index):
+            st.error("   ⚠️ Warning: Loaded 'index' might not be a valid Faiss index.")
+        elif index.ntotal == 0:
+            st.error("   ⚠️ Warning: Faiss index is empty.")
 
-# load rag embedding model and global store
-embedding_model = load_rag_embedding()
-store = load_global_store()
-documents = store["documents"]
-outputs = store["outputs"]
-index = store["index"]
-embeddings = store["embeddings"]
-metadatas = []
-for document in documents:
-    match = re.search(r"with (.+)\.", document)  # Adjust regex if needed
-    issue = match.group(1).strip().lower() if match else "unknown"  # Default to 'unknown'
-    metadatas.append({"issue": issue})
+        # --- Extract Metadata --- ADDED HERE
+        metadatas = []
+        # print("   -> Extracting metadata (issue) by searching keywords in first sentence...")
+
+        for document in documents:
+            issue = "unknown" # Default issue
+
+            if document and isinstance(document, str): # Check if document is a non-empty string
+                # Extract first sentence (or whole doc if no period) and lowercase it
+                first_period_index = document.find('.')
+                if first_period_index != -1:
+                    # Extract up to and including the first period
+                    first_sentence = document[:first_period_index + 1].lower()
+                else:
+                    # If no period, search the whole document (lowercased)
+                    # Alternatively, you could take the first N characters: document[:100].lower()
+                    first_sentence = document.lower()
+
+                # Search for keywords in the defined order
+                for keyword in ISSUE_KEYWORDS:
+                    # Use simple 'in' check (case-insensitive due to lowercasing first_sentence)
+                    if keyword in first_sentence:
+                        issue = keyword # Assign the first keyword found
+                        break # Stop searching once a keyword is found
+
+            metadatas.append({"issue": issue})
+
+        # --- End Metadata Extraction ---
+
+        return documents, outputs, index, embeddings, metadatas # Return metadatas too
+
+    except FileNotFoundError:
+        # print(f"🚨 WARNING: Global store file not found: {GLOBAL_STORE_PKL}. KB is empty.")
+        return [], [], None, None, [] # Return empty lists/None
+    except Exception as e:
+        # print(f"🚨 ERROR: Error loading global store: {e}")
+        return None, None, None, None, None # Indicate failure
+
+
+# Append new input and response (Updates files directly)
+def append_to_json_file(instruction, input_text, output, filename=INSTRUCTION_DATA_JSON, store_filename=GLOBAL_STORE_PKL):
+    st.info("Updating Knowledge Base")
+    progress_bar = st.progress(0)
+
+    try:
+        st.success(f"Reading/Appending {filename}...")
+        progress_bar.progress(10)
+
+        try:
+            with open(filename, "r") as file:
+                content = json.load(file)
+        except (FileNotFoundError, json.JSONDecodeError):
+            st.error(f"   -> {filename} not found or invalid. Starting fresh.")
+            content = []
+
+        new_record = {"instruction": instruction, "input": input_text, "output": output}
+        content.append(new_record)
+        with open(filename, "w") as file:
+            json.dump(content, file, indent=4)
+        st.success(f"Record appended to {filename}")
+        progress_bar.progress(30)
+
+        st.info("Rebuilding internal lists...")
+        current_documents = [f"{item.get('instruction','')} {item.get('input','')}" for item in content]
+        current_outputs = [item.get("output", "") for item in content]
+        st.info(f"Total Records: {len(current_documents)}")
+        progress_bar.progress(40)
+
+        if not current_documents:
+            st.error("   -> No documents to index.")
+            current_index = None
+            current_embeddings = None
+        else:
+            st.info("🔍 Re-encoding documents...")
+            try:
+                new_embeddings = np.array([embedding_model.encode(doc) for doc in current_documents]).astype("float32")
+            except Exception as e:
+                st.error(f"   -> 🚨 ERROR: Failed to encode documents: {e}")
+                return False
+            progress_bar.progress(60)
+
+            st.info("📦 Building new FAISS Index...")
+            if new_embeddings.shape[0] > 0:
+                dimension = new_embeddings.shape[1]
+                current_index = faiss.IndexFlatL2(dimension)
+                current_index.add(new_embeddings)
+                current_embeddings = new_embeddings
+                st.success(f"FAISS Index rebuilt ({current_index.ntotal} vectors, Dim: {dimension})")
+            else:
+                st.error("   -> No embeddings generated, index not rebuilt.")
+                current_index = None
+                current_embeddings = None
+            progress_bar.progress(80)
+
+        st.info(f"💾 Saving updated global store to {store_filename}...")
+        updated_store = {
+            "documents": current_documents,
+            "outputs": current_outputs,
+            "index": current_index,
+            "embeddings": current_embeddings
+        }
+        with open(store_filename, "wb") as f:
+            pickle.dump(updated_store, f)
+        progress_bar.progress(100)
+
+        st.success("Knowledge Base Update Complete!")
+        return True
+
+    except Exception as e:
+        st.error(f"🚨 ERROR: An error occurred during KB update: {e}")
+        return False
+
+# --- Hover Text Formatting Functions ---
+
+# Original function for TERMINAL output (uses newline \n)
+def format_terminal_hover_text(text, idx, max_len=200, line_width=70):
+    text = str(text) if text is not None else ""
+    truncated = text[:max_len] + ('...' if len(text) > max_len else '')
+    wrapped_lines = [truncated[i:i+line_width] for i in range(0, len(truncated), line_width)]
+    wrapped = '\n'.join(wrapped_lines)
+    return f"Index: {idx}\nText:\n{wrapped}"
+
+# NEW function for PLOTLY hover text (uses <br>)
+def format_plot_hover_text(text, idx, issue="N/A", max_len=200, line_width=50):
+    text = str(text) if text is not None else ""
+    truncated = text[:max_len] + ('...' if len(text) > max_len else '')
+    # Replace potential HTML tags in text to avoid breaking hover layout
+    safe_truncated = truncated.replace('<', '&lt;').replace('>', '&gt;')
+    wrapped_lines = [safe_truncated[i:i+line_width] for i in range(0, len(safe_truncated), line_width)]
+    wrapped = '<br>'.join(wrapped_lines)
+    return f"<b>Index: {idx}</b><br>Issue: {issue}<br>Text:<br>{wrapped}"
+
+# NEW function for PLOTLY query hover text (uses <br>)
+def format_plot_hover_query(text, label="Query", max_len=200, line_width=50):
+    text = str(text) if text is not None else ""
+    truncated = text[:max_len] + ('...' if len(text) > max_len else '')
+    safe_truncated = truncated.replace('<', '&lt;').replace('>', '&gt;')
+    wrapped_lines = [safe_truncated[i:i+line_width] for i in range(0, len(safe_truncated), line_width)]
+    wrapped = '<br>'.join(wrapped_lines)
+    return f"<b>{label}:</b><br>{wrapped}"
+# --- End Hover Text Functions ---
+
+# Ryff filtering (Ensure input is string) - No changes needed functionally
+def filter_output_by_ryff(output_text, selected_ryff):
+    # (Content of this function remains the same as previous version)
+    if not selected_ryff: return str(output_text) if output_text is not None else ""
+    output_text = str(output_text) if output_text is not None else ""
+    filtered = []
+    sentences = [s for s in re.split(r'(?<=[.!?])\s+', output_text) if s]
+    for sentence in sentences:
+        for param in selected_ryff:
+            if param.lower() in sentence.lower(): filtered.append(sentence.strip()); break
+    return " ".join(filtered) if filtered else "⚠️ No insights found for selected Ryff parameters."
+
+# -------------------------- FOR RAG --------------------
+
 
 # Load all models and resources by calling the above functions
 lr_model = load_lr_model()
@@ -257,261 +448,190 @@ gemini_model = genai.GenerativeModel(
     generation_config=generation_config,
 )
 
-# wellbeing insight using RAG
-# Append new input and response to instruction_data.json
-def append_to_json_file(instruction, input_text, output, filename="instruction_data.json"):
-    progress = st.progress(0, text="Updating...")
+# --------------------- FOR RAG BASED INSIGHTS ----------------
+# use this line for the graph below : st.plotly_chart(fig, use_container_width=False, key=f"plot-{time.time_ns()}")
 
-    progress.progress(10, text="📄 Appending new record to JSON...")
-    new_record = {
-        "instruction": instruction,
-        "input": input_text,
-        "output": output
-    }
-
-    with open(filename, "r+") as file:
-        content = json.load(file)
-        content.append(new_record)
-        file.seek(0)
-        json.dump(content, file, indent=4)
-
-    st.success(f"New record appended to {filename}")
-
-    progress.progress(30, text="Loading updated instruction_data.json...")
-    # Load instruction data
-    with open("instruction_data.json", "r") as file:
-        data = json.load(file)
-
-    # Rebuild documents and outputs
-    documents = [f"{item['instruction']} {item['input']}" for item in data]
-    outputs = [item["output"] for item in data]
-    st.info(f"Total Records in instruction_data.json: {len(documents)}")
-
-    # Build FAISS index
-    progress.progress(50, text="Encoding documents with embedding model...")
-    embeddings = np.array([embedding_model.encode(doc) for doc in documents]).astype("float32")
-    progress.progress(70, text="Building FAISS Index...")
-    index = faiss.IndexFlatL2(embeddings.shape[1])
-    index.add(embeddings)
-    st.success(f"FAISS Index rebuilt with {index.ntotal} vectors")
-
-    # Save to global_store.pkl
-    progress.progress(90, text="Updating global_store_gpu.pkl...")
-    with open("global_store_gpu.pkl", "wb") as f:
-        pickle.dump({
-            "documents": documents,
-            "outputs": outputs,
-            "index": index,
-            "embeddings": embeddings
-        }, f)
-
-    progress.progress(100, text="All steps completed!")
-    st.success("Updated and saved global store!")
-
-# Ryff filtering ---
-def filter_output_by_ryff(output_text, selected_ryff):
-    if not selected_ryff:
-        return output_text
-    filtered = []
-    for sentence in re.split(r'(?<=[.!?])\s+', output_text):
-        for param in selected_ryff:
-            if param.lower() in sentence.lower():
-                filtered.append(sentence)
-                break
-    return " ".join(filtered) if filtered else "⚠️ No insights found for selected Ryff parameters."
-
-def format_hover_text(text, idx, max_len=200, line_width=50):
-    truncated = text[:max_len]
-    # Insert <br> every `line_width` characters for better readability
-    wrapped = '<br>'.join([truncated[i:i+line_width] for i in range(0, len(truncated), line_width)])
-    return f"Index: {idx}<br>Text:<br>{wrapped}"
-
-def format_hover_query(text, label="Text", max_len=200, line_width=50):
-    truncated = text[:max_len]
-    wrapped = '<br>'.join([truncated[i:i+line_width] for i in range(0, len(truncated), line_width)])
-    return f"{label}:<br>{wrapped}"
-
-def rag_wellbeing_insight(input_text, issue, selected_ryff):
+def rag_wellbeing_insight(input_text, issue, get_selected_ryff):
     # RAG
     text_input = input_text
     mental_issue = issue
+    selected_ryff = get_selected_ryff
+    documents, outputs, index, embeddings, metadatas = load_global_store()
+    ryff_params = ["Autonomy", "Environmental Mastery", "Personal Growth", "Positive Relations", "Purpose in Life", "Self-Acceptance"]
 
-    ryff_params = [
-    "Autonomy", "Environmental Mastery", "Personal Growth",
-    "Positive Relations", "Purpose in Life", "Self-Acceptance"
-    ]
+    start_rag_time = time.time()
+    query = f"Provide wellbeing insight for the below text with {mental_issue}. {text_input}" # Step 1
 
-    if not text_input or not mental_issue:
-        st.warning("Please provide both text input and mental issue.")
-    else:
-        # Summarize input (no need to summarize works faster and better match)
-        summarized = text_input
+    wellbeing_insight = ""
+    query_embedding = None
 
-        # Create query
-        query = f"{summarized} {mental_issue}"
+    with st.expander("RAG Steps..."):
+        # Step 2: Initial Retrieval
+        st.write("   Step 1: Initial Retrieval from Knowledge Base...")
+        
         query_embedding = np.array([embedding_model.encode(query)]).astype("float32")
+        k_initial = min(INITIAL_RETRIEVAL_K, index.ntotal)
+        distances, initial_indices = index.search(query_embedding, k_initial)
+        initial_indices = initial_indices[0]; distances = distances[0]
+        st.info(f" Retrieved {len(initial_indices)} candidates.")
+       
+        # Step 3: Re-ranking
+        st.write("   Step 2: Re-ranking candidates for relevance...")
+        try:
+            retrieved_docs_text = [documents[i] for i in initial_indices]
+            cross_inp = [[query, doc_text] for doc_text in retrieved_docs_text]
+            cross_scores = cross_encoder.predict(cross_inp)
+            reranked_results = sorted(zip(initial_indices, cross_scores), key=lambda x: x[1], reverse=True)
+            n_final = min(RE_RANKED_TOP_N, len(reranked_results))
+            reranked_indices = [idx for idx, score in reranked_results[:n_final]]
+            reranked_scores = [score for idx, score in reranked_results[:n_final]]
+            if not reranked_indices: 
+              st.error("   -> ⚠️ Re-ranking resulted in zero candidates.")
+            st.success(f"  Re-ranked and selected top {len(reranked_indices)} candidates.")
+        except Exception as e:
+            st.error(f"   -> 🚨 ERROR during re-ranking: {e}")
+            st.info("    Falling back to top results from initial retrieval.")
+            n_final = min(RE_RANKED_TOP_N, len(initial_indices))
+            reranked_indices = initial_indices[:n_final]
+            reranked_scores = [1.0 - d for d in distances[:n_final]]
 
-        # Retrieve from FAISS
-        D, I = index.search(query_embedding, 5)
-        match_score = 1 - D[0][0]
-        matched_instruction_input = documents[I[0][0]]
-        retrieved_output = outputs[I[0][0]]
+        # Step 4: Prepare Context & Display Matches (Using TERMINAL hover function here)
+        st.write("   Step 3: Preparing context for Generation...")
+        combined_context_for_llm = ""
+        st.info("Top Re-ranked Records Used as Context")
+        context_parts = []
+        for i, idx in enumerate(reranked_indices):
+              try:
+                  original_input_text = documents[idx]
+                  original_output_text = outputs[idx]
+                  filtered_output = filter_output_by_ryff(original_output_text, selected_ryff)
+                  context_parts.append(f"--- Context Source {i+1} (Score: {reranked_scores[i]:.4f}) ---\n{filtered_output}")
+                  # Use TERMINAL format for printing details
+                  st.write(f"\n### Match {i+1} (Index: {idx}, Score: {reranked_scores[i]:.4f}) ###")
+                  st.write(f"  Retrieved Input (Instruction+Situation):\n    {format_terminal_hover_text(original_input_text, idx)}") # Use terminal format
+                  st.write(f"  Retrieved Output (Filtered for Context):\n    {filtered_output}")
+              except Exception as e:
+                  st.error(f"   -> 🚨 ERROR during context preparation: {e}")
+        combined_context_for_llm = "\n\n".join(context_parts)
 
-        # Store all the 5 queries
-        all_queries = {
-        i: documents[i].split('.', 1)[1].strip() if '.' in documents[i] else documents[i]
-        for i in I[0]
-        }
-
-        # Filter by Ryff parameters
-        final_output = filter_output_by_ryff(retrieved_output, selected_ryff)
-        matched_output = final_output
-
-        if selected_ryff == []:
+        # Step 5: Generation (Prompt slightly adjusted for clarity)
+        if selected_ryff == [] :
             selected_ryff = ryff_params
+        st.write("\n   Step 4: Generating final insight with LLM...")
+        ryff_prompt_part = f"exactly focusing on the Ryff parameters: {', '.join(selected_ryff)}" if selected_ryff != ryff_params else "considering general psychological wellbeing principles" # Adjust if all were implicitly selected
+        num_lines_requested = max(len(selected_ryff) if selected_ryff != ryff_params else 1, 1) # Adjust if all selected
 
-        # USING GEMINI 2.0 FLASH LLM THROUGH API TO REFINE IT BASED ON OBTAINED MATCH
-        # Display matched document and its wellbeing insight
+        prompt = f"""You are part of a Retrieval-Augmented Generation (RAG) system designed to provide psychological wellbeing insights. Given: User's Input Text: "{text_input}". User's Mental Health Issue: "{mental_issue}". Relevant Context (Ranked by Relevance):
+        --- BEGIN CONTEXT ---
+        {combined_context_for_llm}
+        --- END CONTEXT ---
 
-        st.subheader("\n Top Matched Record from RAG Store:")
-        st.info(f"📥 INPUT: {matched_instruction_input}")
-        st.info(f"🧾 OUTPUT: {matched_output}")
+        Task: Using the provided context, generate exactly {num_lines_requested} distinct and insightful bullet points — one **for each** of the following Ryff Psychological Wellbeing parameters: {selected_ryff}.
 
-        num_lines = len(selected_ryff)
-        # Use Gemini to generate a fresh wellbeing insight
-        prompt = f"""You are a part of RAG System. Based on the retrieved text : {matched_output} make small refinements on the retrieved text for getting wellbeing insights based on Ryff Scale of Psychological Wellbeing for the paramters : {selected_ryff} in exactly {num_lines} lines, one line for each of the {selected_ryff} for the original user text : {text_input} and mental issue : {mental_issue}
+        Instructions:
+        - Each bullet point must correspond to a **different** parameter from the list above (maintain the same order).
+        - Be empathetic, supportive, and constructive in tone.
+        - Do **not** repeat the context or user's input verbatim.
+        - Address the user's issue in a personalized and context-aware manner.
+        - Do not add extra bullets or summaries. Just output exactly {num_lines_requested} bullet points.
+
+        Begin:
         """
-
-        # Call Gemini model
         response = gemini_model.generate_content(prompt)
-        generated_output = response.text.strip()
+        generated_output = response.text.strip();
         final_output = generated_output
+        end_rag_time = time.time(); st.success(f"   -> Insight generation took {end_rag_time - start_rag_time:.2f} seconds.")
+        wellbeing_insight = final_output
+        st.write("\n🔗 Top Re-ranked Match Score:")
+        st.success(f"   {reranked_scores[0]:.4f} (CrossEncoder score)")
 
-        # Output
-        # st.subheader("\n📘 Summary of your situation:")
-        # st.write(summarized)
+    st.subheader("Wellbeing Insight using RAG")
+    st.write(wellbeing_insight)
 
-        st.subheader("\nWellbeing Insight Using RAG :")
-        st.write(final_output)
+    # --- Visualization Section (MODIFIED) ---
+    st.subheader("📊 3D Match Visualization")
+    
+    query_embedding_2d = query_embedding.reshape(1, -1)
+    combined_embeddings = np.vstack([query_embedding_2d, embeddings])
+    n_samples = combined_embeddings.shape[0]
+    perplexity_val = min(30, max(5, n_samples - 1)) # Ensure perplexity is valid range
 
-        st.subheader("🔗 Match Score:")
-        st.write(f"{1 - D[0][0]:.4f} (higher is better)")
-
-        # ========== Interactive Graph Section ==========
-        st.subheader("\n📊 Generating interactive match visualization...")
-
-        # Combine query and knowledge base embeddings
-        query_embedding = query_embedding.reshape(1, -1)
-        # embeddings = np.array([embedding_model.encode(doc) for doc in documents]).astype("float32")
-        combined_embeddings = np.vstack([query_embedding, embeddings])
-
-        # Run t-SNE to reduce to 3D
-        reducer = TSNE(n_components=3, random_state=42, perplexity=30, n_iter=1000)
+    if perplexity_val <= 4: st.error(f"      -> ⚠️ Not enough data points ({n_samples}) for meaningful t-SNE plot.")
+    else:
+        tsne_iter = max(250, min(1000, int(n_samples * 2.5))) # Faster iterations
+        reducer = TSNE(n_components=3, random_state=42, perplexity=perplexity_val, max_iter=tsne_iter, init='pca', learning_rate='auto', n_jobs=-1)
         reduced_all = reducer.fit_transform(combined_embeddings)
 
         query_3d = reduced_all[0]
-        all_3d = reduced_all[1:]
-        topk_indices = I[0]
-        topk_3d = np.array([all_3d[i] for i in topk_indices])
+        all_3d = reduced_all[1:] # KB points
+        valid_reranked_indices = [i for i in reranked_indices if i < len(all_3d)]
+        topk_3d = np.array([all_3d[i] for i in valid_reranked_indices]) if valid_reranked_indices else np.empty((0,3))
 
-        # Define issue colors
-        issue_colors = {
-            "normal": "grey",
-            "depression": "orange",
-            "anxiety": "purple",
-            "bipolar": "brown",
-            "PTSD": "cyan"
-        }
+        plot_traces = [] 
+        issues_in_plot = set() 
+        grouped_points = defaultdict(list)
+        
+        for i in range(len(all_3d)):
+            issue = metadatas[i].get("issue", "unknown") # Get issue from corresponding metadata
+            grouped_points[issue].append(i) # Store original KB index 'i'
+      
+        for issue, original_indices in grouped_points.items():
+            if not original_indices: continue # Skip if somehow an issue has no points
 
-        # Group points by issue for colored scatter plot
-        issue_traces = []
-        for issue, color in issue_colors.items():
-            indices = [i for i, meta in enumerate(metadatas) if meta["issue"] == issue]
-            if not indices:
-                continue
-            points = np.array([all_3d[i] for i in indices])
-            trace = go.Scatter3d(
-                x=points[:, 0],
-                y=points[:, 1],
-                z=points[:, 2],
+            issue_points_3d = all_3d[original_indices]
+            issue_color = issue_colors.get(issue, DEFAULT_PLOT_COLOR) # Get color for this issue
+
+            # Create hovertext specifically for these points using the original indices
+            issue_hovertext = [format_plot_hover_text(documents[i], i, issue) for i in original_indices]
+
+            issues_in_plot.add(issue)
+            # Create the trace for this specific issue
+            issue_trace = go.Scatter3d(
+                x=issue_points_3d[:, 0], y=issue_points_3d[:, 1], z=issue_points_3d[:, 2],
                 mode='markers',
-                name=f"{issue}",
-                marker=dict(size=5, color=color, opacity=0.5),
-                # text=[f"{issue} | {all_queries.get(i, 'N/A')}" for i in indices],
-                hoverinfo='none'
+                name=issue.capitalize(), # Legend name = Issue name (e.g., "Anxiety")
+                marker=dict(
+                    size=3,
+                    color=issue_color, # Assign the single specific color
+                    opacity=0.5 # Slightly more opaque for visibility
+                ),
+                hoverinfo='text',
+                hovertext=issue_hovertext # Assign specific hover text
             )
-            issue_traces.append(trace)
-
-        # Color gradient for top-k matches
-        colorscale = ['#00FF00', '#33FF66', '#66FF99', '#99FFCC', '#CCFFF2']
-        topk_colors = colorscale[:len(topk_indices)]
+            plot_traces.append(issue_trace) # Add this issue's trace to the list
 
         topk_trace = go.Scatter3d(
-            x=topk_3d[:, 0],
-            y=topk_3d[:, 1],
-            z=topk_3d[:, 2],
-            mode='markers+text',
-            name='Top-k Matches',
-            marker=dict(size=8, color='green'),
-            text=[f"Index {idx}" for idx in topk_indices],
-            textposition='top center',
+            x=topk_3d[:, 0], y=topk_3d[:, 1], z=topk_3d[:, 2], mode='markers+text', name=f'Top {len(valid_reranked_indices)}',
+            marker=dict(size=7, color='green', symbol='circle'), text=[f"R{i+1}" for i in range(len(valid_reranked_indices))], textposition='top center',
             hoverinfo='text',
-            hovertext=[
-                format_hover_text(all_queries.get(idx, 'N/A'), idx)
-                for idx in topk_indices
-            ]
+            hovertext=[format_plot_hover_text(documents[idx], idx, metadatas[idx].get("issue", "unknown")) for idx in valid_reranked_indices] # Use PLOT hover func
         )
-
+        # Query point - USE PLOT HOVER TEXT
         query_trace = go.Scatter3d(
-            x=[query_3d[0]],
-            y=[query_3d[1]],
-            z=[query_3d[2]],
-            mode='markers+text',
-            name='Query',
-            marker=dict(size=11, color='red'),
-            text=["Query"],
-            textposition="top center",
+            x=[query_3d[0]], y=[query_3d[1]], z=[query_3d[2]], mode='markers+text', name='Your Query',
+            marker=dict(size=11, color='red'), text=["Q"], textposition="middle center",
             hoverinfo='text',
-            hovertext=[format_hover_query(query, "Query")]
+            hovertext=[format_plot_hover_query(query, "Query")] # Use PLOT query hover func
         )
+        # Lines (remain the same)
+        lines = [go.Scatter3d(x=[query_3d[0], p[0]], y=[query_3d[1], p[1]], z=[query_3d[2], p[2]], mode='lines', line=dict(color='darkgreen', width=2, dash='dot'), showlegend=False, hoverinfo='none') for p in topk_3d]
 
-        # Dotted lines from query to top-k
-        lines = []
-        for point in topk_3d:
-            lines.append(go.Scatter3d(
-                x=[query_3d[0], point[0]],
-                y=[query_3d[1], point[1]],
-                z=[query_3d[2], point[2]],
-                mode='lines',
-                line=dict(color='gray', width=2, dash='dot'),
-                showlegend=False,
-                hoverinfo='none'
-            ))
-
-        # Combine all traces
-        fig = go.Figure(data=issue_traces + [topk_trace, query_trace] + lines)
-
+        fig = go.Figure(data=plot_traces + [topk_trace, query_trace] + lines)
         fig.update_layout(
-            title="🎯 Colored 3D t-SNE by Issue — Query & Top-k Matches",
-            scene=dict(
-                xaxis_title='Component 1',
-                yaxis_title='Component 2',
-                zaxis_title='Component 3',
-            ),
-            legend=dict(x=0.02, y=0.98),
-            margin=dict(l=0, r=0, b=0, t=40)
-        )
+              title=f"3D t-SNE: Query → Re-ranked Top {len(valid_reranked_indices)} (Colored by Issue)",
+              scene=dict(xaxis_title='TSNE-1', yaxis_title='TSNE-2', zaxis_title='TSNE-3'),
+              legend=dict(x=0, y=1, traceorder='reversed', title='Legend'), # Added legend title
+              margin=dict(l=0, r=0, b=0, t=40),
+              # height=750,
+              hoverlabel=dict(bgcolor="white", font_size=12, namelength=-1)
+          )
 
-
-        # Show the interactive plot
-        # fig.show()
         st.plotly_chart(fig, use_container_width=False, key=f"plot-{time.time_ns()}")
 
-        to_append_instruction = "Provide wellbeing insight for the below text with " + mental_issue + "."
-
-        # Save to instruction_data.json
-        append_to_json_file(to_append_instruction, summarized, final_output)
-        st.success("Your insight was saved to instruction_data.json")
+    to_append_instruction = "Provide wellbeing insight for the below text with " + mental_issue + "."
+    append_to_json_file(to_append_instruction, text_input, final_output)
+    st.success("Your insight was saved to instruction_data.json")
+# --------------------- FOR RAG BASED INSIGHTS ----------------
 
 
 # Twitter
