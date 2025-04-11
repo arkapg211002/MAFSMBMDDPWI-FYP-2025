@@ -594,9 +594,9 @@
         \hline
         k-NN & \texttt{weights=distance, n\_neighbors=10, metric=euclidean} & Accuracy: 52.03\%; Normal F1: 0.69; ROC AUC: Bipolar 0.67, PTSD 0.71, Normal/Depression 0.79 & Struggles with minority classes: Anxiety (recall 0.23) and PTSD (recall 0.10); not suitable for this dataset. \\
         \hline
-        SVM & \texttt{kernel=linear, gamma=scale, C=1} & Accuracy: 85.13\%; F1-scores: Normal 0.95, Depression 0.72, Anxiety 0.74, Bipolar 0.61; ROC AUC: Normal 0.98, Others >0.90, Bipolar 0.90 & Solid overall performance; excellent for Normal and Anxiety, but slightly lower performance for Bipolar. \\
+        SVM & \texttt{kernel=linear, gamma=scale, C=1} & Accuracy: 85.13\%; F1-scores: Normal 0.95, Depression 0.72, Anxiety 0.74, Bipolar 0.61; ROC AUC: Normal 0.98, Others \textgreater 0.90, Bipolar 0.90 & Solid overall performance; excellent for Normal and Anxiety, but slightly lower performance for Bipolar. \\
         \hline
-        Naive Bayes & \texttt{alpha=0.2914} & Accuracy: 83.95\%; F1-scores: Normal 0.94, PTSD 0.76, Anxiety 0.72; ROC AUC: Normal 0.99, Others >0.90 & Performs very well for Normal and PTSD; lower scores for Bipolar and Depression. \\
+        Naive Bayes & \texttt{alpha=0.2914} & Accuracy: 83.95\%; F1-scores: Normal 0.94, PTSD 0.76, Anxiety 0.72; ROC AUC: Normal 0.99, Others \textgreater 0.90 & Performs very well for Normal and PTSD; lower scores for Bipolar and Depression. \\
         \hline
     \end{tabularx}
     \caption*{\textbf{Summary Comparison of Models after Hyperparameter Tuning}}
@@ -1080,15 +1080,15 @@ The web application uses only the model from the first intermediate node of Arch
 
 % \vspace{1em}
 
-\subsection{Results and Views in Web Application}
+\subsection{User Interface of the Application}
 
 \noindent
-Below are some screenshots from the web application.
+Below are some snapshots from the web application.
 
 \begin{figure}[H]  
     \centering
     \includegraphics[width=0.7\textwidth]{App Images/01 Interface.png}  
-    \caption*{Web Application Interface}
+    \caption*{List of Options for the User}
     \label{01i}  % Label for referencing the figure
 \end{figure}
 
