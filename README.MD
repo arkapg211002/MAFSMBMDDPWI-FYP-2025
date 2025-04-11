@@ -17,7 +17,7 @@ This project leverages artificial intelligence to detect early signs of mental h
 - 🤖 **Deep Learning Models:** LSTM-based and Transformer-based models for sequential and contextual data.
 - 🌐 **Web Application:** Deployable via Streamlit for real-time analysis.
 - 📈 **Performance Evaluation:** Extensive testing with cross-validation, ROC curves, and confusion matrices.
-- 📋 **Wellbeing Mapping:** Integrates Ryff’s Wellbeing Scale to translate predictions into personalized insights.
+- 📋 **Wellbeing Mapping:** Uses an association matrix and a brief wellbeing survey to map predictions to Ryff’s Psychological Wellbeing dimensions. It highlights areas (e.g., purpose, autonomy) users should focus on.
 - 🧠 **AI-Powered Wellbeing Insights:** Uses Gemini API to generate personalized wellbeing insights based on predictions.
 - 🔁 **RAG-Style Insights:** Employs Retrieval-Augmented Generation using dynamic datasets and similarity-based input matching—with Gemini—for scalable and explainable wellbeing analysis.
 
