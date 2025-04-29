@@ -5,7 +5,7 @@
         
         \noindent
         \makebox[\textwidth][c]{%  <-- center this box in the line
-        \scalebox{1.3}{%        <-- scale factor; tweak up/down
+        \scalebox{1.4}{%        <-- scale factor; tweak up/down
             \parbox{0.8\textwidth}{%  <-- adjust 0.65 to taste so post-scale it ≤ \textwidth
             \centering           % center the text inside the parbox
             \bfseries
@@ -15,16 +15,15 @@
             }%
         }%
         }
-        
 
-        \vspace{1.5\baselineskip}
+        \vspace{1.2\baselineskip}
         
-        {\Large \textit{Submitted in partial fulfillment of the}}\\
-        {\Large \textit{requirements for the degree}} \par
+        {\LARGE \textit{Submitted in partial fulfillment of the}}\\
+        {\LARGE \textit{requirements for the degree}} \par
         
         \vspace{\baselineskip}
         
-        {\Large \textit{of}} \par
+        {\LARGE \textit{of}} \par
         
         \vspace{\baselineskip}
         
@@ -32,39 +31,58 @@
         
         \vspace{\baselineskip}
         
-        {\Large \textit{by}} \par
+        {\LARGE \textit{by}} \par
         
         \vspace{\baselineskip}
         
-        {\Large\bfseries\textls[90]{SOUMYADEEP NANDY~(13000121033)}\par}
-        {\Large\bfseries\textls[90]{PRITHWISH SARKAR~(13000121037)}\par}
-        {\Large\bfseries\textls[90]{SAGNIK MUKHOPADHYAY~(13000121040)}\par}
-        {\Large\bfseries\textls[90]{ARKAPRATIM GHOSH~(13000121058)}\par}
-        
-        \vspace{1.4\baselineskip}
-        
-        % DATE
-        {\Large \textit{June, 2025}} \par
-        \vspace{1.4\baselineskip} 
-        
-        \begin{figure}[!h]
-            \centering
-            \includegraphics[width=30mm]{./Images/tmsl.png}
-        \end{figure}
+        {\LARGE\bfseries\textls[90]{SOUMYADEEP NANDY~(13000121033)}\par}
+        {\LARGE\bfseries\textls[90]{PRITHWISH SARKAR~(13000121037)}\par}
+        {\LARGE\bfseries\textls[90]{SAGNIK MUKHOPADHYAY~(13000121040)}\par}
+        {\LARGE\bfseries\textls[90]{ARKAPRATIM GHOSH~(13000121058)}\par}
         
         \vspace{1\baselineskip}
         
-        
-        \begin{minipage}{\textwidth}
+        % DATE
+        {\LARGE \textit{June, 2025}} \par
+        \vspace{1\baselineskip} 
+        \vspace*{-0.5cm}
+
+        \begin{figure}[!h]
             \centering
-            {\large\bfseries\textls[70]{\MakeUppercase{Department of Computer Science and Engineering}}\par}
-            \vspace{1ex}
-            {\large\bfseries\textls[70]{\MakeUppercase{Techno Main Salt Lake\\
-                EM 4/1, Salt Lake, Sector – V, Kolkata – 700091}}\par}
-        \end{minipage}
+            \includegraphics[width=40mm]{./Images/tmsl.png}
+        \end{figure}
+        
+        \vspace{1\baselineskip}
+        \vspace*{-0.7cm}
+        
+        
+        \begin{adjustwidth}{-1.5cm}{-1.5cm}
+            %  2. Center a box whose width is now \linewidth (=\textwidth+3cm)
+            \noindent
+            \makebox[\linewidth][c]{%
+            \scalebox{1.25}{%  ← 120% of whatever the current size is
+                \bfseries
+                \textls[65]{\MakeUppercase{Department of Computer Science and Engineering}}%
+            }%
+            }
+            \vspace{-0.5cm}
+        
+            \noindent
+            \makebox[\linewidth][c]{%
+              {\Large\bfseries\textls[70]{\MakeUppercase{Techno Main Salt Lake}}}%
+            }
+            \\
+            %\vspace{-0.05cm}
+            \noindent
+            \makebox[\linewidth][c]{%
+              {\Large\bfseries\textls[70]{\MakeUppercase{EM 4/1, Salt Lake, Sector – V, Kolkata – 700091}}}%
+            }
+        \end{adjustwidth}
+
+        
    
 
-    \vspace*{\fill} % Push everything above to center
+    %\vspace*{\fill} % Push everything above to center
     
     \end{center}
 \end{titlepage}
