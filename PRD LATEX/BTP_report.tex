@@ -124,21 +124,22 @@
  \setcounter{secnumdepth}{4}
 %  \setcounter{secnumdepth}{3}
  \setcounter{tocdepth}{4}
- \pagenumbering{roman}
- \pagenumbering{roman}
+  
 
  \graphicspath{ {./Images/} }
  %Front Matter
  \include{./FrontMatter/titlePage}
+ \pagenumbering{roman}
+ \setcounter{page}{2}  
  % ----- Approval Page for Sem 7
  %\include{./FrontMatter/approval}
  % ----- Certificate Page for Sem 8
  % ----- Certificate.tex without letter head
  % ----- Certificate2.tex with letter head v1
  % ----- Certificate3.tex with letter head v2
- \include{./FrontMatter/Certificate}
+ %\include{./FrontMatter/Certificate}
  %\include{./FrontMatter/Certificate2}
- %\include{./FrontMatter/Certificate3}
+ \include{./FrontMatter/Certificate3}
  \include{./FrontMatter/acknowledgements}
  % ----- Blank Letter Head 1
  %\include{./FrontMatter/LetterHead1}
@@ -156,12 +157,12 @@
 \fancyfoot[C]{\thepage}
 
 % Hack: redefine plain style so even if ToC sets it, it behaves like fancy
-\fancypagestyle{plain}{
-  \fancyhf{}  % clear all
-  \fancyhead[C]{MAFSMBMDDPWI}
-  \fancyfoot[L]{\footnotesize TMSL / CSE / PRD8 / v2.5}
-  \fancyfoot[C]{}  % Hides center page number
-}
+ \fancypagestyle{plain}{
+   \fancyhf{}  % clear all
+   \fancyhead[C]{MAFSMBMDDPWI}
+   \fancyfoot[L]{\footnotesize TMSL / CSE / PRD8 / v2.5}
+   \fancyfoot[C]{\thepage}  % Hides center page number
+ }
 
 % Now, ToC page will auto-use this "fake plain"
 \vspace{-3\baselineskip}

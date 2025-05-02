@@ -321,231 +321,209 @@
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Images/LR Confusion Matrix.png}
-        \caption*{Confusion Matrix (Logistic Regression)}
+        \caption*{Logistic Regression}
         \label{LRCM}  % Label for referencing the subfigure
     \end{subfigure}
+    \vspace{1cm}
     \hfill
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{Images/LR ROC.png}
-        \caption*{ROC AUC (Logistic Regression)}
-        \label{LRROC}  % Label for referencing the subfigure
-    \end{subfigure}
-    \label{fig:comparison}
-\end{figure}
-
-\begin{figure}[h!]
-    \centering
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
         \includegraphics[width=\textwidth]{Images/NB Confusion Matrix.png}
-        \caption*{Confusion Matrix (Naive Bayes)}
+        \caption*{Naive Bayes}
         \label{NBCM}  % Label for referencing the subfigure
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{Images/NB ROC.png}
-        \caption*{ROC AUC (Naive Bayes)}
-        \label{NBROC}  % Label for referencing the subfigure
-    \end{subfigure}
-    \label{fig:nb_comparison}
-\end{figure}
-
-
-\begin{figure}[h!]
-    \centering
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
         \includegraphics[width=\textwidth]{Images/SVM Confusion Matrix.png}
-        \caption*{Confusion Matrix (SVM)}
+        \caption*{Support Vector Machine}
         \label{SVMCM}  % Label for referencing the subfigure
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{Images/SVM ROC.png}
-        \caption*{ROC AUC (SVM)}
-        \label{SVMROC}  % Label for referencing the subfigure
-    \end{subfigure}
-    \label{fig:svm_comparison}
-\end{figure}
-
-\pagebreak
-
-\begin{figure}[h!]
-    \centering
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
         \includegraphics[width=\textwidth]{Images/RF Confusion Matrix.png}
-        \caption*{Confusion Matrix (Random Forest)}
+        \caption*{Random Forest}
         \label{RFCM}  % Label for referencing the subfigure
     \end{subfigure}
     \hfill
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/RF ROC.png}
-        \caption*{ROC AUC (Random Forest)}
-        \label{RFROC}  % Label for referencing the subfigure
-    \end{subfigure}
-    \label{fig:rf_comparison}
-\end{figure}
-
-
-\begin{figure}[h!]
-    \centering
+    \vspace{1cm}
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Images/XG Confusion Matrix.png}
-        \caption*{Confusion Matrix (XGBoost)}
+        \caption*{XGBoost}
         \label{XGCM}  % Label for referencing the subfigure
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{Images/XG ROC.png}
-        \caption*{ROC AUC (XGBoost)}
-        \label{XGROC}  % Label for referencing the subfigure
-    \end{subfigure}
-    \label{fig:xgboost_comparison}
-\end{figure}
-
-
-\begin{figure}[h!]
-    \centering
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
         \includegraphics[width=\textwidth]{Images/KNN Confusion Matrix.png}
-        \caption*{Confusion Matrix (KNN)}
+        \caption*{K-Nearest Neighbour}
         \label{KNNCM}  % Label for referencing the subfigure
     \end{subfigure}
     \hfill
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/KNN ROC.png}
-        \caption*{ROC AUC (KNN)}
-        \label{KNNROC}  % Label for referencing the subfigure
-    \end{subfigure}
-    \label{fig:knn_comparison}
+
+    \label{fig:comparison}
+    \caption*{Confusion Matrices for Models without Hyperparameter Tuning}
 \end{figure}
 
 \pagebreak
 
-\begin{figure}[h!]
+\vspace{-2cm}
+
+\begin{figure}[H]
     \centering
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Images/LSTM Confusion Matrix.png}
-        \caption*{Confusion Matrix (LSTM)}
+        \caption*{Long Short Term Memory}
         \label{LSTMCM}  % Label for referencing the subfigure
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{Images/LSTM ROC.png}
-        \caption*{ROC AUC (LSTM)}
-        \label{LSTMROC}  % Label for referencing the subfigure
-    \end{subfigure}
-    \label{fig:lstm_comparison}
-\end{figure}
-
-
-\begin{figure}[h!]
-    \centering
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
         \includegraphics[width=\textwidth]{Images/T CM.png}
-        \caption*{Confusion Matrix (Transformer based Model)}
+        \caption*{Transformer based Model}
         \label{dfdl145}  % Label for referencing the subfigure
     \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/T ROC.png}
-        \caption*{ROC AUC (Transformer based Model)}
-        \label{dfdl146}  % Updated label for referencing the subfigure
-    \end{subfigure}
-    \label{fig:transformer_comparison}
-\end{figure}
-
-
-\begin{figure}[h!]
-    \centering
+    \label{fig:lstm_comparison}
+    \caption*{Confusion Matrices for Models without Hyperparameter Tuning}
+    \vspace{0.75cm}
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Images/HP LR CM.png}
+        \caption*{Logistic Regression}
         \label{LSTMROC2}  % Label for referencing the subfigure
     \end{subfigure}
     \hfill
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/HP LR ROC.png}
-        \label{LSTMROC3}  % Label for referencing the subfigure
-    \end{subfigure}
-    \vspace{-2em}
-    \caption*{Confusion Matrix and ROC AUC for Logistic Regression with Hyperparameter Tuning}
-    \label{fig:hp_lr_comparison}
-\end{figure}
-
-\pagebreak
-
-\begin{figure}[h!]
-    \centering
+    \vspace{0.5cm}
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Images/HP KNN CM.png}
+        \caption*{K-Nearest Neighbour}
         \label{LSTMROC4}  % Label for referencing the subfigure
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{Images/HP KNN ROC.png}
-        \label{LSTMROC5}  % Label for referencing the subfigure
-    \end{subfigure}
-    \vspace{-1.5em}
-    \caption*{Confusion Matrix and ROC AUC for KNN with Hyperparameter Tuning}
-    \label{fig:hp_knn_comparison}
-\end{figure}
-
-
-
-\begin{figure}[h!]
-    \centering
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
         \includegraphics[width=\textwidth]{Images/HP SVM CM.png}
+        \caption*{Support Vector Machine}
         \label{LSTMROC6}  % Label for referencing the subfigure
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{Images/HP SVM ROC.png}
-        \label{LSTMROC}  % Label for referencing the subfigure
+        \includegraphics[width=\textwidth]{Images/HP NB CM.png}
+        \caption*{Naive Bayes}
+        \label{LSTMROC7}  % Label for referencing the subfigure
+        
     \end{subfigure}
-    \vspace{-1.5em}
-    \caption*{Confusion Matrix and ROC AUC for SVM with Hyperparameter Tuning}
-    \label{fig:hp_svm_comparison}
+    \label{fig:hp_lr_comparison}
+    \caption*{Confusion Matrices for Models with Hyperparameter Tuning}
 \end{figure}
 
+\pagebreak
 
-\begin{figure}[h!]
+\begin{figure}[H]
     \centering
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{Images/HP NB CM.png}
-        \label{LSTMROC7}  % Label for referencing the subfigure
+        \includegraphics[width=\textwidth]{Images/LR ROC.png}
+        \caption*{Logistic Regression}
+        \label{LRROC}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \vspace{0.75cm}
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/NB ROC.png}
+        \caption*{Naive Bayes}
+        \label{NBROC}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/SVM ROC.png}
+        \caption*{Support Vector Machine}
+        \label{SVMROC}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \vspace{0.75cm}
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/RF ROC.png}
+        \caption*{Random Forest}
+        \label{RFROC}  % Label for referencing the subfigure
+    \end{subfigure}\
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/XG ROC.png}
+        \caption*{XGBoost}
+        \label{XGROC}  % Label for referencing the subfigure
+    \end{subfigure}\
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/KNN ROC.png}
+        \caption*{K-Nearest Neighbour}
+        \label{KNNROC}  % Label for referencing the subfigure
+    \end{subfigure}
+    \label{fig:comparison}
+    \caption*{ROC AUC for Models without Hyperparameter Tuning}
+\end{figure}
+
+\pagebreak
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/LSTM ROC.png}
+        \caption*{Long Short Term Memory}
+        \label{LSTMROC}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/T ROC.png}
+        \caption*{Transformer based Model}
+        \label{dfdl146}  % Updated label for referencing the subfigure
+    \end{subfigure}
+    \label{fig:lstm_comparison}
+    \caption*{ROC AUC for Models without Hyperparameter Tuning}
+    \vspace{0.75cm}
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/HP LR ROC.png}
+        \caption*{Logistic Regression}
+        \label{LSTMROC3}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \vspace{0.5cm}
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/HP KNN ROC.png}
+        \caption*{K-Nearest Neighbour}
+        \label{LSTMROC5}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/HP SVM ROC.png}
+        \caption*{Support Vector Machine}
+        \label{LSTMROC}  % Label for referencing the subfigure
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Images/HP NB ROC.png}
+        \caption*{Naive Bayes}
         \label{LSTMROC8}  % Label for referencing the subfigure
     \end{subfigure}
-    \vspace{-1.5em}
-    \caption*{Confusion Matrix and ROC AUC for Naive Bayes with Hyperparameter Tuning}
-    \label{fig:hp_nb_comparison}
+    \label{fig:hp_lr_comparison}
+    \caption*{ROC AUC for Models with Hyperparameter Tuning}
 \end{figure}
-
 
 \pagebreak
 
@@ -773,120 +751,102 @@ In ensemble learning, combining models like Logistic Regression (LR), Naive Baye
 
 \pagebreak
 
-\begin{figure}[h!]
+\begin{figure}[H]
     \centering
-    \begin{subfigure}[b]{0.47\textwidth}
+    \begin{subfigure}[b]{0.49\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Images/EM CM.png}
-        \caption*{Confusion Matrix (Ensemble Model 1)}
+        \caption*{Ensemble Model 1}
         \label{dfdl3123}  % Label for referencing the subfigure
     \end{subfigure}
     \hfill
-    \begin{subfigure}[b]{0.47\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/EM ROC.png}
-        \caption*{ROC AUC (Ensemble Model 1)}
-        \label{dfdl12443}  % Label for referencing the subfigure
-    \end{subfigure}
-    \label{fig:ensemble_model_comparison}
-\end{figure}
-
-\vspace{-1em}
-
-\begin{figure}[h!]
-    \centering
-    \begin{subfigure}[b]{0.47\textwidth}
+    \vspace{0.5cm}
+    \begin{subfigure}[b]{0.49\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Images/EM2 CM.png}
-        \caption*{Confusion Matrix (Ensemble Model 2)}
+        \caption*{Ensemble Model 2}
         \label{em2 cm}  % Label for referencing the subfigure
     \end{subfigure}
     \hfill
-    \begin{subfigure}[b]{0.47\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/EM2 ROC.png}
-        \caption*{ROC AUC (Ensemble Model 2)}
-        \label{em2 roc}  % Label for referencing the subfigure
-    \end{subfigure}
-    \label{fig:ensemble_model2_comparison}
-\end{figure}
-
-\vspace{-1em}
-
-\begin{figure}[h!]
-    \centering
-    \begin{subfigure}[b]{0.47\textwidth}
+    \begin{subfigure}[b]{0.49\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Images/EM3 CM.png}
-        \caption*{Confusion Matrix (Ensemble Model 3)}
+        \caption*{Ensemble Model 3}
         \label{em3 cm}  % Label for referencing the subfigure
     \end{subfigure}
     \hfill
-    \begin{subfigure}[b]{0.47\textwidth}
+    \vspace{0.5cm}
+    \begin{subfigure}[b]{0.49\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{Images/EM3 ROC.png}
-        \caption*{ROC AUC (Ensemble Model 3)}
-        \label{em3 roc}  % Label for referencing the subfigure
+        \includegraphics[width=\textwidth]{Images/BAG CM.png}
+        \caption*{Ensemble Model 4}
+        \label{bag cm}  % Label for referencing the subfigure
     \end{subfigure}
-    \label{fig:ensemble_model3_comparison}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/BLD CM.png}
+        \caption*{Ensemble Model 5}
+        \label{bld cm}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/WV CM.png}
+        \caption*{Ensemble Model 6}
+        \label{wv cm}  % Label for referencing the subfigure
+    \end{subfigure}
+    \label{fig:ensemble_model_comparison}
+    \caption*{Confusion Matrices for Ensemble Models 1 to 6}
 \end{figure}
 
 \pagebreak
 
 \begin{figure}[h!]
     \centering
-    \begin{subfigure}[b]{0.48\textwidth}
+    \begin{subfigure}[b]{0.49\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{Images/BAG CM.png}
-        \caption*{Confusion Matrix (Ensemble Model 4)}
-        \label{bag cm}  % Label for referencing the subfigure
+        \includegraphics[width=\textwidth]{Images/EM ROC.png}
+        \caption*{Ensemble Model 1}
+        \label{dfdl12443}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.47\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/EM2 ROC.png}
+        \caption*{Ensemble Model 2}
+        \label{em2 roc}  % Label for referencing the subfigure
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.47\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/EM3 ROC.png}
+        \caption*{Ensemble Model 3}
+        \label{em3 roc}  % Label for referencing the subfigure
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Images/BAG ROC.png}
-        \caption*{ROC AUC (Ensemble Model 4)}
+        \caption*{Ensemble Model 4}
         \label{bag roc}  % Label for referencing the subfigure
-    \end{subfigure}
-    \label{fig:ensemble_model4_comparison}
-\end{figure}
-
-
-\begin{figure}[h!]
-    \centering
-    \begin{subfigure}[b]{0.48\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/BLD CM.png}
-        \caption*{Confusion Matrix (Ensemble Model 5)}
-        \label{bld cm}  % Label for referencing the subfigure
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Images/BLD ROC.png}
-        \caption*{ROC AUC (Ensemble Model 5)}
+        \caption*{Ensemble Model 5}
         \label{bld roc}  % Label for referencing the subfigure
-    \end{subfigure}
-    \label{fig:ensemble_model5_comparison}
-\end{figure}
-
-
-\begin{figure}[h!]
-    \centering
-    \begin{subfigure}[b]{0.48\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/WV CM.png}
-        \caption*{Confusion Matrix (Ensemble Model 6)}
-        \label{wv cm}  % Label for referencing the subfigure
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Images/WV ROC.png}
-        \caption*{ROC AUC (Ensemble Model 6)}
+        \caption*{Ensemble Model 6}
         \label{wv roc}  % Label for referencing the subfigure
     \end{subfigure}
-    \label{fig:ensemble_model6_comparison}
+    \label{fig:ensemble_model_comparison}
+    \caption*{ROC AUC for Ensemble Models 1 to 6}
 \end{figure}
 
 \pagebreak
@@ -896,29 +856,31 @@ In ensemble learning, combining models like Logistic Regression (LR), Naive Baye
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Images/EM T CM.png}
-        \caption*{Confusion Matrix (Ensemble Model 7)}
+        %\caption*{Confusion Matrix}
         \label{em_t cm}  % Label for referencing the subfigure
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Images/EM T ROC.png}
-        \caption*{ROC AUC (Ensemble Model 7)}
+        %\caption*{ROC AUC}
         \label{em_t roc}  % Label for referencing the subfigure
     \end{subfigure}
+    \vspace{-0.5cm}
+    \caption*{Confusion Matrix and ROC AUC for Ensemble Model 7 (used in the web application)}
     \label{fig:ensemble_model7_comparison}
 \end{figure}
 
 \begin{figure}[h!]  
     \centering
     \includegraphics[width=0.8\textwidth]{Images/EM T RESULT.png}  
-    \caption*{Comparison of Base Models and Ensemble Model7}
+    \caption*{Comparison of Base Models and Ensemble Model 7}
     \label{lstm arch}  % Label for referencing the figure
 \end{figure}
 
 \begin{table}[H]
     \centering
-    \caption*{Comparison of all the 7 Ensemble Models}
+    \caption*{Summary of Ensemble Models 1 to 7}
     \label{tab:ensemble_comparison}
     \begin{tabularx}{\textwidth}{|l|c|X|X|X|}
     \hline

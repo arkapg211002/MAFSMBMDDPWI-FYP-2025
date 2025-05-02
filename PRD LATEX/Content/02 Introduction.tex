@@ -1,5 +1,7 @@
 % ------------------------ Introduction -------------------------------------
 
+\vspace{2cm}
+
 \section{Introduction}
 
 \begin{comment}
@@ -17,72 +19,79 @@
 % Real Input
 
 \subsection{Project Overview}
-\vspace{.1in}
 \noindent
-Mental health disorders—including depression, anxiety, bipolar disorder, and PTSD—affect millions of people worldwide, creating a growing public health concern. In today’s digital era, social media platforms have become a ubiquitous space where individuals freely express their emotions, share personal struggles, and document life’s challenges, often without realizing that these expressions can serve as early indicators of mental health issues. This project leverages advanced machine learning and deep learning techniques to analyze social media posts by examining intricate language patterns, contextual cues, and sentiment variations to detect signs of mental distress. By employing a multimodal approach, the framework not only processes text data through methods like TF-IDF, Bag-of-Words, and deep neural networks but also integrates additional data sources such as images, videos, PDFs, and user responses to visual stimuli. This integration also allows the system to extract textual information from PDFs using OCR, analyze emotions via specialized image processing modules, and incorporate a comprehensive wellbeing survey. The survey responses are then mapped to specific parameters of Ryff’s Wellbeing Scale using an association matrix, which provides personalized insights and actionable recommendations using Gemini and RAG for early intervention. Ultimately, this holistic framework is designed to facilitate timely support and guide individuals towards appropriate mental health services, contributing to a more proactive approach in managing mental health on a global scale.
+Mental health disorders—including depression, anxiety, bipolar disorder, and PTSD—affect millions worldwide and often go undetected until they manifest in crises. Meanwhile, people increasingly share their thoughts, feelings, and experiences on social media platforms (Reddit, Twitter etc) and in digital documents, leaving behind rich clues about their emotional state. In this work, we develop a multimodal AI framework that ingests text, images, video, and document feeds, uses OCR and deep-learning emotion analysis, and aligns user responses to established well-being scales. By fusing these signals through an ensemble of machine-learning and neural models, our system aims to flag early warning signs of distress and guide users toward timely, personalized support.
 
 \subsection{Project Purpose}
-\vspace{.1in}
 \noindent
-This project aims to develop a web application using machine learning and deep learning models (Logistic Regression, Naive Bayes, SVM, XGBoost, LSTM, Transformer) to detect mental health disorders from text, images, videos, PDFs, user responses to images, and social media profiles. By addressing technical challenges in processing large datasets and optimizing algorithms, the project seeks to enable early detection of mental health issues, contributing to public health improvement through technology.
+Early identification and intervention are critical for mitigating the severity of mental health crises, yet current screening methods often rely on self-report or occasional clinical encounters. This project aims to fill that gap by delivering a continuously learning, data-driven monitoring tool that passively and proactively analyzes digital footprints—from social posts to uploaded documents and survey responses—to surface warning signs long before a crisis point. By putting actionable insights directly into the hands of individuals, caregivers, and healthcare providers, it seeks to enable truly preventative mental-health care at scale.
+
+\pagebreak
 
 \subsection{Technical Domain Specifications}
-\vspace{.1in}
-This project falls within the intersection of natural language processing (NLP) and machine learning (ML), leveraging techniques such as text vectorization, and classification algorithms. Here are the key technical domain specifications:
-
-\newpage
-
-\begin{itemize}
-    
-    \item \textbf{Hardware} : 
-    \noindent
-    The project does not require specialized hardware beyond a standard machine with adequate processing power. However, for larger datasets or complex model training, a machine equipped with a GPU (Graphics Processing Unit) could significantly reduce processing time. The project can be run on any system with at least 8GB of RAM and a multi-core processor.
-
-    \item \textbf{Operating System} : 
-    \noindent
-    The project is cross-platform and can be developed and executed on any modern operating system, including macOS, Windows 10/11, Linux distributions (Ubuntu, Linux Mint). 
-
-    \item  \textbf{Software} :
-    \noindent
-        \begin{itemize}
-            \item \textbf{Programming Languages} : 
-            \noindent
-            Python 3.x will be the primary programming language, given its extensive libraries for machine learning, data analysis, and NLP.
-
-            \item \textbf{Libraries / Frameworks} :
-            \noindent
-            This project leverages a comprehensive suite of libraries and frameworks to enable its functionality, including data processing (Pandas, NumPy), machine learning (Scikit-learn, XGBoost, TensorFlow, Transformers), image and text analysis (OpenCV, Tesseract, Pytesseract, DeepFace), audio processing (Librosa, PyDub, SpeechRecognition), social media integration (PRAW, Tweepy), and visualization (Plotly, Matplotlib). Additional tools like Streamlit, NLTK, and Google Generative AI ensure seamless application development, multilingual support, and advanced model implementation.    
-
-            \item \textbf{Development Environment} :
-            \noindent
-            Google Colab is used for cloud-based execution when working with larger datasets or GPU-based model training.
-                
-
-                
+\vspace{-0.5cm}
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|>{\raggedright\arraybackslash}p{3cm}|p{10.3cm}|}
+      \hline
+      \textbf{Domain} & \textbf{Specifications} \\
+      \hline
+      \textbf{Hardware} &
+      Standard machine with $\geq 8$~GB RAM and a multi-core CPU. 
+      (Optional: GPU for larger datasets or complex model training.) \\
+      \hline
+      \textbf{Operating System} &
+      Cross-platform support: macOS, Windows 10/11, Linux distributions
+      (e.g.\ Ubuntu, Linux Mint). \\
+      \hline
+      \textbf{Programming Languages} &
+      Python 3.x (primary language for ML, data analysis, NLP). \\
+      \hline
+      \textbf{Libraries / Frameworks} &
+      \begin{minipage}[t]{\linewidth}
+        \begin{itemize}\setlength\itemsep{0pt}\setlength\parskip{0pt}
+          \item \textbf{Data processing:} Pandas, NumPy
+          \item \textbf{Machine learning:} Scikit-learn, XGBoost, TensorFlow, Transformers
+          \item \textbf{Image/text analysis:} OpenCV, Tesseract, Pytesseract, DeepFace
+          \item \textbf{Audio processing:} Librosa, PyDub, SpeechRecognition
+          \item \textbf{Social media integration:} PRAW, Tweepy
+          \item \textbf{Visualization:} Plotly, Matplotlib
+          \item \textbf{Additional tools:} Streamlit, NLTK, Google Generative AI
+          \vspace{0.5em}
         \end{itemize}
-    
-\end{itemize}
+      \end{minipage} \\
+      \hline
+      \textbf{Development Environment} &
+      Google Colab (cloud execution with optional GPU for large datasets or model training). \\
+      \hline
+    \end{tabular}
+  \end{table}
+      
 
 \subsection{Business Domain Specifications}
-\noindent
-From a business perspective, this project offers significant value in mental health monitoring, public health awareness, and social media governance. As mental health issues rise globally, organizations seek innovative solutions to address this crisis. By using machine learning to detect mental health disorders from social media data, this project can transform mental health management at both individual and societal levels, impacting various industries effectively.
-
-\begin{itemize}
-    
-    \item \textbf{Mental Health Services} :
-    \noindent
-    Mental health providers, including hospitals and therapy centers, can leverage machine learning to detect early signs of mental disorders from social media data. This proactive approach complements traditional self-reporting and clinical assessments, enabling earlier intervention and support for patients.
-
-    \item \textbf{Social Media Platforms} :
-    \noindent
-    Social media platforms like Twitter and Reddit are key spaces for expressing thoughts and emotions, including mental health struggles. This project’s machine learning models can help these platforms safeguard user well-being by identifying concerns early, while maintaining ethical standards.
-
-    \item \textbf{Public Health Organizations} :
-    \noindent
-    Public health organizations can use real-time social media data to monitor mental well-being, identify trends, and design data-driven interventions. By analyzing language patterns, they can create targeted awareness campaigns that better engage individuals facing mental health challenges.
-    
-\end{itemize}
-
+\vspace{-0.5cm}
+\begin{table}[H]
+    \centering
+    % Increase row height and cell padding
+    \renewcommand{\arraystretch}{1.2}
+    \setlength{\tabcolsep}{8pt}
+    \begin{tabular}{|>{\raggedright\arraybackslash}p{3cm}|>{\raggedright\arraybackslash}p{10cm}|}
+      \hline
+      \textbf{Stakeholder} & \textbf{Role / Use Case} \\
+      \hline
+      Mental Health Services &
+        Mental health providers, including hospitals and therapy centers, can leverage machine learning to detect early signs of mental disorders from social media data. This proactive approach complements traditional self-reporting and clinical assessments, enabling earlier intervention and support for patients. \\
+      \hline
+      Social Media Platforms &
+        Social media platforms like Twitter and Reddit are key spaces for expressing thoughts and emotions, including mental health struggles. This project’s machine learning models can help these platforms safeguard user well-being by identifying concerns early, while maintaining ethical standards. \\
+      \hline
+      Public Health Organizations &
+        Public health organizations can use real-time social media data to monitor mental well-being, identify trends, and design data-driven interventions. By analyzing language patterns, they can create targeted awareness campaigns that better engage individuals facing mental health challenges. \\
+      \hline
+    \end{tabular}
+\end{table}
+  
+\pagebreak
 
 \subsection{Glossary / Keywords}
 \noindent
@@ -124,18 +133,15 @@ From a business perspective, this project offers significant value in mental hea
   \hline
   PRAW & PRAW (Python Reddit API Wrapper) is a Python library that provides a simple interface to interact with Reddit's API for accessing Reddit data, such as posts, comments, and user information. \\
   \hline
+  TesseractOCR & TesseractOCR is an open-source Optical Character Recognition (OCR) engine that extracts text from images with high accuracy; it is widely used for various applications like scanning documents and digitalizing printed text. \\
+  \hline
+  Depression & There is a difference between depression and mood swings or short-lived emotional reactions to daily experiments; A mental state causing painful symptoms adversely disrupts normal activities (e.g., sleeping). \\
+  \hline
 \end{tabular}
 
 \begin{tabular}{|p{4cm}|p{10cm}|}
     \hline
     \multicolumn{1}{|c|}{\textbf{Term}} & \multicolumn{1}{c|}{\textbf{Definition}} \\
-  
-
-  \hline
-  TesseractOCR & TesseractOCR is an open-source Optical Character Recognition (OCR) engine that extracts text from images with high accuracy; it is widely used for various applications like scanning documents and digitalizing printed text. \\
-
-  \hline
-  Depression & There is a difference between depression and mood swings or short-lived emotional reactions to daily experiments; A mental state causing painful symptoms adversely disrupts normal activities (e.g., sleeping). \\
 
   \hline
   Anxiety & Several behavioral disturbances are associated with anxiety disorders, including excessive fear and worry. Severe symptoms cause significant impairment in functioning cause considerable distress. Anxiety disorders come in many forms, such as social anxiety, generalized anxiety, panic, etc. \\
@@ -144,7 +150,7 @@ From a business perspective, this project offers significant value in mental hea
   Bipolar Disorder & An alternating pattern of depression and manic symptoms is associated with bipolar disorder. An individual experiencing a depressive episode may feel sad, irritable, empty, or lose interest in daily activities. Emotions of euphoria or irritability, excessive energy, and increased talkativeness can all be signs of manic depression. Increased self-esteem, decreased sleep need, disorientation, and reckless behavior may also be signs of manic depression. \\
 
   \hline
-  Post-Traumatic Stress Disorder (PTSD) & In PTSD, persistent mental and emotional stress can occur after an injury or severe psychological shock, characterized by sleep disturbances, constant vivid memories, and dulled response to others and the outside world. People who re-experience symptoms may have difficulties with their everyday routines and experience significant impairment in their performance. \\
+  Post-Traumatic Stress Disorder (PTSD) & In PTSD, persistent mental and emotional stress can occur after an injury or severe psychological shock, characterized by sleep disturbances, constant vivid memories, and dulled response to others and the outside world. \\
 
   \hline
   DeepFace & DeepFace is a Python library for deep learning-based facial recognition and attribute analysis. It supports several pretrained models and simplifies face recognition tasks, making it suitable for various applications in image analysis. \\
@@ -159,7 +165,14 @@ From a business perspective, this project offers significant value in mental hea
   FFmpeg & FFmpeg is a multimedia framework used for encoding, decoding, transcoding, streaming, and manipulating audio and video files, supporting a wide range of formats and codecs. \\
 
   \hline
-  Hyperparameter Tuning & Hyperparameter tuning involves selecting the best parameters for a machine learning model to optimize its performance on a given task, using methods like grid search or random search. \\
+  Hyperparameter Tuning & Hyperparameter tuning involves selecting the best parameters for a machine learning model to optimize its performance on a given task using grid search or random search. \\
+
+  \hline
+  Embedding Model & A neural network that transforms individual text inputs into fixed-length vector representations in a continuous semantic space, enabling efficient similarity search and downstream tasks like clustering or retrieval. \\
+
+  \hline
+  Cross-Encoder & A model that jointly processes a pair of inputs (e.g., query and document) through a shared encoder and directly produces a relevance score or classification, allowing for richer interaction at the cost of higher compute per pair. \\
+
   \hline
 \end{tabular}
   
