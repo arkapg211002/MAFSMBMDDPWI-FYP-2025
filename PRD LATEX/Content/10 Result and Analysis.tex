@@ -94,10 +94,47 @@
     \end{tabularx}
 \end{table}
 
+\vspace{2cm}
+
+\mdfdefinestyle{dashedbox}{
+  linecolor=black,
+  linewidth=0.5pt,
+  roundcorner=5pt,
+  leftmargin=0pt, rightmargin=0pt,
+  innerleftmargin=10pt, innerrightmargin=10pt,
+  innertopmargin=10pt, innerbottommargin=10pt,
+  tikzsetting={draw=black, dash pattern=on 2pt off 2pt},
+  frametitleaboveskip=5pt, frametitlebelowskip=5pt,
+  frametitlefont=\bfseries,
+  frametitlerule=false,
+  frametitlealignment=\centering
+}
+
+\begin{mdframed}[style=dashedbox]
+    \centering
+    \textbf{Note:} Class Label Mapping for rows and columns in Confusion Matrices
+    
+    \vspace{0.5em}
+    \begin{tabular}{cl}
+    \hline
+    \textbf{Label} & \textbf{Class} \\
+    \hline
+    0 & Anxiety \\
+    1 & Bipolar \\
+    2 & Depression \\
+    3 & Normal \\
+    4 & PTSD \\
+    \hline
+    \end{tabular}
+    \end{mdframed}
+    
+
+\pagebreak
+
 \subsection{Results from Base Models}
 
 \begin{center}
-    \textbf{Logistic Regression} \\[0.5em]
+    \textbf{Logistic Regression} \\[0.2em]
     \begin{tabular}{|l|c|c|c|c|}
         \hline
         \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
@@ -112,7 +149,7 @@
     \end{tabular}
 \end{center}
 
-\pagebreak
+
 % --------- naive bayes
 
 \begin{center}
@@ -166,7 +203,7 @@
     \end{tabular}
 \end{center}
 
-
+\pagebreak
 % -------- xgb
 
 \begin{center}
@@ -187,7 +224,7 @@
 
 
 
-\pagebreak
+
 
 % --------------- knn
 
@@ -243,6 +280,7 @@
     \end{tabular}
 \end{center}
 
+\pagebreak
 
 \begin{center}
     \textbf{Hyperparameter Tuning on Logistic Regression} \\[0.2em]
@@ -260,7 +298,7 @@
     \end{tabular}
 \end{center}
 
-\pagebreak
+
 % ----------- knn hp
 
 \begin{center}
@@ -314,9 +352,11 @@
     \end{tabular}
 \end{center}
 
+
+
 \pagebreak
 
-\begin{figure}[h!]
+\begin{figure}[H]
     \centering
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
@@ -324,7 +364,7 @@
         \caption*{Logistic Regression}
         \label{LRCM}  % Label for referencing the subfigure
     \end{subfigure}
-    \vspace{1cm}
+    \vspace{0.25cm}
     \hfill
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
@@ -347,7 +387,7 @@
         \label{RFCM}  % Label for referencing the subfigure
     \end{subfigure}
     \hfill
-    \vspace{1cm}
+    \vspace{0.25cm}
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Images/XG Confusion Matrix.png}
@@ -369,13 +409,12 @@
 
 \pagebreak
 
-\vspace{-2cm}
-
 \begin{figure}[H]
     \centering
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{Images/LSTM Confusion Matrix.png}
+        \includegraphics[width=\textwidth]{Images/LSTM Confusion Matrix.png}  
+        \vspace{-0.8cm}
         \caption*{Long Short Term Memory}
         \label{LSTMCM}  % Label for referencing the subfigure
     \end{subfigure}
@@ -383,23 +422,29 @@
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Images/T CM.png}
+        \vspace{-0.8cm}
         \caption*{Transformer based Model}
         \label{dfdl145}  % Label for referencing the subfigure
     \end{subfigure}
     \label{fig:lstm_comparison}
+    \vspace{-0.25cm}
     \caption*{Confusion Matrices for Models without Hyperparameter Tuning}
-    \vspace{0.75cm}
+
+    \vspace{0.5cm}
+
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Images/HP LR CM.png}
+        \vspace{-0.8cm}
         \caption*{Logistic Regression}
         \label{LSTMROC2}  % Label for referencing the subfigure
     \end{subfigure}
     \hfill
-    \vspace{0.5cm}
+    \vspace{0.25cm}
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Images/HP KNN CM.png}
+        \vspace{-0.8cm}
         \caption*{K-Nearest Neighbour}
         \label{LSTMROC4}  % Label for referencing the subfigure
     \end{subfigure}
@@ -407,6 +452,7 @@
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Images/HP SVM CM.png}
+        \vspace{-0.8cm}
         \caption*{Support Vector Machine}
         \label{LSTMROC6}  % Label for referencing the subfigure
     \end{subfigure}
@@ -414,11 +460,13 @@
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Images/HP NB CM.png}
+        \vspace{-0.8cm}
         \caption*{Naive Bayes}
         \label{LSTMROC7}  % Label for referencing the subfigure
         
     \end{subfigure}
     \label{fig:hp_lr_comparison}
+    \vspace{-0.25cm}
     \caption*{Confusion Matrices for Models with Hyperparameter Tuning}
 \end{figure}
 
@@ -535,17 +583,17 @@
     \hline
     \textbf{Model} & \textbf{Accuracy (\%)} & \textbf{Key Observations} \\
     \hline
-    Logistic Regression & 87.66 & High precision, recall, and F1 for the \textit{Normal} class; struggles with \textit{Bipolar} and \textit{Anxiety}. ROC AUC: Normal (0.99), Anxiety (0.95), Depression (0.96). \\
+    Logistic Regression & 87.66 & High precision, recall, and F1 for the \textit{Normal} class; struggles with \textit{Bipolar} and \textit{Anxiety}. ROC AUC: Normal (1.00), Anxiety (0.99), Depression (0.99). \\
     \hline
-    Naive Bayes & 83.63 & Excellent for \textit{Normal} (Precision 0.96, Recall 0.92, F1 0.94) but poor for \textit{Bipolar} (Recall 0.45, F1 0.58). \newline ROC AUC: Normal (0.99), Depression/PTSD (0.94), Bipolar (0.89). \\
+    Naive Bayes & 83.63 & Excellent for \textit{Normal} (Precision 0.96, Recall 0.92, F1 0.94) but poor for \textit{Bipolar} (Recall 0.45, F1 0.58). \newline ROC AUC: Normal (0.99), Depression/PTSD (0.98), Bipolar (0.97). \\
     \hline
-    SVM & 85.13 & Best for \textit{Normal} (Precision 0.94, Recall 0.95, F1 0.95); \textit{Bipolar} underperforms (Precision 0.62, Recall 0.61); \textit{Anxiety} is balanced (Recall 0.76, Precision 0.72). \newline ROC AUC: Normal (0.98), others ~0.96, Bipolar (0.90). \\
+    SVM & 85.13 & Best for \textit{Normal} (Precision 0.94, Recall 0.95, F1 0.95); \textit{Bipolar} underperforms (Precision 0.62, Recall 0.61); \textit{Anxiety} is balanced (Recall 0.76, Precision 0.72). \newline ROC AUC: Normal (1.00), others ~0.99, Bipolar (0.98). \\
     \hline
     Random Forest & 86.00 & \textit{Normal} class achieves perfect recall (1.00) with high precision (0.88, F1 0.93); \textit{Bipolar} is weak (Recall 0.47, F1 0.62). \newline ROC AUC: For most classes it is greater than equal to 0.96; Bipolar (0.89). \\
     \hline
-    XGBoost & 87.39 & Strong performance for \textit{Normal}; \textit{Anxiety} shows good metrics (Precision 0.81, Recall 0.74) while \textit{Bipolar} has lower recall (0.62). \newline ROC AUC: 0.97 for Anxiety, Depression, PTSD; 0.99 for Normal. \\
+    XGBoost & 87.39 & Strong performance for \textit{Normal}; \textit{Anxiety} shows good metrics (Precision 0.81, Recall 0.74) while \textit{Bipolar} has lower recall (0.62). \newline ROC AUC: 0.99 for Anxiety; 1.00 for Normal, Depression, PTSD. \\
     \hline
-    KNN & 54.46 & Overall low performance; \textit{Normal} is moderate (Precision 0.79, Recall 0.69) but \textit{PTSD} has very low recall (0.09). \newline ROC AUC: Normal (0.80), indicating weak discrimination. \\
+    KNN & 54.46 & Overall low performance; \textit{Normal} is moderate (Precision 0.79, Recall 0.69) but \textit{PTSD} has very low recall (0.09). \newline ROC AUC: Normal (0.79), indicating weak discrimination. \\
     \hline
     LSTM & 84.91 & High performance for \textit{Normal}; \textit{Anxiety} acceptable (Precision 0.74, Recall 0.72); \textit{Bipolar} (Precision 0.66, Recall 0.70) and \textit{PTSD} (Precision 0.72, Recall 0.78) are moderate. \newline Effective ROC AUC for Normal. \\
     \hline
@@ -568,11 +616,11 @@
         \hline
         \textbf{Model} & \textbf{Best Hyperparameters} & \textbf{Accuracy \& Metrics} & \textbf{Key Observations} \\
         \hline
-        Logistic Regression & \texttt{solver=liblinear, penalty=l2, C=1} & Accuracy: 87.72\%; Normal: 92\% accuracy; ROC AUC: Normal 0.99, Depression 0.96 & High precision, recall, and F1 for Normal; Bipolar shows lower F1 (64\%); overall robust performance, especially for Normal and Anxiety. \\
+        Logistic Regression & \texttt{solver=liblinear, penalty=l2, C=1} & Accuracy: 87.72\%; Normal: 92\% accuracy; ROC AUC: Normal 0.98, Depression 0.96 & High precision, recall, and F1 for Normal; Bipolar shows lower F1 (64\%); overall robust performance, especially for Normal and Anxiety. \\
         \hline
-        k-NN & \texttt{weights=distance, n\_neighbors=10, metric=euclidean} & Accuracy: 52.03\%; Normal F1: 0.69; ROC AUC: Bipolar 0.67, PTSD 0.71, Normal/Depression 0.79 & Struggles with minority classes: Anxiety (recall 0.23) and PTSD (recall 0.10); not suitable for this dataset. \\
+        k-NN & \texttt{weights=distance, n\_neighbors=10, metric=euclidean} & Accuracy: 52.03\%; Normal F1: 0.69; ROC AUC: Bipolar 0.67, PTSD 0.72, Normal/Depression 0.79 & Struggles with minority classes: Anxiety (recall 0.23) and PTSD (recall 0.10); not suitable for this dataset. \\
         \hline
-        SVM & \texttt{kernel=linear, gamma=scale, C=1} & Accuracy: 85.13\%; F1-scores: Normal 0.95, Depression 0.72, Anxiety 0.74, Bipolar 0.61; ROC AUC: Normal 0.98, Others \textgreater 0.90, Bipolar 0.90 & Solid overall performance; excellent for Normal and Anxiety, but slightly lower performance for Bipolar. \\
+        SVM & \texttt{kernel=linear, gamma=scale, C=1} & Accuracy: 85.13\%; F1-scores: Normal 0.95, Depression 0.72, Anxiety 0.74, Bipolar 0.61; ROC AUC: Normal 0.98, Others \textgreater 0.90, Bipolar 0.88 & Solid overall performance; excellent for Normal and Anxiety, but slightly lower performance for Bipolar. \\
         \hline
         Naive Bayes & \texttt{alpha=0.2914} & Accuracy: 83.95\%; F1-scores: Normal 0.94, PTSD 0.76, Anxiety 0.72; ROC AUC: Normal 0.99, Others \textgreater 0.90 & Performs very well for Normal and PTSD; lower scores for Bipolar and Depression. \\
         \hline
@@ -760,7 +808,7 @@ In ensemble learning, combining models like Logistic Regression (LR), Naive Baye
         \label{dfdl3123}  % Label for referencing the subfigure
     \end{subfigure}
     \hfill
-    \vspace{0.5cm}
+    \vspace{0.25cm}
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Images/EM2 CM.png}
@@ -775,7 +823,7 @@ In ensemble learning, combining models like Logistic Regression (LR), Naive Baye
         \label{em3 cm}  % Label for referencing the subfigure
     \end{subfigure}
     \hfill
-    \vspace{0.5cm}
+    \vspace{0.25cm}
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Images/BAG CM.png}
@@ -802,7 +850,7 @@ In ensemble learning, combining models like Logistic Regression (LR), Naive Baye
 
 \pagebreak
 
-\begin{figure}[h!]
+\begin{figure}[H]
     \centering
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
@@ -860,7 +908,7 @@ In ensemble learning, combining models like Logistic Regression (LR), Naive Baye
         \label{em_t cm}  % Label for referencing the subfigure
     \end{subfigure}
     \hfill
-    \begin{subfigure}[b]{0.48\textwidth}
+    \begin{subfigure}[b]{0.5\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Images/EM T ROC.png}
         %\caption*{ROC AUC}
@@ -873,7 +921,8 @@ In ensemble learning, combining models like Logistic Regression (LR), Naive Baye
 
 \begin{figure}[h!]  
     \centering
-    \includegraphics[width=0.8\textwidth]{Images/EM T RESULT.png}  
+    \includegraphics[width=1.0\textwidth]{Images/EM T RESULT.png}  
+    \vspace{-0.35cm}
     \caption*{Comparison of Base Models and Ensemble Model 7}
     \label{lstm arch}  % Label for referencing the figure
 \end{figure}
@@ -895,13 +944,13 @@ In ensemble learning, combining models like Logistic Regression (LR), Naive Baye
 
 \begin{table}[H]
     \centering
-    \caption*{Comparison of all the 7 Ensemble Models}
+    \caption*{Summary of Ensemble Models 1 to 7}
     \label{tab:ensemble_comparison}
     \begin{tabularx}{\textwidth}{|l|c|X|X|X|}
     \hline
     \textbf{Model} & \textbf{Accuracy} & \textbf{Key Components} & \textbf{Advantages} & \textbf{Limitations} \\
     \hline
-    Ensemble Model 2 & 97.93 & XGBoost as meta-learner combining base models (LR, SVM, NB, LSTM) & Near-perfect ROC AUC (1.0 for Anxiety, Normal, PTSD; 0.99 for Bipolar, Depression); effective handling of imbalanced data & Potential overfitting if base model predictions are highly correlated \\
+    Ensemble Model 2 & 97.93 & XGBoost as meta-learner combining base models (LR, SVM, NB, LSTM) & Near-perfect ROC AUC (1.0 for Anxiety, Normal, PTSD, Bipolar, Depression); effective handling of imbalanced data & Potential overfitting if base model predictions are highly correlated \\
     \hline
     Ensemble Model 3 & 97.76 & Random Forest used as meta-learner & High overall accuracy with very few misclassifications; robust due to bootstrapping and random feature selection & Slightly lower recall in some classes (e.g., Bipolar) \\
     \hline

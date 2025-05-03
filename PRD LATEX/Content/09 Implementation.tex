@@ -788,14 +788,17 @@ Algorithm like Logistic Regression, K-Nearest Neighbors, Support Vector Machine,
         
         12 & \textbf{Plot Interactive Graph} & Plot the 3D scatter plot with annotations for the query, top-\(k\) matches, and connecting dotted lines. \\ \hline
         
-        13 & \textbf{Append New Record} & Append a new record to \texttt{instruction\_data.json} and rebuild the FAISS index. In this step, the updated documents are:
+        13 & \textbf{Append New Record} & Append a new record to \texttt{instruction\_data.json} and rebuild the FAISS index. In this step, the updated documents are as below and the FAISS index is rebuilt with the new embeddings :
+        \vspace{-0.5cm}
         \[
         \text{documents} = \{ \texttt{instruction} + \texttt{input} \}
         \]
-        and the FAISS index is rebuilt with the new embeddings. \\ \hline
+        \vspace{-0.5cm}
+         \\ \hline
     \end{tabularx}
 \end{table}
 
+\vspace{-0.7cm}
 
 \begin{figure}[H]
     \centering
@@ -805,6 +808,7 @@ Algorithm like Logistic Regression, K-Nearest Neighbors, Support Vector Machine,
     \begin{subfigure}[b]{0.496\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Images/RAG_NEAR.png}
+        \vspace{-0.5cm}
         \caption*{Nearest Neighbours among the Embeddings}
         \label{fig:wellbeing_result}
     \end{subfigure}
@@ -812,6 +816,7 @@ Algorithm like Logistic Regression, K-Nearest Neighbors, Support Vector Machine,
     \begin{subfigure}[b]{0.496\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Images/RAG_MATCHSCORE.png}
+        \vspace{-0.5cm}
         \caption*{Count of Matches and Top Score for an input}
         \label{fig:wellbeing_questions}
     \end{subfigure}
@@ -819,22 +824,28 @@ Algorithm like Logistic Regression, K-Nearest Neighbors, Support Vector Machine,
     \label{fig:wellbeing_comparison}
 \end{figure}
 
+\vspace{-0.7cm}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.65\textwidth]{Images/RAG_WBEMBED.png}
+    \includegraphics[width=0.72\textwidth]{Images/RAG_WBEMBED.png}
+    \vspace{-0.3cm}
     \caption*{Instruction Embeddings in 2D space}
     \label{fig:wellbeing_questions}
 \end{figure}
+
+\vspace{-2cm}
 
 \pagebreak
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{Images/RAG_KNOWLEDGE.png}
+    \vspace{-0.3cm}
     \caption*{Visualization of Query and Top-\(k\) Matches}
     \label{fig:wellbeing_questions}
 \end{figure}
+
 
 
 % ------------------------- Implementation Ends -----------------------------
