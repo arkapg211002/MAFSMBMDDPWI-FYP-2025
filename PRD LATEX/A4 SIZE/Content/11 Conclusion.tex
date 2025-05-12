@@ -1,0 +1,51 @@
+% ------------------------------ Conclusion ---------------------------------
+
+\section{Conclusion}
+% State the project benefits. Outline the future scope for improvements.
+
+\begin{table}[H]
+    \caption*{Project Summary: Benefits, Future Scope, Distributed Architecture, and Threading Enhancements}
+    \label{tab:project_summary}
+    \begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3cm}|X|}
+    \hline
+    \textbf{Aspect} & \textbf{Summary} \\ \hline
+    \textbf{Project Benefits} & 
+    \begin{itemize}[noitemsep, leftmargin=*, topsep=0pt]
+        \item Early detection and intervention through social media analysis.
+        \item Leverages ML/DL to process large-scale data for objective, scalable diagnostics.
+        \item Reduces mis-/under-diagnosis by providing real-time insights.
+        \item Offers reusable components applicable in other domains (e.g., market sentiment, cyberbullying detection).
+    \end{itemize} \\ \hline
+    \textbf{Future Scope} & 
+    \begin{itemize}[noitemsep, leftmargin=*, topsep=0pt]
+        \item Incorporate additional data sources (Facebook, Instagram, niche forums) for comprehensive analysis using bigger datasets.
+        \item Integrate real-time monitoring and feedback capabilities.
+        \item Enhance user privacy using techniques like differential privacy.
+        \item Collaborate with psychologists and ethicists to refine ethical and diagnostic guidelines.
+    \end{itemize} \\ \hline
+    \textbf{Distributed Architecture} & 
+    \begin{itemize}[noitemsep, leftmargin=*, topsep=0pt]
+        \item Partition dataset using Hadoop HDFS, Amazon S3, or Google Cloud Storage.
+        \item Use Apache Spark or Dask for parallel processing and training on worker nodes (Docker/VMs).
+        \item Train base models (e.g., Logistic Regression, SVM) in parallel and aggregate them via a meta learner (Random Forest, XGBoost).
+        \item Aggregate subset-specific ensembles using stacking or weighted averaging, and deploy the final model via TensorFlow Serving, Kubernetes, or AWS SageMaker.
+    \end{itemize} \\ \hline
+    \textbf{Threading Enhancements} & 
+    \begin{itemize}[noitemsep, leftmargin=*, topsep=0pt]
+        \item Implement threading to handle I/O-heavy tasks (e.g., video/image downloading, audio extraction, transcription) concurrently.
+        \item Overlap network and disk operations to reduce idle time.
+        \item Improve scalability and responsiveness, enabling the system to serve multiple requests simultaneously.
+    \end{itemize} \\ \hline
+    \textbf{Custom SLM (Small Language Model) Challenges in Google Colab} & 
+    \begin{itemize}[noitemsep, leftmargin=*, topsep=0pt]
+        \item Finding proper weights and biases is difficult.
+        \item Epoch 1 takes excessively long, making pretraining or fine-tuning on larger datasets unfeasible.
+        \item Using pre-trained OpenAI weights builds a foundation but fails to generate meaningful texts.
+        \item Generating 1024-token sequences takes approximately 20 minutes, which is impractical.
+    \end{itemize} \\ \hline
+    \end{tabularx}
+\end{table}
+
+
+\pagebreak
+% ------------------------- Conclusion Ends ----------------------------------

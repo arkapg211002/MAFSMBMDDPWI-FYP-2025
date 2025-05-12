@@ -1,0 +1,44 @@
+% -------------- Problem Definition and Preleminaries ------------------------
+\pagebreak
+\section{Problem Definition and Preliminaries}
+
+\begin{comment}
+    State the problem you have solved. Define the boundaries of your project. What was included (scope) and what was not (exclusions)?
+\vspace{.1in}
+
+\noindent
+Briefly explain the methods you used to conduct your research or complete the project. Were there specific tools, techniques or libraries employed?
+\end{comment}
+
+\subsection{Context and Background}
+\noindent
+Mental health disorders affect approximately 1 in 8 people globally. Social media platforms like Reddit and Twitter offer vast amounts of real-time data reflecting mental health struggles, but the unstructured nature of this data poses challenges for effective identification and categorization of specific disorders.
+
+\subsection{Objective and Challenges}
+\noindent
+The primary objective is to develop a system that uses NLP and machine learning to analyze Reddit and Twitter posts for detecting mental health disorders like depression, anxiety, bipolar disorder, and PTSD. It seeks to \textbf{classify posts} accurately and provide \textbf{data-driven insights} into mental health trends for researchers, professionals, and policymakers.
+
+\begin{itemize}
+    \item \textbf{Data Variability}: Social media posts vary in structure, style, and language.
+    \item \textbf{Imbalanced Data}: Uneven distribution of mental issues can impact model training.
+    \item \textbf{Cultural Nuances}: Mental health discussions differ across cultures.
+    \item \textbf{Privacy and Ethics}: Analyzing social media data raises concerns about user privacy.
+\end{itemize}
+
+
+\subsection{Scope, Exclusions and Assumptions}
+\noindent
+The scope of the project is to develop a multimodal AI framework to detect mental disorders from social media inputs using ML and NLP. It analyzes text, images, videos, PDFs, dynamic responses to image shown and Reddit/Twitter data via APIs, classifying inputs into Normal, Anxiety, Depression, Bipolar, or PTSD using a Reddit dataset. Finally an association is created between mental health disorder and mental wellbeing paramters from Ryff's Psychological Well-being Scale.
+
+\vspace{1em}
+
+\noindent
+This project excludes real-time sentiment analysis, platform-specific features like hashtags or subreddits, and ethical implications of data ownership. It also does not analyze comments, metadata, or Reddit/Twitter-specific elements, focusing solely on detecting mental health disorders from user profiles and mapping them to wellbeing insights, though the dataset has been made solely from Reddit posts from various subreddits.
+
+\vspace{1em}
+
+\noindent
+The project assumes that the Reddit dataset obtained via PRAW represents diverse mental health discussions and that user posts accurately reflect emotions. NLP techniques are presumed effective for sentiment classification, and selected ML models (Logistic Regression, SVM, Naïve Bayes, LSTM, Transformer, XGBoost) are expected to perform optimally. Social media sentiments are considered valid proxies for public mental health perceptions. Data preprocessing is assumed sufficient to reduce noise, and ethical standards are maintained to protect user privacy. The users' responses to the well-being surveys are considered valid for updating the association matrix between mental health disorders and well-being parameters.
+
+
+% ----------- Problem Definition and Preliminaries ends ----------------------

@@ -1,0 +1,41 @@
+% ----------------------- Proposed Solution ----------------------------------
+
+\section{Proposed Solution}
+
+\vspace{-1.5em}
+
+\begin{table}[H]
+    \centering
+    \caption*{Special Contributions}
+    \vspace{-0.5em}
+    \label{tab:project_components}
+    \begin{tabularx}{\textwidth}{|p{4cm}|>{\raggedright\arraybackslash}X|}
+    \hline
+    \textbf{Component} & \textbf{Description} \\ \hline
+    Dataset Acquisition & Reddit data was sourced using PRAW from relevant subreddits (Normal, Depression, Anxiety, Bipolar, PTSD). Extensive preprocessing ensured data integrity. \\ \hline
+    Text Vectorization & TF-IDF and Bag-of-Words were used to convert text into numerical format via Scikit-learn, enabling efficient feature extraction and model training. Other vectorization techniques like Word2Vec, LIWC, and N-Grams were also explored. \\ \hline
+    Machine Learning Models & Logistic Regression, SVM, Naïve Bayes, LSTM, Transformer, and XGBoost were implemented for multi-class classification of mental health conditions. \\ \hline
+    Model Evaluation & Accuracy, precision, recall, and F1-score were used to assess performance. Confusion matrices and ROC curves were generated for detailed model evaluation. \\ \hline
+    Insights \& Recommendations & Findings inform mental health professionals and policymakers on probable issues and provide well-being insights. \\ \hline
+    Documentation \& Reproducibility & Detailed documentation ensures usability, including methodology, code, and instructions for result reproduction. \\ \hline
+    \end{tabularx}
+\end{table}
+
+\vspace{-0.5cm}
+
+\begin{table}[H]
+    \centering
+    \caption*{Reusable Components}
+    \vspace{-0.5em}
+    \label{tab:modules_functions}
+    \begin{tabularx}{\textwidth}{|p{4cm}|X|}
+    \hline
+    \textbf{Module / Function} & \textbf{Description} \\ \hline
+    Data Collection Functions & Modular functions designed for data collection, which can be reused across different platforms. \\ \hline
+    Data Preprocessing Module & A component that cleans data by removing duplicates and empty rows, and adds a separate column for cleaned texts. \\ \hline
+    Machine and Deep Learning Model Functions & Functions for implementing Logistic Regression, Naïve Bayes, Support Vector Machine, Random Forest, XGBoost, Long Short Term Memory, and Transformer algorithms. These functions enable easy retraining on varying datasets and feature various evaluation metrics to assess model performance. \\ \hline
+    Deployment Function & A separate function that contains the main Python file for creating a web-based application on Streamlit Cloud, including the necessary requirements and package dependencies for deployment. \\ \hline
+    \end{tabularx}
+\end{table}
+
+% ----------------------- Proposed Solution Ends -----------------------------

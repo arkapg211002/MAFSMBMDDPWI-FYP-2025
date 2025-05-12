@@ -1,0 +1,255 @@
+\documentclass[12pt]{article} 
+
+%load any additional packages
+\usepackage[utf8]{inputenc}
+\usepackage{array} % For custom column types
+\usepackage{tabularx} % For dynamic column widths
+\usepackage{diagbox} % For diagonal split in a cell
+\usepackage{subcaption}
+\usepackage{microtype} % Improves typography
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[numbers]{natbib}
+\usepackage{multicol}
+\usepackage{setspace} 
+\usepackage{fancyhdr}
+\usepackage{times}
+\usepackage{tocloft}
+\usepackage{geometry}
+\usepackage{textcomp}
+\usepackage{comment}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{color}
+\usepackage{tcolorbox}
+\usepackage{listings}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{xcolor}
+\usepackage{tocloft}
+\usepackage{titling}
+\usepackage{booktabs} % Optional, for improved table lines
+\usepackage{makecell} % For easy line breaks in table cells
+\usepackage{adjustbox} 
+\usepackage{url} % For \urldef
+
+\usepackage{rotating}      % For rotating tables
+\usepackage{lscape}        % Optional: for landscape 
+\usepackage{longtable}     % Optional: For tables that span pages
+\usepackage{changepage}
+\usepackage{hhline}
+\usepackage{boldline} % <- for bold border
+\usepackage{anyfontsize}
+\usepackage{transparent}  
+
+\usepackage{mdframed}
+\usepackage{tikz}
+
+\definecolor{myblue}{RGB}{0, 0, 255}
+
+
+
+\renewcommand{\headrulewidth}{0pt}% for removing the line under header 
+\fancyhead{} %remove section number from header 
+%\clearpage
+
+
+% Set basic style for listings
+\lstset{basicstyle=\ttfamily\small\color{black}, 
+        breaklines=true % Allow line breaks
+        }
+
+\renewcommand{\contentsname}{\raggedright\bfseries\LARGE Contents}
+
+
+% Redefine \section to include color
+\usepackage{titlesec}
+\titleformat{\section}
+  {\color{black}\normalfont\Large\bfseries} % Format section headings
+  {\thesection}{1em}{}
+
+\usepackage[hidelinks]{hyperref}
+\usepackage{siunitx} % Required for alignment
+\sisetup{
+  round-mode          = places, % Rounds numbers
+  round-precision     = 2, % to 2 places
+}
+%\geometry{a4paper,total={175mm,257mm},left=25mm,right=25mm,top=30mm, bottom=30mm}
+
+\setlength{\topmargin}{-0.65in}
+\setlength{\oddsidemargin}{0.33in}
+\setlength{\evensidemargin}{-0.08in}
+\setlength{\textheight}{9.5in}
+\setlength{\textwidth}{6.0in}
+\setlength{\footskip}{1pt}
+
+\hypersetup{
+    colorlinks=true,    % Enable colored links
+    linkcolor=black,     % Color for internal links
+    filecolor=magenta,  % Color for file links
+    urlcolor=black,       % Color for URLs
+    citecolor=black      % colour for cite  
+}
+% Set citation style to square brackets
+\setcitestyle{square}
+% \setcounter{chapter}{1}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}} % Default dots
+
+% Define a custom command to add section numbers
+\newcommand{\sectionnumber}{\arabic{section}}
+
+
+% Add project title here
+\def\mytitle{\fontsize{25}{30}\selectfont{Multimodal AI Framework for Social Media Based Mental Disorder Detection and Personalized Wellbeing Insights}}
+
+% Add student Degree
+\def\mydegree{Bachelor of Technology}
+% Add student \textbf{name}
+\def\mysupervisor{Nairanjana Chowdhury}
+% Supervisor designation : Assistant Professor, Associate Professor, Professor
+\def\mysupervisordesig{Assistant Professor}
+
+% Add student names and roll no
+\def\mynameone{SOUMYADEEP NANDY}
+\def\myrollnoone{13000121033}
+\def\mynametwo{PRITHWISH SARKAR}
+\def\myrollnotwo{13000121037}
+\def\mynamethree{SAGNIK MUKHOPADHYAY}
+\def\myrollnothree{13000121040}
+\def\mynamefour{ARKAPRATIM GHOSH}
+\def\myrollnofour{13000121058}
+
+% Add student department
+\def\mydep{Computer Science and Engineering}
+\def\myHODname{Dr. Tapan Chowdhury}
+% HOD designation : Assistant Professor, Associate Professor, Professor
+\def\myHODdesig{Assistant Professor}
+% Add the date of submission
+\def\mydegreedate{\today}
+
+\begin{document}
+ \baselineskip=18pt plus1pt
+ \setcounter{secnumdepth}{4}
+%  \setcounter{secnumdepth}{3}
+ \setcounter{tocdepth}{4}
+  
+
+ \graphicspath{ {./Images/} }
+ %Front Matter
+ \include{./FrontMatter/titlePage}
+ \pagenumbering{roman}
+ \setcounter{page}{2}  
+ % ----- Approval Page for Sem 7
+ %\include{./FrontMatter/approval}
+ % ----- Certificate Page for Sem 8
+ % ----- Certificate.tex without letter head
+ % ----- Certificate2.tex with letter head v1
+ % ----- Certificate3.tex with letter head v2
+ \include{./FrontMatter/Certificate}
+ % \include{./FrontMatter/Certificate2}
+ % \include{./FrontMatter/Certificate3}
+ \include{./FrontMatter/acknowledgements}
+ % ----- Blank Letter Head 1
+ % \include{./FrontMatter/LetterHead1}
+ % ----- Blank Letter Head 2
+ % \include{./FrontMatter/LetterHead2}
+% 
+ %\include{./FrontMatter/dedication}
+ % \include{./FrontMatter/abstract}
+%
+% Set up fancy style first
+% Force fancy style globally
+\pagestyle{fancy}
+\fancyhead[C]{MAFSMBMDDPWI}
+\fancyfoot[L]{\footnotesize TMSL / CSE / PRD8 / v2.5}
+\fancyfoot[C]{\thepage}
+
+% Hack: redefine plain style so even if ToC sets it, it behaves like fancy
+ \fancypagestyle{plain}{
+   \fancyhf{}  % clear all
+   \fancyhead[C]{MAFSMBMDDPWI}
+   \fancyfoot[L]{\footnotesize TMSL / CSE / PRD8 / v2.5}
+   \fancyfoot[C]{\thepage}  % Hides center page number
+ }
+
+% Now, ToC page will auto-use this "fake plain"
+\vspace{-3\baselineskip}
+\begin{spacing}{0.9}
+  \tableofcontents
+\end{spacing}
+
+% After ToC, continue with real fancy style (with center page numbers)
+\clearpage
+\fancyfoot[C]{\thepage}  % Restore center page number for rest
+
+\vspace{2em}
+
+\pagebreak
+ %Main material
+\clearpage
+
+
+
+\pagenumbering{arabic}
+
+ % \include{./Chapters/1_introduction} 
+ % \include{./Chapters/2_problem_definition}  \include{./Chapters/3_related_studies}
+ % \include{./Chapters/4_project_plan} 
+ % \include{./Chapters/5_requirement_analysis} \include{./Chapters/6_design} 
+ % \include{./Chapters/7_test_plan} 
+ % \include{./Chapters/8_conclusion}
+
+ % \include{./Chapters/content}
+
+ % ---------------------- SEPERATE FILES FOR CONTENT----
+
+\input{Content/01 Abstract}
+\input{Content/02 Introduction}
+\input{Content/03 Related Studies.tex}
+\input{Content/04 Problem Definition and Preliminaries.tex}
+\input{Content/05 Proposed Solution.tex}
+\input{Content/06 Project Planning.tex}
+\input{Content/07 Requirement Analysis.tex}
+\input{Content/08 Design.tex}
+\input{Content/09 Implementation.tex}
+\input{Content/10 Result and Analysis.tex}
+\input{Content/11 Conclusion.tex}
+\input{Content/12 References.tex}
+% \input{Chapters/appendix.tex}
+
+
+
+
+ % ---------------------- SEPERATE FILES FOR CONTENT--------------
+ 
+ %\include{./Chapters/appendix}
+% \addcontentsline{toc}{section}{Bibliography}
+% \bibliographystyle{IEEEtran}
+% \bibliography{Content/references}
+ 
+%TODO: remove the following after your report is completed
+% by commenting the next line
+%%\include{./instructions}
+
+ % Comment Out 
+% \include{./instructions} 
+ 
+ 
+ %Bibliography
+
+%  \begin{thebibliography}{9}
+% \bibitem{knuth_texbook}
+% Donald E. Knuth (1986) \emph{The \TeX{} Book}, Addison-Wesley Professional.
+
+% \bibitem{lamport94}
+% Leslie Lamport (1994) \emph{\LaTeX: a document preparation system}, Addison
+% Wesley, Massachusetts, 2nd ed.
+% \end{thebibliography}
+ 
+
+% \include{./Chapters/9_app1}
+% \include{./Chapters/10_app2}
+ 
+\end{document}

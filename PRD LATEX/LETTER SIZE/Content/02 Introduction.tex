@@ -1,0 +1,182 @@
+% ------------------------ Introduction -------------------------------------
+
+\vspace{2cm}
+
+\section{Introduction}
+
+\begin{comment}
+    Briefly introduce the project's overall topic and purpose.
+    \vspace{.1in}
+    
+    \noindent
+    Provide specifications of Technical domain (Hardware, Operating System, Software) and Business domain.
+    \vspace{.1in}
+    
+    \noindent
+    Provide \textbf{Glossary} / Keywords in a tabular format.
+\end{comment}
+
+% Real Input
+
+\subsection{Project Overview}
+\noindent
+Mental health disorders—including depression, anxiety, bipolar disorder, and PTSD—affect millions worldwide and often go undetected until they manifest in crises. Meanwhile, people increasingly share their thoughts, feelings, and experiences on social media platforms (Reddit, Twitter etc) and in digital documents, leaving behind rich clues about their emotional state. In this work, we develop a multimodal AI framework that ingests text, images, video, and document feeds, uses OCR and deep-learning emotion analysis, and aligns user responses to established well-being scales. By fusing these signals through an ensemble of machine-learning and neural models, our system aims to flag early warning signs of distress and guide users toward timely, personalized support.
+
+\subsection{Project Purpose}
+\noindent
+Early identification and intervention are critical for mitigating the severity of mental health crises, yet current screening methods often rely on self-report or occasional clinical encounters. This project aims to fill that gap by delivering a continuously learning, data-driven monitoring tool that passively and proactively analyzes digital footprints—from social posts to uploaded documents and survey responses—to surface warning signs long before a crisis point. By putting actionable insights directly into the hands of individuals, caregivers, and healthcare providers, it seeks to enable truly preventative mental-health care at scale.
+
+\pagebreak
+
+\subsection{Technical Domain Specifications}
+\vspace{-0.5cm}
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|>{\raggedright\arraybackslash}p{3cm}|p{10.3cm}|}
+      \hline
+      \textbf{Domain} & \textbf{Specifications} \\
+      \hline
+      \textbf{Hardware} &
+      Standard machine with $\geq 8$~GB RAM and a multi-core CPU. 
+      (Optional: GPU for larger datasets or complex model training.) \\
+      \hline
+      \textbf{Operating System} &
+      Cross-platform support: macOS, Windows 10/11, Linux distributions
+      (e.g.\ Ubuntu, Linux Mint). \\
+      \hline
+      \textbf{Programming Languages} &
+      Python 3.x (primary language for ML, data analysis, NLP). \\
+      \hline
+      \textbf{Libraries / Frameworks} &
+      \begin{minipage}[t]{\linewidth}
+        \begin{itemize}\setlength\itemsep{0pt}\setlength\parskip{0pt}
+          \item \textbf{Data processing:} Pandas, NumPy
+          \item \textbf{Machine learning:} Scikit-learn, XGBoost, TensorFlow, Transformers
+          \item \textbf{Image/text analysis:} OpenCV, Tesseract, Pytesseract, DeepFace
+          \item \textbf{Audio processing:} Librosa, PyDub, SpeechRecognition
+          \item \textbf{Social media integration:} PRAW, Tweepy
+          \item \textbf{Visualization:} Plotly, Matplotlib
+          \item \textbf{Additional tools:} Streamlit, NLTK, Google Generative AI
+          \vspace{0.5em}
+        \end{itemize}
+      \end{minipage} \\
+      \hline
+      \textbf{Development Environment} &
+      Google Colab (cloud execution with optional GPU for large datasets or model training). \\
+      \hline
+    \end{tabular}
+  \end{table}
+      
+
+\subsection{Business Domain Specifications}
+\vspace{-0.5cm}
+\begin{table}[H]
+    \centering
+    % Increase row height and cell padding
+    \renewcommand{\arraystretch}{1.2}
+    \setlength{\tabcolsep}{8pt}
+    \begin{tabular}{|>{\raggedright\arraybackslash}p{3cm}|>{\raggedright\arraybackslash}p{10cm}|}
+      \hline
+      \textbf{Stakeholder} & \textbf{Role / Use Case} \\
+      \hline
+      Mental Health Services &
+        Mental health providers, including hospitals and therapy centers, can leverage machine learning to detect early signs of mental disorders from social media data. This proactive approach complements traditional self-reporting and clinical assessments, enabling earlier intervention and support for patients. \\
+      \hline
+      Social Media Platforms &
+        Social media platforms like Twitter and Reddit are key spaces for expressing thoughts and emotions, including mental health struggles. This project’s machine learning models can help these platforms safeguard user well-being by identifying concerns early, while maintaining ethical standards. \\
+      \hline
+      Public Health Organizations &
+        Public health organizations can use real-time social media data to monitor mental well-being, identify trends, and design data-driven interventions. By analyzing language patterns, they can create targeted awareness campaigns that better engage individuals facing mental health challenges. \\
+      \hline
+    \end{tabular}
+\end{table}
+  
+\pagebreak
+
+\subsection{Glossary / Keywords}
+\noindent
+
+\begin{center}
+
+\begin{tabular}{|p{4cm}|p{10cm}|}
+  \hline
+  \multicolumn{1}{|c|}{\textbf{Term}} & \multicolumn{1}{c|}{\textbf{Definition}} \\
+
+  \hline 
+  Natural Language Processing (NLP) & A branch of artificial intelligence focused on the interaction between computers and humans through natural language, including tasks like text analysis. \\
+
+  \hline 
+  Retrieval-Augmented Generation (RAG) & A hybrid NLP framework that combines information retrieval and text generation by fetching relevant context from a knowledge base before generating responses, improving factual accuracy and relevance. \\
+
+
+  \hline 
+  Vectorization & The process of converting textual data into numerical form (such as a vector) so that it can be used as input for machine learning models. \\
+
+  \hline 
+  Classifier & A machine learning model or algorithm that categorizes or labels data points into predefined classes. \\
+
+  \hline
+  Mental Health Disorder & A wide range of conditions that affect mood, thinking, and behavior, including depression, anxiety, schizophrenia, etc. \\
+
+  \hline
+  Data Preprocessing & The process of preparing raw data for analysis by cleaning, normalizing, and transforming it into a usable format for machine learning models. \\
+
+  \hline 
+  Cross-validation & A model validation technique used to assess how well a model performs by dividing data into training and testing sets multiple times for better accuracy. \\
+
+  \hline
+  Precision & In the context of classification, precision refers to the accuracy of positive predictions, calculated as the ratio of true positives to the sum of true and false positives. \\
+
+  \hline
+  Recall & In classification, recall measures the ability of a model to identify all relevant instances within a dataset, calculated as the ratio of true positives to the sum of true positives and false negatives. \\
+  
+  \hline
+  PRAW & PRAW (Python Reddit API Wrapper) is a Python library that provides a simple interface to interact with Reddit's API for accessing Reddit data, such as posts, comments, and user information. \\
+  \hline
+  TesseractOCR & TesseractOCR is an open-source Optical Character Recognition (OCR) engine that extracts text from images with high accuracy; it is widely used for various applications like scanning documents and digitalizing printed text. \\
+  \hline
+  Depression & There is a difference between depression and mood swings or short-lived emotional reactions to daily experiments; A mental state causing painful symptoms adversely disrupts normal activities (e.g., sleeping). \\
+  \hline
+\end{tabular}
+
+\begin{tabular}{|p{4cm}|p{10cm}|}
+    \hline
+    \multicolumn{1}{|c|}{\textbf{Term}} & \multicolumn{1}{c|}{\textbf{Definition}} \\
+
+  \hline
+  Anxiety & Several behavioral disturbances are associated with anxiety disorders, including excessive fear and worry. Severe symptoms cause significant impairment in functioning cause considerable distress. Anxiety disorders come in many forms, such as social anxiety, generalized anxiety, panic, etc. \\
+
+  \hline
+  Bipolar Disorder & An alternating pattern of depression and manic symptoms is associated with bipolar disorder. An individual experiencing a depressive episode may feel sad, irritable, empty, or lose interest in daily activities. Emotions of euphoria or irritability, excessive energy, and increased talkativeness can all be signs of manic depression. Increased self-esteem, decreased sleep need, disorientation, and reckless behavior may also be signs of manic depression. \\
+
+  \hline
+  Post-Traumatic Stress Disorder (PTSD) & In PTSD, persistent mental and emotional stress can occur after an injury or severe psychological shock, characterized by sleep disturbances, constant vivid memories, and dulled response to others and the outside world. \\
+
+  \hline
+  DeepFace & DeepFace is a Python library for deep learning-based facial recognition and attribute analysis. It supports several pretrained models and simplifies face recognition tasks, making it suitable for various applications in image analysis. \\
+
+  \hline
+  Transformers Module & The Transformers module in Python, developed by Hugging Face, is a library for natural language processing (NLP) tasks like text classification, translation, and summarization, using state-of-the-art models like BERT and GPT. \\
+
+  \hline
+  Gemini 2.0 Flash & Gemini 2.0 Flash is a cutting-edge AI model developed by Google, capable of performing advanced generative and analytical tasks across text, image, and other modalities. \\
+
+  \hline
+  FFmpeg & FFmpeg is a multimedia framework used for encoding, decoding, transcoding, streaming, and manipulating audio and video files, supporting a wide range of formats and codecs. \\
+
+  \hline
+  Hyperparameter Tuning & Hyperparameter tuning involves selecting the best parameters for a machine learning model to optimize its performance on a given task using grid search or random search. \\
+
+  \hline
+  Embedding Model & A neural network that transforms individual text inputs into fixed-length vector representations in a continuous semantic space, enabling efficient similarity search and downstream tasks like clustering or retrieval. \\
+
+  \hline
+  Cross-Encoder & A model that jointly processes a pair of inputs (e.g., query and document) through a shared encoder and directly produces a relevance score or classification, allowing for richer interaction at the cost of higher compute per pair. \\
+
+  \hline
+\end{tabular}
+  
+\end{center}
+
+
+% ------------------------------ Introduction Ends ---------------------------
