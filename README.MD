@@ -45,3 +45,4 @@ This project leverages artificial intelligence to detect early signs of mental h
 
 ---
 
+![Streamlit app](https://github.com/arkapg211002/MAFSMBMDDPWI-FYP-2025/blob/main/WEB%20APP%20IMAGES/01%20Interface.png)
