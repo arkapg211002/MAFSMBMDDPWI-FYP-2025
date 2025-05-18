@@ -1,6 +1,6 @@
 # Multimodal AI Framework for Social Media Based Mental Disorder Detection and Personalized Wellbeing Insights
 
-![Demo](https://github.com/username/repo/raw/main/demo.gif)
+![Demo](https://github.com/arkapg211002/MAFSMBMDDPWI-FYP-2025/blob/main/WEB%20APP%20LANDING%20PAGE/demo.gif)
 
 ---
 
