@@ -185,7 +185,7 @@ The dataset for mental health classification was compiled from subreddit communi
     \makecell{Before\\Cleaning} &
     \begin{tabular}[t]{@{}l@{}}
     \texttt{text}: Original text data \\
-    \texttt{mental\_issue}: Mental health issues
+    \texttt{mental\_issue}: Mental health \\ \quad \quad \quad \quad \quad \quad \quad \ \ issues
     \end{tabular}
     &
     Contains raw, unprocessed text data with possible missing values, duplicates, URLs, mentions, and special characters. \\[6pt]
@@ -193,8 +193,8 @@ The dataset for mental health classification was compiled from subreddit communi
     \makecell{After\\Cleaning} &
     \begin{tabular}[t]{@{}l@{}}
     \texttt{text}: Original text data \\
-    \texttt{mental\_issue}: Mental health issues \\
-    \texttt{cleaned\_text}: Processed text data
+    \texttt{mental\_issue}: Mental health \\ \quad \quad \quad \quad \quad \quad \quad \ \ issues \\
+    \texttt{cleaned\_text}: Processed text \\ \quad \quad \quad \quad \quad \quad \quad \ \ data
     \end{tabular}
     &
     Data is cleaned by removing URLs, mentions, special characters, and extra noise. The text is converted to lowercase, tokenized, stopwords (except key negative words) are removed, and the cleaned text is stored in the new column \texttt{cleaned\_text}. \\[6pt]
@@ -692,7 +692,7 @@ Algorithm like Logistic Regression, K-Nearest Neighbors, Support Vector Machine,
     \begin{tabularx}{\textwidth}{|c|p{2.5cm}|X|}
         \hline
         \textbf{Step} & \textbf{Operation} & \textbf{Mathematical Formula / Description} \\ \hline
-        1 & \textbf{Import Libraries} & Import necessary packages: \texttt{streamlit}, \texttt{json}, \texttt{pickle}, \texttt{numpy}, \texttt{faiss}, \texttt{sentence\_transformers}, \texttt{transformers}, \texttt{google.generativeai}, \texttt{plotly}, \texttt{sklearn.manifold.TSNE}, etc. \\ \hline
+        1 & \textbf{Import} \newline \textbf{Libraries} & Import necessary packages: \texttt{streamlit}, \texttt{json}, \texttt{pickle}, \texttt{numpy}, \texttt{faiss}, \texttt{sentence\_transformers}, \texttt{transformers}, \texttt{google.generativeai}, \texttt{plotly}, \texttt{sklearn.manifold.TSNE}, etc. \\ \hline
         2 & \textbf{Configure Gemini API} & Set the generation configuration parameters and initialize the Gemini model. \\ \hline
         3 & \textbf{Generate Instruction Dataset} & Create a dataset \texttt{instruction\_data.json} with \texttt{text}, \texttt{issue}, and \texttt{response} using Gemini API through batching and rate limiting. \\ \hline
     \end{tabularx}
@@ -714,7 +714,7 @@ Algorithm like Logistic Regression, K-Nearest Neighbors, Support Vector Machine,
         5 & \textbf{Load Global Store} & Retrieve data from \texttt{global\_store\_gpu.pkl} (documents, indices, outputs and embeddings).
         \\ \hline
         
-        6 & \textbf{Compute Query Embedding} & Create the query by concatenating user text and mental issue. Encode it and and cast to a float32 NumPy array:
+        6 & \textbf{Compute Query} \newline \textbf{Embedding} & Create the query by concatenating user text and mental issue. Encode it and and cast to a float32 NumPy array:
         \vspace{-1em}
         \[
         \mathbf{v}_q = \text{embedding\_model.encode}(\text{query})
@@ -722,7 +722,7 @@ Algorithm like Logistic Regression, K-Nearest Neighbors, Support Vector Machine,
         \vspace{-1.5em}
         \\ \hline
         
-        7 & \textbf{FAISS Retrieval (Top-\(k\))} & 
+        7 & \textbf{FAISS} \newline \textbf{Retrieval} \newline \textbf{(Top-\(k\))} & 
         \begin{minipage}[t]{\linewidth}
         \begin{spacing}{0.4}
         Retrieve the top \(k=10\) matches using FAISS. The distance metric is the squared Euclidean (L2) norm:
@@ -760,7 +760,7 @@ Algorithm like Logistic Regression, K-Nearest Neighbors, Support Vector Machine,
 
         9 & \textbf{Filter by Ryff Parameters} & Apply text filtering to the retrieved output of the top candidate. Check if it contains any selected Ryff parameters (e.g., Autonomy, Positive Relations, etc.). \\ \hline
 
-        10 & \textbf{Generate Refined Insight} & Construct a prompt for the Gemini model based on the retrieved text and selected parameters. Generate a refined insight:
+        10 & \textbf{Generate} \newline \textbf{Refined} \newline \textbf{Insight} & Construct a prompt for the Gemini model based on the retrieved text and selected parameters. Generate a refined insight:
         \vspace{-1em}
         \[
         \text{generated\_output} = \text{gemini\_model.generate\_content}(\text{prompt})
@@ -780,13 +780,13 @@ Algorithm like Logistic Regression, K-Nearest Neighbors, Support Vector Machine,
         \hline
         \textbf{Step} & \textbf{Operation} & \textbf{Mathematical Formula / Description} \\ \hline
     
-        11 & \textbf{3D t-SNE Visualization} & Combine the query embedding with the document embeddings and reduce the dimensionality using t-SNE:
+        11 & \textbf{3D t-SNE} \newline \textbf{Visualization} & Combine the query embedding with the document embeddings and reduce the dimensionality using t-SNE:
         \[
         \text{reduced} = \text{TSNE}(n\_components=3)(\text{combined\_embeddings})
         \]
         Separate the query and top-\(k\) points for visualization via Plotly. \\ \hline
         
-        12 & \textbf{Plot Interactive Graph} & Plot the 3D scatter plot with annotations for the query, top-\(k\) matches, and connecting dotted lines. \\ \hline
+        12 & \textbf{Plot Graph} & Plot the 3D scatter plot with annotations for the query, top-\(k\) matches, and connecting dotted lines. \\ \hline
         
         13 & \textbf{Append New Record} & Append a new record to \texttt{instruction\_data.json} and rebuild the FAISS index. In this step, the updated documents are as below and the FAISS index is rebuilt with the new embeddings :
         \vspace{-0.5cm}
@@ -801,28 +801,30 @@ Algorithm like Logistic Regression, K-Nearest Neighbors, Support Vector Machine,
 \vspace{-0.7cm}
 
 \begin{figure}[H]
+  \centering
+
+  % Left panel: make it 0.52 of \textwidth, then shift it 3% of \textwidth left
+  \begin{subfigure}[b]{0.4975\textwidth}
     \centering
-    % First subfigure: Well-being survey questions
-    
-    % Second subfigure: Well-being survey result
-    \begin{subfigure}[b]{0.496\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/RAG_NEAR.png}
-        \vspace{-0.5cm}
-        \caption*{Nearest Neighbours among the Embeddings}
-        \label{fig:wellbeing_result}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.496\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Images/RAG_MATCHSCORE.png}
-        \vspace{-0.5cm}
-        \caption*{Count of Matches and Top Score for an input}
-        \label{fig:wellbeing_questions}
-    \end{subfigure}
-   
-    \label{fig:wellbeing_comparison}
+    \hspace*{-0.1\textwidth}% ← shift left of line width
+    \includegraphics[width=1.09\textwidth]{Images/RAG_NEAR.png}
+    \vspace{-0.35cm}
+    \caption*{Nearest Neighbours among the Embeddings}
+    \label{fig:wellbeing_result}
+  \end{subfigure}
+  \hfill
+  % Right panel stays at 0.496\textwidth
+  \begin{subfigure}[b]{0.496\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{Images/RAG_MATCHSCORE.png}
+    \vspace{-0.5cm}
+    \caption*{Count of Matches and Top Score for an input}
+    \label{fig:wellbeing_questions}
+  \end{subfigure}
+
+  \label{fig:wellbeing_comparison}
 \end{figure}
+
 
 \vspace{-0.7cm}
 

@@ -23,8 +23,8 @@
         \textbf{Test Case ID} & \textbf{Description} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Status} \\ \hline
         T01 & User provides input in the text area. & Text is accepted for further processing. & Text is accepted for further processing. & \checkmark \\ \hline
         T02 & Display mental health issues with probabilities for classes. & Probabilities for each mental health class are shown. & Probabilities for each mental health class are shown. & \checkmark \\ \hline
-        T03 & Highlight the mental health issue with the highest probability. & Correct issue with the highest probability is displayed. & Correct issue with the highest probability is displayed. & \checkmark \\ \hline
-        T04 & Accept username input and provide prediction. & Prediction is displayed based on the provided username. & Prediction is displayed based on the provided username. & \checkmark \\ \hline
+        T03 & Highlight the mental health issue with the highest \newline probability. & Correct issue with the highest probability is displayed. & Correct issue with the highest probability is displayed. & \checkmark \\ \hline
+        T04 & Accept username input and provide \newline prediction. & Prediction is displayed based on the provided username. & Prediction is displayed based on the provided username. & \checkmark \\ \hline
     \end{tabularx}
     }
 \end{table}
@@ -39,18 +39,18 @@
         \hline
         \textbf{Test Case ID} & \textbf{Description} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Status} \\ \hline
         T05 & Translate multiple language inputs to English. & Non-English text is translated correctly to English. & Non-English text is translated correctly to English. & \checkmark \\ \hline
-        T06 & Extract text and detect emotion from image. & Extracted text and detected emotions are displayed accurately. & Extracted text and detected emotions are displayed accurately. & \checkmark \\ \hline
+        T06 & Extract text and \newline detect emotion from image. & Extracted text and detected emotions are displayed accurately. & Extracted text and detected emotions are displayed accurately. & \checkmark \\ \hline
         T07 & Pass a prompt to the system and retrieve a valid response. & Correct response is generated based on the prompt. & Correct response is generated based on the prompt. & \checkmark \\ \hline
         T08 & Perform a combined test using multiple inputs. & Predictions for all inputs are displayed correctly. & Predictions for all inputs are displayed correctly. & \checkmark \\ \hline
         T09 & Analyze uploaded audio files and transcribe them into text. & Audio transcription and analysis results are displayed. & Audio transcription and analysis results are displayed. & \checkmark \\ \hline
-        T10 & Extract frames, analyze emotions, audio from video. & Frame emotions and audio transcription are displayed. & Frame emotions and audio transcription are displayed. & \checkmark \\ \hline
+        T10 & Extract frames, \newline analyze emotions, audio from video. & Frame emotions and audio transcription are displayed. & Frame emotions and audio transcription are displayed. & \checkmark \\ \hline
         T11 & Extract tweets and related media using a Twitter username. & Text and media are extracted and analyzed correctly. & Text and media are extracted and analyzed correctly. & \checkmark \\ \hline
         T12 & Generate captions for uploaded images or video frames. & Captions are generated for images or frames. & Captions are generated for images or frames. & \checkmark \\ \hline
         T13 & Upload a PDF file and analyze its text content. & Extracted text from the PDF is processed and analyzed for mental health cues. & Extracted text from the PDF is processed and analyzed for mental health cues. & \checkmark \\ \hline
-        T14 & Capture user response to a displayed image. & User response is captured and correctly classified for emotional analysis. & User response is captured and correctly classified for emotional analysis. & \checkmark \\ \hline
+        T14 & Capture user \newline response to a \newline displayed image. & User response is captured and correctly classified for emotional analysis. & User response is captured and correctly classified for emotional analysis. & \checkmark \\ \hline
         T15 & Fill out a survey form to update the association matrix. & Survey responses update the association matrix and generate targeted wellbeing insights. & Survey responses update the association matrix and generate targeted wellbeing insights. & \checkmark \\ \hline
 
-        T16 & RAG-based Wellbeing Insights & Generates wellbeing insights using context, prompts, and mental issue. & Generates refined insights using Gemini based on retrieved data. & \checkmark \\ \hline
+        T16 & RAG-based \newline Wellbeing Insights & Generates wellbeing insights using context, prompts, and mental issue. & Generates refined insights using Gemini based on retrieved data. & \checkmark \\ \hline
 
     \end{tabularx}
     }
@@ -612,24 +612,24 @@
     \centering
     \renewcommand{\arraystretch}{1.3}
     \small
-    \begin{tabularx}{\textwidth}{|l|X|X|X|}
+    \begin{tabularx}{\textwidth}{|l|X|p{3cm}|X|}
         \hline
-        \textbf{Model} & \textbf{Best Hyperparameters} & \textbf{Accuracy \& Metrics} & \textbf{Key Observations} \\
+        \textbf{Model} & \textbf{Best} \newline \textbf{Hyperparameters} & \textbf{Accuracy \&} \newline \textbf{Metrics} & \textbf{Key Observations} \\
         \hline
         Logistic Regression & \texttt{solver=liblinear, penalty=l2, C=1} & Accuracy: 87.72\%; Normal: 92\% accuracy; ROC AUC: Normal 0.98, Depression 0.96 & High precision, recall, and F1 for Normal; Bipolar shows lower F1 (64\%); overall robust performance, especially for Normal and Anxiety. \\
         \hline
         k-NN & \texttt{weights=distance, n\_neighbors=10, metric=euclidean} & Accuracy: 52.03\%; Normal F1: 0.69; ROC AUC: Bipolar 0.67, PTSD 0.72, Normal/Depression 0.79 & Struggles with minority classes: Anxiety (recall 0.23) and PTSD (recall 0.10); not suitable for this dataset. \\
         \hline
-        SVM & \texttt{kernel=linear, gamma=scale, C=1} & Accuracy: 85.13\%; F1-scores: Normal 0.95, Depression 0.72, Anxiety 0.74, Bipolar 0.61; ROC AUC: Normal 0.98, Others \textgreater 0.90, Bipolar 0.88 & Solid overall performance; excellent for Normal and Anxiety, but slightly lower performance for Bipolar. \\
+        SVM & \texttt{kernel=linear, gamma=scale, C=1} & Accuracy: 85.13\%; F1-scores: Normal 0.95, Depression 0.72, Anxiety 0.74, Bipolar 0.61; ROC AUC: Normal 0.98, Others \textgreater \ 0.90, Bipolar 0.88 & Solid overall performance; excellent for Normal and Anxiety, but slightly lower performance for Bipolar. \\
         \hline
-        Naive Bayes & \texttt{alpha=0.2914} & Accuracy: 83.95\%; F1-scores: Normal 0.94, PTSD 0.76, Anxiety 0.72; ROC AUC: Normal 0.99, Others \textgreater 0.90 & Performs very well for Normal and PTSD; lower scores for Bipolar and Depression. \\
+        Naive Bayes & \texttt{alpha=0.2914} & Accuracy: 83.95\%; F1-scores: Normal 0.94, PTSD 0.76, Anxiety 0.72; ROC AUC: Normal 0.99, Others \textgreater \ 0.90 & Performs very well for Normal and PTSD; lower scores for Bipolar and Depression. \\
         \hline
     \end{tabularx}
     \caption*{\textbf{Summary Comparison of Models after Hyperparameter Tuning}}
     \label{tab:hp_tuning_summary}
 \end{table}
 
-\vspace{1em}
+\vspace{0.5em}
 
 \noindent
 K-Nearest Neighbors (KNN) performs poorly on this mental health dataset compared to other algorithms, even after hyperparameter tuning. KNN relies on distance-based metrics, which struggle with the sparse, high-dimensional nature of text data, making it difficult to capture meaningful relationships between Reddit posts and mental health labels. Despite optimizing parameters like \verb|weights='distance'|, \verb|n_neighbors=10|, and \verb|metric='euclidean'|, KNN's performance remains suboptimal, with lower accuracy, precision, recall, and F1-score than Logistic Regression, Naive Bayes, or SVM. Its inability to handle non-linear, context-dependent patterns in text, especially for nuanced categories like anxiety, PTSD, or bipolar disorder, highlights its limitations in text classification tasks. KNN's reliance on proximity without considering textual context likely explains its poor performance.
@@ -1026,7 +1026,7 @@ Ensemble Model 7 is applied on different subsets of a very large dataset to crea
     Data Partitioning & The dataset is divided into manageable subsets for independent processing. \\ \hline
     Base Models & Each subset trains base models (Logistic Regression, Naive Bayes, SVM, LSTM, XGBoost, and Custom Transformers). \\ \hline
     Subset Ensemble & For each subset, a Random Forest meta learner is used to combine the base models into a subset-specific ensemble. \\ \hline
-    Global Aggregation & The subset-specific ensembles are aggregated to form a final global ensemble, capturing comprehensive learning. \\ \hline
+    Global \newline Aggregation & The subset-specific ensembles are aggregated to form a final global ensemble, capturing comprehensive learning. \\ \hline
     Scalability & Designed for distributed processing; subsets can be processed in parallel across multiple nodes. \\ \hline
     Fault Tolerance & Modular design ensures that failure in one subset does not impact the overall ensemble performance. \\ \hline
     Distributed Processing & Worker nodes independently train base models and report to a central controller that aggregates the results. \\ \hline
@@ -1048,13 +1048,13 @@ Ensemble Model 7 is applied on different subsets of a very large dataset to crea
     \begin{tabularx}{\textwidth}{|p{3cm}|X|}
     \hline
     \textbf{Aspect} & \textbf{Description} \\ \hline
-    Optimized Aggregation & Models of the same type from all subsets are combined into a single intermediate ensemble for that model type. \\ \hline
-    Intermediate Ensembles & Produces six intermediate ensembles (one each for Logistic Regression, Naive Bayes, SVM, XGBoost, LSTM, and Transformer). \\ \hline
+    Optimized \newline Aggregation & Models of the same type from all subsets are combined into a single intermediate ensemble for that model type. \\ \hline
+    Intermediate \newline Ensembles & Produces six intermediate ensembles (one each for Logistic Regression, Naive Bayes, SVM, XGBoost, LSTM, and Transformer). \\ \hline
     Final Ensemble & The six intermediate ensembles are aggregated via a meta learner (Random Forest) to form the final ensemble. \\ \hline
     Fixed Ensemble Count & The number of intermediate ensembles is fixed at six, regardless of the number of subsets, reducing computational overhead. \\ \hline
-    Efficient Resource Utilization & GPUs are reserved for training the computationally intensive LSTM and Transformer ensembles; lightweight meta learners (e.g., Logistic Regression or Random Forest) optimize aggregation. \\ \hline
-    Data Bus Implementation & A structured data bus efficiently transfers models from subsets to intermediate nodes, reducing latency and synchronization overhead. \\ \hline
-    Improved Cross-Validation & Streamlined aggregation minimizes redundancy, resulting in faster cross-validation and training on large datasets. \\ \hline
+    Efficient \newline Resource \newline Utilization & GPUs are reserved for training the computationally intensive LSTM and Transformer ensembles; lightweight meta learners (e.g., Logistic Regression or Random Forest) optimize aggregation. \\ \hline
+    Data Bus \newline Implementation & A structured data bus efficiently transfers models from subsets to intermediate nodes, reducing latency and synchronization overhead. \\ \hline
+    Improved \newline Cross-Validation & Streamlined aggregation minimizes redundancy, resulting in faster cross-validation and training on large datasets. \\ \hline
     \end{tabularx}
 \end{table}
     
