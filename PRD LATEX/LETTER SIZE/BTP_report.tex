@@ -43,7 +43,7 @@
 \usepackage{boldline} % <- for bold border
 \usepackage{anyfontsize}
 \usepackage{transparent}  
-
+%\usepackage[T1]{fontenc}
 \usepackage{mdframed}
 \usepackage{tikz}
 
@@ -154,7 +154,7 @@
  % ----- Blank Letter Head 1
  % \include{./FrontMatter/LetterHead1}
  % ----- Blank Letter Head 2
- %\include{./FrontMatter/LetterHead2}
+ % \include{./FrontMatter/LetterHead2}
  
  %\include{./FrontMatter/dedication}
  % \include{./FrontMatter/abstract}
@@ -163,14 +163,14 @@
 % Force fancy style globally
 \pagestyle{fancy}
 \fancyhead[C]{MAFSMBMDDPWI}
-\fancyfoot[L]{\footnotesize TMSL / CSE / PRD8 / v2.5}
+\fancyfoot[L]{\fontfamily{cmr}\selectfont\footnotesize TMSL/CSE/PRD8/v2.5}
 \fancyfoot[C]{\thepage}
 
 % Hack: redefine plain style so even if ToC sets it, it behaves like fancy
  \fancypagestyle{plain}{
    \fancyhf{}  % clear all
    \fancyhead[C]{MAFSMBMDDPWI}
-   \fancyfoot[L]{\footnotesize TMSL / CSE / PRD8 / v2.5}
+   \fancyfoot[L]{\fontfamily{cmr}\selectfont\footnotesize TMSL/CSE/PRD8/v2.5}
    \fancyfoot[C]{\thepage}  % Hides center page number
  }
 
