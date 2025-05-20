@@ -51,6 +51,22 @@ This project leverages artificial intelligence to detect early signs of mental h
 
 ## How to run ?
 
+> ⚠️ **Note:** To create a Reddit API Client ID and Secret Key, visit  
+> [https://old.reddit.com/prefs/apps/](https://old.reddit.com/prefs/apps/)  
+> and follow the steps below.
+<!-- Step 1 -->
+<p><strong>Step 1:</strong></p>
+<img src="https://github.com/arkapg211002/MAFSMBMDDPWI-FYP-2025/blob/main/WEB%20APP%20LANDING%20PAGE/REDDIT1.png" width="300" />
+
+<!-- Step 2 -->
+<p><strong>Step 2:</strong></p>
+<img src="https://github.com/arkapg211002/MAFSMBMDDPWI-FYP-2025/blob/main/WEB%20APP%20LANDING%20PAGE/REDDIT2.png" width="300" />
+
+<!-- Step 3 -->
+<p><strong>Step 3:</strong></p>
+<img src="https://github.com/arkapg211002/MAFSMBMDDPWI-FYP-2025/blob/main/WEB%20APP%20LANDING%20PAGE/REDDIT3.png" width="300" />
+
+
 <div style="display: flex; gap: 10px; align-items: center;">
   <a href="https://drive.google.com/uc?export=download&id=1LguxWEB64xMTUtJ46tKPhQzZ37jGZilV" download>
     <img src="https://img.shields.io/badge/Download-Pickles_and_Required_Files-green?style=for-the-badge" />
