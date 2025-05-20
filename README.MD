@@ -86,6 +86,19 @@ This project leverages artificial intelligence to detect early signs of mental h
 
 ---
 
+> 🔐 **Note:** To use Ngrok for tunneling your application online:
+> 
+> - Login using your **GitHub account** at [https://ngrok.com/](https://ngrok.com/)
+> - Then generate your **Ngrok Auth Token** and **Static Domain** using the steps below.
+
+<p><strong>Step 1: Generate Auth Token</strong></p>
+<img src="https://github.com/arkapg211002/MAFSMBMDDPWI-FYP-2025/blob/main/WEB%20APP%20LANDING%20PAGE/NGROK1.png" width="300" />
+
+<p><strong>Step 2: Create Static Domain</strong></p>
+<img src="https://github.com/arkapg211002/MAFSMBMDDPWI-FYP-2025/blob/main/WEB%20APP%20LANDING%20PAGE/NGROK2.png" width="300" />
+
+---
+
 <div style="display: flex; gap: 10px; align-items: center;">
   <a href="https://drive.google.com/uc?export=download&id=1LguxWEB64xMTUtJ46tKPhQzZ37jGZilV" download>
     <img src="https://img.shields.io/badge/Download-Pickles_and_Required_Files-green?style=for-the-badge" />
