@@ -132,3 +132,6 @@ This project leverages artificial intelligence to detect early signs of mental h
 > print("✅ Saved cross_encoder_model to pkl")
 > ```
 > ✅ Replace the newly generated `cross_encoder_gpu.pkl` with the one inside the **Pickles and Required Files** folder to ensure compatibility.
+
+[![Starting the application](https://img.shields.io/badge/▶️-Watch_Demo_MP4-red?style=for-the-badge)](https://drive.google.com/file/d/1LSSzi3sttacXlVt146ebSsmWp4bq9lbc/view)
+
