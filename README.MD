@@ -66,6 +66,25 @@ This project leverages artificial intelligence to detect early signs of mental h
 <p><strong>Step 3:</strong></p>
 <img src="https://github.com/arkapg211002/MAFSMBMDDPWI-FYP-2025/blob/main/WEB%20APP%20LANDING%20PAGE/REDDIT3.png" width="300" />
 
+---
+
+> 📌 **Note:** To use Google AI Studio features, create a **Google API Key**  
+> 👉 Visit [https://aistudio.google.com/apikey](https://aistudio.google.com/apikey) and follow the instructions on the page.
+
+---
+
+> 🚨 **Note:** To access Twitter (X) API features, you must create a **Bearer Token**
+> 
+> 👉 First, create a **developer profile** at [https://developer.x.com/](https://developer.x.com/)  
+> 👉 Then open [https://developer.x.com/en/portal/dashboard](https://developer.x.com/en/portal/dashboard) in a new tab and follow the steps below.
+
+<p><strong>Step 1:</strong></p>
+<img src="https://github.com/arkapg211002/MAFSMBMDDPWI-FYP-2025/blob/main/WEB%20APP%20LANDING%20PAGE/X1.png" width="300" />
+
+<p><strong>Step 2:</strong></p>
+<img src="https://github.com/arkapg211002/MAFSMBMDDPWI-FYP-2025/blob/main/WEB%20APP%20LANDING%20PAGE/X2.png" width="300" />
+
+
 
 <div style="display: flex; gap: 10px; align-items: center;">
   <a href="https://drive.google.com/uc?export=download&id=1LguxWEB64xMTUtJ46tKPhQzZ37jGZilV" download>
