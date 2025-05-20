@@ -46,3 +46,12 @@ This project leverages artificial intelligence to detect early signs of mental h
 ---
 
 ![Streamlit app](https://github.com/arkapg211002/MAFSMBMDDPWI-FYP-2025/blob/main/WEB%20APP%20IMAGES/01%20Interface.png)
+
+---
+
+## How to run ?
+
+<a href="https://drive.google.com/uc?export=download&id=1LguxWEB64xMTUtJ46tKPhQzZ37jGZilV" download>
+  <img src="https://img.shields.io/badge/Download-ZIP-green?style=for-the-badge" />
+</a>
+
