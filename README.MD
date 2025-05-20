@@ -90,7 +90,7 @@ This project leverages artificial intelligence to detect early signs of mental h
   <a href="https://drive.google.com/uc?export=download&id=1LguxWEB64xMTUtJ46tKPhQzZ37jGZilV" download>
     <img src="https://img.shields.io/badge/Download-Pickles_and_Required_Files-green?style=for-the-badge" />
   </a>
-  <a href="https://raw.githubusercontent.com/arkapg211002/MAFSMBMDDPWI-FYP-2025/main/D05%20Deployment/WebAppV13-6.ipynb" download>
+  <a href="https://github.com/arkapg211002/MAFSMBMDDPWI-FYP-2025/blob/main/D05%20Deployment/WebAppV13-6.ipynb" download>
     <img src="https://img.shields.io/badge/Download-Notebook-blue?style=for-the-badge" />
   </a>
 </div>
