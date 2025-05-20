@@ -84,7 +84,7 @@ This project leverages artificial intelligence to detect early signs of mental h
 <p><strong>Step 2: GENERATE BEARER TOKEN AND SAVE IT</strong></p>
 <img src="https://github.com/arkapg211002/MAFSMBMDDPWI-FYP-2025/blob/main/WEB%20APP%20LANDING%20PAGE/X2.png" width="300" />
 
-
+---
 
 <div style="display: flex; gap: 10px; align-items: center;">
   <a href="https://drive.google.com/uc?export=download&id=1LguxWEB64xMTUtJ46tKPhQzZ37jGZilV" download>
