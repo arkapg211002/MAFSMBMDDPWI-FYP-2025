@@ -119,16 +119,16 @@ This project leverages artificial intelligence to detect early signs of mental h
 > 
 > If you encounter errors while loading this file, please regenerate it using the following code:
 > ```py
-from sentence_transformers import CrossEncoder
-import pickle
-
-# Load the cross-encoder model (use device='cuda' if using GPU runtime)
-cross_encoder_model = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2', device='cuda')
-
-# Save it to a pickle file
-with open("cross_encoder_gpu.pkl", "wb") as f:
-    pickle.dump(cross_encoder_model, f)
-
-print("✅ Saved cross_encoder_model to pkl")
-```
+> from sentence_transformers import CrossEncoder
+> import pickle
+>
+> # Load the cross-encoder model (use device='cuda' if using GPU runtime)
+> cross_encoder_model = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2', device='cuda')
+>
+> # Save it to a pickle file
+> with open("cross_encoder_gpu.pkl", "wb") as f:
+>     pickle.dump(cross_encoder_model, f)
+>
+> print("✅ Saved cross_encoder_model to pkl")
+> ```
 > ✅ Replace the newly generated `cross_encoder_gpu.pkl` with the one inside the **Pickles and Required Files** folder to ensure compatibility.
