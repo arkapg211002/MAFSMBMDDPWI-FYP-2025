@@ -95,4 +95,6 @@ This project leverages artificial intelligence to detect early signs of mental h
   </a>
 </div>
 
+> Unzip the `Pickles and Required Files`
+> Upload `WebAppV13-6.ipynb` in drive and open it in Google Colab
 
