@@ -75,7 +75,7 @@ This project leverages artificial intelligence to detect early signs of mental h
 
 > 🚨 **Note:** To access Twitter (X) API features, you must create a **Bearer Token**
 > 
-> 👉 First, create a **developer profile** at [https://developer.x.com/](https://developer.x.com/)  
+> 👉 First, create a profile on X 
 > 👉 Then open [https://developer.x.com/en/portal/dashboard](https://developer.x.com/en/portal/dashboard) in a new tab and follow the steps below.
 
 <p><strong>Step 1:</strong></p>
