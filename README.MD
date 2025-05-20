@@ -93,8 +93,12 @@ This project leverages artificial intelligence to detect early signs of mental h
   <a href="https://drive.google.com/uc?export=download&id=1rCKbEAwJvjPJJICKXNYOGxI6GVJQ7kPC" download>
     <img src="https://img.shields.io/badge/Download-Notebook-blue?style=for-the-badge" />
   </a>
+  <!-- Download Samples -->
+  <a href="https://drive.google.com/uc?export=download&id=1VH3QKcllymxj3CSeRkWBe9XbN0PTrvs8" download>
+    <img src="https://img.shields.io/badge/Download-Sample_Data-purple?style=for-the-badge" />
+  </a>
 </div>
 
-> Unzip the `Pickles and Required Files`
+> Unzip the `Pickles and Required Files` and `Samples`
 > Upload `WebAppV13-6.ipynb` in drive and open it in Google Colab
 
