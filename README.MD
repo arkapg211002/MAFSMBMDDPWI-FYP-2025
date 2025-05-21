@@ -69,7 +69,7 @@ This project leverages artificial intelligence to detect early signs of mental h
 ---
 
 > 📌 **Note:** To use Google AI Studio features, create a **Google API Key**  
-> 👉 Visit [https://aistudio.google.com/apikey](https://aistudio.google.com/apikey) and follow the instructions on the page.
+> 👉 Visit [https://aistudio.google.com/apikey](https://aistudio.google.com/apikey) and create an API key.
 
 ---
 
