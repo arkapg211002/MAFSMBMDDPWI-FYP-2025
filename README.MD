@@ -117,7 +117,7 @@ This project leverages artificial intelligence to detect early signs of mental h
 
 > ⚠️ **Warning:** The `cross_encoder_gpu.pkl` file inside the "Pickles and Required Files" may become **incompatible** if Google Colab updates its environment.
 > 
-> If you encounter errors while loading this file, please regenerate it using the following code:
+> It is `recommended` to regenerate it using the following code:
 > ```py
 > from sentence_transformers import CrossEncoder
 > import pickle
