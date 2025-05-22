@@ -136,7 +136,7 @@ This project leverages artificial intelligence to detect early signs of mental h
 
 [![Starting the application](https://img.shields.io/badge/Watch▶️-Start_the_application-red?style=for-the-badge)](https://drive.google.com/file/d/1LSSzi3sttacXlVt146ebSsmWp4bq9lbc/view)
 
-> Test with sample inputs obtained from unzipping `Samples.zip`
+> Test with sample inputs obtained after unzipping `Samples.zip`
 
 [![📄 View Reports Folder](https://img.shields.io/badge/✅%20View-Sample_Reports-blue?style=for-the-badge)](https://github.com/arkapg211002/MAFSMBMDDPWI-FYP-2025/tree/main/WEB%20APP%20REPORTS)
 
