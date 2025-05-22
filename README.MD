@@ -69,7 +69,7 @@ This project leverages artificial intelligence to detect early signs of mental h
 ---
 
 > 📌 **Note:** To use Google AI Studio features, create a **Google API Key**  
-> 👉 Visit [https://aistudio.google.com/apikey](https://aistudio.google.com/apikey) and follow the instructions on the page.
+> 👉 Visit [https://aistudio.google.com/apikey](https://aistudio.google.com/apikey) and create an API key.
 
 ---
 
@@ -117,7 +117,7 @@ This project leverages artificial intelligence to detect early signs of mental h
 
 > ⚠️ **Warning:** The `cross_encoder_gpu.pkl` file inside the "Pickles and Required Files" may become **incompatible** if Google Colab updates its environment.
 > 
-> If you encounter errors while loading this file, please regenerate it using the following code:
+> It is `recommended` to regenerate it using the following code:
 > ```py
 > from sentence_transformers import CrossEncoder
 > import pickle
@@ -131,11 +131,14 @@ This project leverages artificial intelligence to detect early signs of mental h
 >
 > print("✅ Saved cross_encoder_model to pkl")
 > ```
-> ✅ Replace the newly generated `cross_encoder_gpu.pkl` with the one inside the **Pickles and Required Files** folder to ensure compatibility.
+> ✅ Replace the newly generated `cross_encoder_gpu.pkl` with the one inside the **Pickles and Required Files** folder to ensure compatibility. <br>
+> Disconnect and delete the runtime of Google Colab and start by reconnecting again.
 
 [![Starting the application](https://img.shields.io/badge/Watch▶️-Start_the_application-red?style=for-the-badge)](https://drive.google.com/file/d/1LSSzi3sttacXlVt146ebSsmWp4bq9lbc/view)
 
-[![📄 View Reports Folder](https://img.shields.io/badge/✅%20View-Web_App_Reports-blue?style=for-the-badge)](https://github.com/arkapg211002/MAFSMBMDDPWI-FYP-2025/tree/main/WEB%20APP%20REPORTS)
+> Test with sample inputs obtained from unzipping `Samples.zip`
+
+[![📄 View Reports Folder](https://img.shields.io/badge/✅%20View-Sample_Reports-blue?style=for-the-badge)](https://github.com/arkapg211002/MAFSMBMDDPWI-FYP-2025/tree/main/WEB%20APP%20REPORTS)
 
 ---
 
