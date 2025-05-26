@@ -20,6 +20,7 @@
     \resizebox{\textwidth}{!}{
     \begin{tabularx}{\textwidth}{|>{\centering\arraybackslash}m{1.5cm}|X|X|X|>{\centering\arraybackslash}m{1.5cm}|}
         \hline
+        \rowcolor{lightestgray}
         \textbf{Test Case ID} & \textbf{Description} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Status} \\ \hline
         T01 & User provides input in the text area. & Text is accepted for further processing. & Text is accepted for further processing. & \checkmark \\ \hline
         T02 & Display mental health issues with probabilities for classes. & Probabilities for each mental health class are shown. & Probabilities for each mental health class are shown. & \checkmark \\ \hline
@@ -37,6 +38,7 @@
     \resizebox{\textwidth}{!}{
     \begin{tabularx}{\textwidth}{|>{\centering\arraybackslash}m{1.5cm}|X|X|X|>{\centering\arraybackslash}m{1.5cm}|}
         \hline
+        \rowcolor{lightestgray}
         \textbf{Test Case ID} & \textbf{Description} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Status} \\ \hline
         T05 & Translate multiple language inputs to English. & Non-English text is translated correctly to English. & Non-English text is translated correctly to English. & \checkmark \\ \hline
         T06 & Extract text and \newline detect emotion from image. & Extracted text and detected emotions are displayed accurately. & Extracted text and detected emotions are displayed accurately. & \checkmark \\ \hline
@@ -64,6 +66,7 @@
     \centering
     \begin{tabularx}{\textwidth}{|p{3cm}|>{\raggedright\arraybackslash}X|}
     \hline
+    \rowcolor{lightestgray}
     \textbf{Metric} & \textbf{Definition and Formula} \\ \hline
     Precision & The ratio of correctly predicted positive observations to the total predicted positives.
     \[
@@ -137,6 +140,7 @@
     \textbf{Logistic Regression} \\[0.2em]
     \begin{tabular}{|l|c|c|c|c|}
         \hline
+        \rowcolor{lightestgray}
         \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
         Anxiety        & 0.83               & 0.77            & 0.80              & 379              \\ \hline
         Bipolar        & 0.74               & 0.55            & 0.63              & 384              \\ \hline
@@ -156,6 +160,7 @@
     \textbf{Naive Bayes} \\[0.2em]
     \begin{tabular}{|l|c|c|c|c|}
         \hline
+        \rowcolor{lightestgray}
         \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
         Anxiety        & 0.70               & 0.73            & 0.72              & 379              \\ \hline
         Bipolar        & 0.83               & 0.45            & 0.58              & 384              \\ \hline
@@ -174,6 +179,7 @@
     \textbf{Support Vector Machine} \\[0.2em]
     \begin{tabular}{|l|c|c|c|c|}
         \hline
+        \rowcolor{lightestgray}
         \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
         Anxiety        & 0.72               & 0.76            & 0.74              & 379              \\ \hline
         Bipolar        & 0.62               & 0.61            & 0.61              & 384              \\ \hline
@@ -191,6 +197,7 @@
     \textbf{Random Forest} \\[0.2em]
     \begin{tabular}{|l|c|c|c|c|}
         \hline
+        \rowcolor{lightestgray}
         \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
         Anxiety        & 0.81               & 0.70            & 0.75              & 379              \\ \hline
         Bipolar        & 0.93               & 0.47            & 0.62              & 384              \\ \hline
@@ -210,6 +217,7 @@
     \textbf{XGBoost} \\[0.2em]
     \begin{tabular}{|l|c|c|c|c|}
         \hline
+        \rowcolor{lightestgray}
         \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
         Anxiety        & 0.81               & 0.74            & 0.77              & 403              \\ \hline
         Bipolar        & 0.77               & 0.62            & 0.69              & 397              \\ \hline
@@ -233,6 +241,7 @@
     \textbf{K-Nearest Neighbour} \\[0.2em]
     \begin{tabular}{|l|c|c|c|c|}
         \hline
+        \rowcolor{lightestgray}
         \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
         Anxiety        & 0.58               & 0.31            & 0.40              & 379              \\ \hline
         Bipolar        & 0.18               & 0.59            & 0.28              & 384              \\ \hline
@@ -250,6 +259,7 @@
     \textbf{Long Short Term Memory} \\[0.2em]
     \begin{tabular}{|l|c|c|c|c|}
         \hline
+        \rowcolor{lightestgray}
         \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
         Anxiety        & 0.74               & 0.72            & 0.73              & 1999             \\ \hline
         Bipolar        & 0.66               & 0.70            & 0.68              & 1964             \\ \hline
@@ -268,6 +278,7 @@
     \textbf{Custom Transformer} \\[0.2em]
     \begin{tabular}{|l|c|c|c|c|}
         \hline
+        \rowcolor{lightestgray}
         \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
         Anxiety        & 0.75               & 0.78            & 0.76              & 379             \\ \hline
         Bipolar        & 0.76               & 0.69            & 0.73              & 384             \\ \hline
@@ -286,6 +297,7 @@
     \textbf{Hyperparameter Tuning on Logistic Regression} \\[0.2em]
     \begin{tabular}{|l|c|c|c|c|}
         \hline
+        \rowcolor{lightestgray}
         \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
         Anxiety        & 0.83               & 0.77            & 0.80              & 379             \\ \hline
         Bipolar        & 0.74               & 0.55            & 0.64              & 384             \\ \hline
@@ -305,6 +317,7 @@
     \textbf{Hyperparameter Tuning on KNN} \\[0.5em]
     \begin{tabular}{|l|c|c|c|c|}
         \hline
+        \rowcolor{lightestgray}
         \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
         Anxiety        & 0.73               & 0.23            & 0.35              & 379             \\ \hline
         Bipolar        & 0.18               & 0.60            & 0.27              & 384             \\ \hline
@@ -322,6 +335,7 @@
     \textbf{Hyperparameter Tuning on SVM} \\[0.5em]
     \begin{tabular}{|l|c|c|c|c|}
         \hline
+        \rowcolor{lightestgray}
         \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
         Anxiety        & 0.72               & 0.76            & 0.74              & 379             \\ \hline
         Bipolar        & 0.62               & 0.61            & 0.61              & 384             \\ \hline
@@ -340,6 +354,7 @@
     \textbf{Hyperparameter Tuning on Naive Bayes} \\[0.5em]
     \begin{tabular}{|l|c|c|c|c|}
         \hline
+        \rowcolor{lightestgray}
         \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
         Anxiety        & 0.69               & 0.76            & 0.72              & 379             \\ \hline
         Bipolar        & 0.75               & 0.55            & 0.64              & 384             \\ \hline
@@ -582,6 +597,7 @@
     \small
     \begin{tabularx}{\textwidth}{|l|c|X|}
     \hline
+    \rowcolor{lightestgray}
     \textbf{Model} & \textbf{Accuracy (\%)} & \textbf{Key Observations} \\
     \hline
     Logistic Regression & 87.66 & High precision, recall, and F1 for the \textit{Normal} class; struggles with \textit{Bipolar} and \textit{Anxiety}. ROC AUC: Normal (1.00), Anxiety (0.99), Depression (0.99). \\
@@ -615,6 +631,7 @@
     \small
     \begin{tabularx}{\textwidth}{|l|X|p{3cm}|X|}
         \hline
+        \rowcolor{lightestgray}
         \textbf{Model} & \textbf{Best} \newline \textbf{Hyperparameters} & \textbf{Accuracy \&} \newline \textbf{Metrics} & \textbf{Key Observations} \\
         \hline
         Logistic Regression & \texttt{solver=liblinear, penalty=l2, C=1} & Accuracy: 87.72\%; Normal: 92\% accuracy; ROC AUC: Normal 0.98, Depression 0.96 & High precision, recall, and F1 for Normal; Bipolar shows lower F1 (64\%); overall robust performance, especially for Normal and Anxiety. \\
@@ -659,6 +676,7 @@ K-Nearest Neighbors (KNN) performs poorly on this mental health dataset compared
     \textbf{Model Performance Comparison} \\[0.5em]
     \begin{tabular}{|c|c|c|c|c|c|}
         \hline
+        \rowcolor{lightestgray}
         \textbf{Model} & \textbf{BoW} & \textbf{TFIDF} & \textbf{LIWC} & \textbf{Word2Vec} & \textbf{N-Gram} \\ \hline
         \textbf{Logistic Regression} & 87.66 & 86.02 & 66.36 & 79.40 & 87.13 \\ \hline
         \textbf{KNN} & 54.56 & 75.06 & 70.70 & 75.52 & 43.06 \\ \hline
@@ -679,7 +697,8 @@ In ensemble learning, combining models like Logistic Regression (LR), Naive Baye
     \textbf{Ensemble Model 1} \\[0.2em]
     \begin{tabular}{|c|c|c|c|c|}
         \hline
-        & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
+        \rowcolor{lightestgray}
+        \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
         \textbf{Anxiety}    & 0.97 & 0.94 & 0.95 & 400  \\ \hline
         \textbf{Bipolar}    & 0.92 & 0.85 & 0.88 & 388  \\ \hline
         \textbf{Depression} & 0.95 & 0.94 & 0.94 & 392  \\ \hline
@@ -696,7 +715,8 @@ In ensemble learning, combining models like Logistic Regression (LR), Naive Baye
     \textbf{Ensemble Model 2} \\[0.2em]
     \begin{tabular}{|c|c|c|c|c|}
         \hline
-        & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
+        \rowcolor{lightestgray}
+        \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
         \textbf{Anxiety}    & 0.97 & 0.97 & 0.97 & 400  \\ \hline
         \textbf{Bipolar}    & 0.95 & 0.92 & 0.93 & 388  \\ \hline
         \textbf{Depression} & 0.98 & 0.96 & 0.97 & 392  \\ \hline
@@ -713,7 +733,8 @@ In ensemble learning, combining models like Logistic Regression (LR), Naive Baye
     \textbf{Ensemble Model 3} \\[0.2em]
     \begin{tabular}{|c|c|c|c|c|}
         \hline
-        & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
+        \rowcolor{lightestgray}
+        \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
         \textbf{Anxiety}    & 0.98 & 0.97 & 0.98 & 400  \\ \hline
         \textbf{Bipolar}    & 0.96 & 0.90 & 0.93 & 388  \\ \hline
         \textbf{Depression} & 0.97 & 0.96 & 0.96 & 392  \\ \hline
@@ -730,6 +751,7 @@ In ensemble learning, combining models like Logistic Regression (LR), Naive Baye
     \textbf{Ensemble Model 4} \\[0.2em]
     \begin{tabular}{|c|c|c|c|c|}
         \hline
+        \rowcolor{lightestgray}
         \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
         Anxiety & 0.97 & 0.97 & 0.97 & 400 \\ \hline
         Bipolar & 0.95 & 0.90 & 0.92 & 388 \\ \hline
@@ -751,7 +773,8 @@ In ensemble learning, combining models like Logistic Regression (LR), Naive Baye
     \textbf{Ensemble Model 5} \\[0.2em]
     \begin{tabular}{|c|c|c|c|c|}
         \hline
-        & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
+        \rowcolor{lightestgray}
+        \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
         \textbf{Anxiety}    & 0.96 & 0.95 & 0.96 & 400 \\ \hline
         \textbf{Bipolar}    & 0.94 & 0.89 & 0.92 & 388 \\ \hline
         \textbf{Depression} & 0.96 & 0.95 & 0.95 & 392 \\ \hline
@@ -768,7 +791,8 @@ In ensemble learning, combining models like Logistic Regression (LR), Naive Baye
     \textbf{Ensemble Model 6} \\[0.2em]
     \begin{tabular}{|c|c|c|c|c|}
         \hline
-        & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
+        \rowcolor{lightestgray}
+        \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
         \textbf{Anxiety}    & 0.95 & 0.92 & 0.94 & 400 \\ \hline
         \textbf{Bipolar}    & 0.96 & 0.74 & 0.84 & 388 \\ \hline
         \textbf{Depression} & 0.92 & 0.94 & 0.93 & 392 \\ \hline
@@ -785,7 +809,8 @@ In ensemble learning, combining models like Logistic Regression (LR), Naive Baye
     \textbf{Ensemble Model 7} \\[0.5em]
     \begin{tabular}{|c|c|c|c|c|}
         \hline
-        & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
+        \rowcolor{lightestgray}
+        \textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\ \hline
         \textbf{Anxiety}    & 0.98 & 0.97 & 0.98 & 400 \\ \hline
         \textbf{Bipolar}    & 0.96 & 0.93 & 0.95 & 388 \\ \hline
         \textbf{Depression} & 0.97 & 0.97 & 0.97 & 392 \\ \hline
@@ -934,6 +959,7 @@ In ensemble learning, combining models like Logistic Regression (LR), Naive Baye
     \label{tab:ensemble_comparison}
     \begin{tabularx}{\textwidth}{|l|c|X|X|X|}
     \hline
+    \rowcolor{lightestgray}
     \textbf{Model} & \textbf{Accuracy} & \textbf{Key} \newline \textbf{Components} & \textbf{Advantages} & \textbf{Limitations} \\
     \hline
     Ensemble Model 1 & 96.08\% & Logistic Regression + XGBoost & Balanced performance (e.g., Anxiety: Prec=0.97, Rec=0.94, F1=0.95); robust macro/weighted averages & May not fully capture complex, non-linear, context-dependent patterns \\
@@ -949,6 +975,7 @@ In ensemble learning, combining models like Logistic Regression (LR), Naive Baye
     \label{tab:ensemble_comparison}
     \begin{tabularx}{\textwidth}{|l|c|X|X|X|}
     \hline
+    \rowcolor{lightestgray}
     \textbf{Model} & \textbf{Accuracy} & \textbf{Key} \newline \textbf{Components} & \textbf{Advantages} & \textbf{Limitations} \\
     \hline
     Ensemble Model 2 & 97.93 & XGBoost as meta-learner combining base models (LR, SVM, NB, LSTM) & Near-perfect ROC AUC (1.0 for Anxiety, Normal, PTSD, Bipolar, Depression); effective handling of imbalanced data & Potential overfitting if base model predictions are highly correlated \\
@@ -992,6 +1019,7 @@ Ensemble Model 7 is applied on different subsets of a very large dataset to crea
     \resizebox{\textwidth}{!}{%
     \begin{tabular}{|c|c|c|c|c|c|c|c|}
         \hline
+        \rowcolor{lightestgray}
         \textbf{Model} & \textbf{Subset 1} & \textbf{Subset 2} & \textbf{Subset 3} & \textbf{Subset 4} & \textbf{Subset 5} & \textbf{Subset 6} & \textbf{ENSEMBLE} \\ \hline
         Logistic Regression & 87.66 & 85.07 & 86.74 & 90.61 & 88.17 & 72.62 & \textbf{90.90} \\ \hline
         Naive Bayes         & 83.63 & 81.71 & 83.50 & 84.44 & 85.93 & 64.33 & \textbf{84.15} \\ \hline
@@ -1023,6 +1051,7 @@ Ensemble Model 7 is applied on different subsets of a very large dataset to crea
     \label{tab:arch1}
     \begin{tabularx}{\textwidth}{|p{3cm}|X|}
     \hline
+    \rowcolor{lightestgray}
     \textbf{Aspect} & \textbf{Description} \\ \hline
     Data Partitioning & The dataset is divided into manageable subsets for independent processing. \\ \hline
     Base Models & Each subset trains base models (Logistic Regression, Naive Bayes, SVM, LSTM, XGBoost, and Custom Transformers). \\ \hline
@@ -1048,6 +1077,7 @@ Ensemble Model 7 is applied on different subsets of a very large dataset to crea
     \label{tab:arch2}
     \begin{tabularx}{\textwidth}{|p{3cm}|X|}
     \hline
+    \rowcolor{lightestgray}
     \textbf{Aspect} & \textbf{Description} \\ \hline
     Optimized \newline Aggregation & Models of the same type from all subsets are combined into a single intermediate ensemble for that model type. \\ \hline
     Intermediate \newline Ensembles & Produces six intermediate ensembles (one each for Logistic Regression, Naive Bayes, SVM, XGBoost, LSTM, and Transformer). \\ \hline

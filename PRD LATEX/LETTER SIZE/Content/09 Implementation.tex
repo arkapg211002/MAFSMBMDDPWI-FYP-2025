@@ -18,6 +18,7 @@
     \label{tab:algorithm}
     \begin{tabularx}{\textwidth}{|c|X|}
         \hline
+        \rowcolor{lightestgray}
         \textbf{Step} & \textbf{Description} \\
         \hline
         1 & \textbf{Import Libraries:} Import \texttt{praw, pandas, time} for data collection and \texttt{sklearn.utils.shuffle} for combining datasets. \\
@@ -52,6 +53,7 @@
     \label{tab:algorithm}
     \begin{tabularx}{\textwidth}{|c|X|}
         \hline
+        \rowcolor{lightestgray}
         \textbf{Step} & \textbf{Description} \\
         \hline
         6 & \textbf{Save Collected Data:} Convert the data list into a DataFrame with columns \texttt{text} and \texttt{label} and save it as \texttt{\{label\}\_dataset.csv}. \\
@@ -115,6 +117,7 @@ The dataset for mental health classification was compiled from subreddit communi
     \centering
     \begin{tabularx}{\textwidth}{|c|X|}
     \hline
+    \rowcolor{lightestgray}
     \textbf{Step} & \textbf{Description} \\
     \hline
     1 & \textbf{Import Libraries \& Resources}: Import \texttt{pandas}, \texttt{re}, \texttt{TfidfVectorizer} from scikit-learn, and NLTK modules. Download the necessary NLTK resources (e.g., \texttt{stopwords}, \texttt{punkt}, and \texttt{punkt\_tab}). \\
@@ -148,6 +151,7 @@ The dataset for mental health classification was compiled from subreddit communi
     \centering
     \begin{tabularx}{\textwidth}{|c|X|}
     \hline
+    \rowcolor{lightestgray}
     \textbf{Step} & \textbf{Description} \\
     \hline
     7 & \textbf{Apply Cleaning Function}: Execute \texttt{clean\_text} on the \texttt{text} column and store the result in a new column called \texttt{cleaned\_text}. \\
@@ -180,6 +184,7 @@ The dataset for mental health classification was compiled from subreddit communi
     \centering
     \begin{tabularx}{\textwidth}{|c|X|X|}
     \hline
+    \rowcolor{lightestgray}
     \textbf{Stage} & \textbf{Schema} & \textbf{Description} \\
     \hline
     \makecell{Before\\Cleaning} &
@@ -221,6 +226,7 @@ Algorithm like Logistic Regression, K-Nearest Neighbors, Support Vector Machine,
     \small
     \begin{tabularx}{\textwidth}{|c|X|}
         \hline
+        \rowcolor{lightestgray}
         \textbf{Step} & \textbf{Description} \\
         \hline
         1 & \textbf{Data Loading and Verification:} Load the dataset (\texttt{preprocessed\_mental\_health.csv}) using pandas, verify required columns (\texttt{cleaned\_text} and \texttt{mental\_health\_issue}), and drop rows with missing values. \\
@@ -260,6 +266,7 @@ Algorithm like Logistic Regression, K-Nearest Neighbors, Support Vector Machine,
     \small
     \begin{tabularx}{\textwidth}{|c|X|}
         \hline
+        \rowcolor{lightestgray}
         \textbf{Step} & \textbf{Description} \\
         \hline
         1 & \textbf{Data Loading:} Load \texttt{preprocessed\_mental\_health.csv} using pandas. \\
@@ -289,6 +296,7 @@ Algorithm like Logistic Regression, K-Nearest Neighbors, Support Vector Machine,
     \small
     \begin{tabularx}{\textwidth}{|c|X|}
         \hline
+        \rowcolor{lightestgray}
         \textbf{Step} & \textbf{Description} \\
         \hline
         5 & \textbf{LSTM Model Building:} For each fold, build a Keras Sequential model with:
@@ -365,6 +373,7 @@ Algorithm like Logistic Regression, K-Nearest Neighbors, Support Vector Machine,
     \small
     \begin{tabularx}{\textwidth}{|c|X|}
         \hline
+        \rowcolor{lightestgray}
         \textbf{Step} & \textbf{Description} \\
         \hline
         1 & \textbf{Import Libraries:} Import required packages including NumPy, pandas, Matplotlib, Seaborn, scikit-learn modules (e.g., \texttt{LabelEncoder}, \texttt{confusion\_matrix}), and TensorFlow Keras modules (e.g., \texttt{TextVectorization}, \texttt{Embedding}, \texttt{LSTM}, \texttt{MultiHeadAttention}, etc.). \\
@@ -386,6 +395,7 @@ Algorithm like Logistic Regression, K-Nearest Neighbors, Support Vector Machine,
     \small
     \begin{tabularx}{\textwidth}{|c|X|}
         \hline
+        \rowcolor{lightestgray}
         \textbf{Step} & \textbf{Description} \\
         \hline
         5 & \textbf{Define Custom Transformer Model:} 
@@ -438,6 +448,7 @@ Algorithm like Logistic Regression, K-Nearest Neighbors, Support Vector Machine,
     \small
     \begin{tabularx}{\textwidth}{|c|X|}
         \hline
+        \rowcolor{lightestgray}
         \textbf{Step} & \textbf{Description} \\
         \hline
         1 & \textbf{Import Libraries:} Import required packages including \texttt{numpy}, \texttt{pandas}, \texttt{tensorflow} (Keras modules such as \texttt{MultiHeadAttention}, \texttt{Embedding}, etc.), \texttt{scikit-learn} (e.g., \texttt{RandomForestClassifier}, \texttt{train\_test\_split}, \texttt{confusion\_matrix}), and \texttt{pickle}. \\
@@ -475,6 +486,7 @@ Algorithm like Logistic Regression, K-Nearest Neighbors, Support Vector Machine,
     \small
     \begin{tabularx}{\textwidth}{|c|X|}
         \hline
+        \rowcolor{lightestgray}
         \textbf{Step} & \textbf{Description} \\
         \hline
         6 & \textbf{Stack Predictions:} Horizontally stack all base model prediction probabilities to form a new feature matrix (\texttt{stacked\_features}) for the meta-learner. \\
@@ -516,6 +528,7 @@ Algorithm like Logistic Regression, K-Nearest Neighbors, Support Vector Machine,
     \label{tab:algorithm}
     \begin{tabularx}{\textwidth}{|l|X|X|}
     \hline
+    \rowcolor{lightestgray}
     \textbf{Step} & \textbf{Operation} & \textbf{Description / Formula} \\ \hline
     1 & \textbf{Initialization:} \newline
     - Define file paths: \texttt{csv\_file\_path}, \texttt{image\_path}, \texttt{am\_file\_path}. \newline
@@ -586,6 +599,7 @@ Algorithm like Logistic Regression, K-Nearest Neighbors, Support Vector Machine,
     \label{tab:algorithm}
     \begin{tabularx}{\textwidth}{|l|X|X|}
     \hline
+    \rowcolor{lightestgray}
     \textbf{Step} & \textbf{Operation} & \textbf{Description / Formula} \\ \hline
      & \(S_{\mathrm{PL}}\): Purpose in Life  \newline
     \(S_{\mathrm{PG}}\): Personal Growth  &  \\ \hline
@@ -637,6 +651,7 @@ Algorithm like Logistic Regression, K-Nearest Neighbors, Support Vector Machine,
     \label{tab:algorithm}
     \begin{tabularx}{\textwidth}{|c|p{6cm}|>{\raggedright\arraybackslash}X|}
     \hline
+    \rowcolor{lightestgray}
     \textbf{Step} & \textbf{Operation} & \textbf{Mathematical Formula / Description} \\ \hline
     1 & \textbf{Load Dataset} & Read the CSV file (e.g., \texttt{am.csv}) to obtain the association matrix data. \\ \hline
     2 & \textbf{Define Row Names and Issue Columns} & Set row names: 
@@ -665,6 +680,7 @@ Algorithm like Logistic Regression, K-Nearest Neighbors, Support Vector Machine,
     \label{tab:algorithm}
     \begin{tabularx}{\textwidth}{|c|p{6cm}|>{\raggedright\arraybackslash}X|}
     \hline
+    \rowcolor{lightestgray}
     \textbf{Step} & \textbf{Operation} & \textbf{Mathematical Formula / Description} \\ \hline
     9 & \textbf{Display Results} & Use Streamlit to display:
     \begin{itemize}[noitemsep, topsep=0pt]
@@ -691,6 +707,7 @@ Algorithm like Logistic Regression, K-Nearest Neighbors, Support Vector Machine,
     \label{tab:algorithm}
     \begin{tabularx}{\textwidth}{|c|p{2.5cm}|X|}
         \hline
+        \rowcolor{lightestgray}
         \textbf{Step} & \textbf{Operation} & \textbf{Mathematical Formula / Description} \\ \hline
         1 & \textbf{Import} \newline \textbf{Libraries} & Import necessary packages: \texttt{streamlit}, \texttt{json}, \texttt{pickle}, \texttt{numpy}, \texttt{faiss}, \texttt{sentence\_transformers}, \texttt{transformers}, \texttt{google.generativeai}, \texttt{plotly}, \texttt{sklearn.manifold.TSNE}, etc. \\ \hline
         2 & \textbf{Configure Gemini API} & Set the generation configuration parameters and initialize the Gemini model. \\ \hline
@@ -706,6 +723,7 @@ Algorithm like Logistic Regression, K-Nearest Neighbors, Support Vector Machine,
     \label{tab:algorithm}
     \begin{tabularx}{\textwidth}{|c|p{2.5cm}|X|}
         \hline
+        \rowcolor{lightestgray}
         \textbf{Step} & \textbf{Operation} & \textbf{Mathematical Formula / Description} \\ \hline
         
         4 & \textbf{Build FAISS Index} & Load the saved model via: \texttt{embedding\_model = pickle.load("rag\_embedding\_gpu.pkl")}. Then load the instruction data from \texttt{instruction\_data.json} to form \texttt{documents = \{instruction + input\}} and \texttt{outputs = \{output\}}. Next, encode the documents using \texttt{embeddings = np.array([embedding\_model.encode(doc)])} so that embeddings $\in \mathbb{R}^{n \times d}$. Build the FAISS L2-index by setting \texttt{index = faiss.IndexFlatL2(d)} and calling \texttt{index.add(embeddings)}. Finally, save the tuple \texttt{\{documents, outputs, index, embeddings\}} into \texttt{"global\_store\_gpu.pkl"}. \\ \hline
@@ -778,6 +796,7 @@ Algorithm like Logistic Regression, K-Nearest Neighbors, Support Vector Machine,
     \label{tab:algorithm}
     \begin{tabularx}{\textwidth}{|c|p{2.5cm}|X|}
         \hline
+        \rowcolor{lightestgray}
         \textbf{Step} & \textbf{Operation} & \textbf{Mathematical Formula / Description} \\ \hline
     
         11 & \textbf{3D t-SNE} \newline \textbf{Visualization} & Combine the query embedding with the document embeddings and reduce the dimensionality using t-SNE:
