@@ -25,6 +25,20 @@
 \usepackage{listings}
 \usepackage{float}
 \usepackage{caption}
+
+\captionsetup{
+  labelfont=bf,    % bold “Fig. 7.1”
+  labelsep=quad   % drop the colon, leave one space
+}
+
+% 1) tie figure numbering to section
+\usepackage{chngcntr}
+\counterwithin{figure}{section}
+
+% 2) switch “Figure” → “Fig.” and format as <sec>.<fig>
+\renewcommand{\figurename}{Fig.}
+\renewcommand{\thefigure}{\thesection.\arabic{figure}}
+
 \usepackage{multirow}
 \usepackage{xcolor}
 \usepackage{xcolor}
@@ -183,7 +197,7 @@
   \tableofcontents
 \end{spacing}
 
-\listoffigures
+% \listoffigures
 
 % After ToC, continue with real fancy style (with center page numbers)
 \clearpage

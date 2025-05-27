@@ -7,55 +7,57 @@
 \noindent
 The technical environment for the project "Multimodal AI Framework for Social Media Based Mental Disorder Detection and Personalized Wellbeing Insights" comprises a combination of hardware, software, and tools that enable smooth data analysis, machine learning model training, and deployment. Below is an overview of the minimum hardware configuration, software tools, and package details necessary to carry out this project effectively. 
 
-\begin{table}[h]
+\begin{table}[H]
     \centering
     \renewcommand{\arraystretch}{1.2}
-    \begin{tabular}{|c|p{12cm}|}
-        \hline
+    \setlength{\arrayrulewidth}{1pt}
+    \begin{tabular}{|c|p{11.2cm}|}
+        \hlineB{1.0}
         \rowcolor{lightestgray}
         \textbf{Component} & \textbf{Specification} \\
-        \hline
+        \hlineB{1.0}
         Processor & Intel Core i5 (or equivalent) with a base clock speed of at least 2.5 GHz. A multi-core processor is preferred for parallel processing, essential for model training and data preprocessing. \\
-        \hline
+        \hlineB{1.0}
         RAM & 8 GB recommended for handling data loading, cleaning, and transformation. For large datasets, 16 GB is ideal to prevent memory overflow and processing delays. \\
-        \hline
+        \hlineB{1.0}
         Storage & Minimum 256 GB SSD recommended. SSD offers faster read/write speeds, significantly improving dataset loading times, especially for large datasets like Reddit-based social media posts. \\
-        \hline
+        \hlineB{1.0}
         GPU & Not necessary for basic ML tasks like Logistic Regression or SVM. For deep learning, an NVIDIA GTX 1060 with 4 GB VRAM or higher is advantageous. \\
-        \hline
+        \hlineB{1.0}
         Operating System & Windows 10 (64-bit) or higher, macOS 10.13 (High Sierra) or higher, or any stable Linux distribution (e.g., Ubuntu 18.04 or higher). The OS should support ML libraries and project tools. \\
-        \hline
+        \hlineB{1.0}
     \end{tabular}
     \caption*{\textbf{Minimum Hardware Configuration}}
 \end{table}
 
 
-\begin{table}[h]
+\begin{table}[H]
     \centering
     \renewcommand{\arraystretch}{1.2}
-    \begin{tabular}{|c|p{12cm}|}
-        \hline
+    \setlength{\arrayrulewidth}{1pt}
+    \begin{tabular}{|c|p{11.2cm}|}
+        \hlineB{1.0}
         \rowcolor{lightestgray}
         \textbf{Library/Package} & \textbf{Description} \\
-        \hline
-        Python & Primary programming language for data processing and model training. \\
-        \hline
+        \hlineB{1.0}
+        Python & Programming language for data processing and model training. \\
+        \hlineB{1.0}
         pandas & Data manipulation and preprocessing. \\
-        \hline
+        \hlineB{1.0}
         scikit-learn & Machine learning models and evaluation tools. \\
-        \hline
+        \hlineB{1.0}
         Streamlit & Web framework for deploying interactive ML applications. \\
-        \hline
+        \hlineB{1.0}
         pyngrok & Creates secure tunnels for sharing local applications. \\
-        \hline
+        \hlineB{1.0}
         Google Colab & Cloud-based Python environment with GPU/TPU support. \\
-        \hline
+        \hlineB{1.0}
         PRAW & Access and retrieve Reddit data via API. \\
-        \hline
+        \hlineB{1.0}
         pytesseract & OCR library for extracting text from images. \\
-        \hline
+        \hlineB{1.0}
         Pillow & Image processing and handling library. \\
-        \hline
+        \hlineB{1.0}
     \end{tabular}
     \caption*{\textbf{Libraries and Packages Used}}
     \label{tab:libraries}
@@ -65,75 +67,76 @@ The technical environment for the project "Multimodal AI Framework for Social Me
 \begin{table}[H]
     \centering
     \renewcommand{\arraystretch}{1.2}
-    \begin{tabular}{|c|p{12cm}|}
-        \hline
+    \setlength{\arrayrulewidth}{1pt}
+    \begin{tabular}{|c|p{11.2cm}|}
+        \hlineB{1.0}
         \rowcolor{lightestgray}
         \textbf{Library/Package} & \textbf{Description} \\
-        \hline
+        \hlineB{1.0}
         joblib & Serialization and model saving utility. \\
-        \hline
+        \hlineB{1.0}
         protobuf & Efficient data serialization format by Google. \\
-        \hline
+        \hlineB{1.0}
         deep-translator & Multilingual text translation. \\
-        \hline
+        \hlineB{1.0}
         Requests & Library for making HTTP requests. \\
-        \hline
+        \hlineB{1.0}
         google-generativeai & Integrate Google’s generative AI models. \\
-        \hline
+        \hlineB{1.0}
         ffmpeg & Multimedia framework for processing audio/video. \\
-        \hline
+        \hlineB{1.0}
         tesseract-ocr & OCR tool for text extraction. \\
-        \hline
+        \hlineB{1.0}
         portaudio19-dev & Required for handling audio input/output. \\
-        \hline
+        \hlineB{1.0}
         poppler-utils & Converts PDFs to images for text extraction. \\
-        \hline
+        \hlineB{1.0}
         pydub & Audio processing library. \\
-        \hline
+        \hlineB{1.0}
         sounddevice & Real-time audio recording/playback. \\
-        \hline
+        \hlineB{1.0}
         wavio & WAV file handling. \\
-        \hline
+        \hlineB{1.0}
         numpy & Numerical computing library. \\
-        \hline
+        \hlineB{1.0}
         PyAudio & Audio input/output handling. \\
-        \hline
+        \hlineB{1.0}
         SpeechRecognition & Converts speech to text. \\
-        \hline
+        \hlineB{1.0}
         pdf2image & Converts PDFs to images. \\
-        \hline
+        \hlineB{1.0}
         tweepy & Access and analyze Twitter data. \\
-        \hline
+        \hlineB{1.0}
         openai-whisper & Speech-to-text model from OpenAI. \\
-        \hline
+        \hlineB{1.0}
         tiktoken & Tokenizer for language models. \\
-        \hline
+        \hlineB{1.0}
         librosa & Audio analysis and feature extraction. \\
-        \hline
+        \hlineB{1.0}
         opencv-python & Computer vision and image processing. \\
-        \hline
+        \hlineB{1.0}
         xgboost & Gradient boosting for ML models. \\
-        \hline
+        \hlineB{1.0}
         deepface & Facial recognition and emotion analysis. \\
-        \hline
+        \hlineB{1.0}
         tf\_keras & Keras API for TensorFlow. \\
-        \hline
+        \hlineB{1.0}
         transformers & Pre-trained NLP models from Hugging Face. \\
-        \hline
+        \hlineB{1.0}
         tensorflow & Deep learning framework. \\
-        \hline
+        \hlineB{1.0}
         nltk & Natural language processing toolkit. \\
-        \hline
+        \hlineB{1.0}
         plotly & Interactive data visualization. \\
-        \hline 
+        \hlineB{1.0} 
         matplotlib & Static and animated plots. \\
-        \hline
+        \hlineB{1.0}
         scipy & Scientific computing and signal processing. \\
-        \hline
+        \hlineB{1.0}
         networkx & Graph analysis and visualization. \\
-        \hline
+        \hlineB{1.0}
         yt-dlp & YouTube video/audio downloader. \\
-        \hline
+        \hlineB{1.0}
     \end{tabular}
     \caption*{\textbf{Libraries and Packages Used}}
     \label{tab:libraries}
@@ -154,13 +157,14 @@ The technical environment for the project "Multimodal AI Framework for Social Me
     \centering
     \renewcommand{\arraystretch}{1.2} % Adjust row height for better readability
     \small % Reduce text size to fit within the page
+    \setlength{\arrayrulewidth}{1pt}
     \begin{tabularx}{\textwidth}{|p{3.5cm}|X|}
-        \hline
+        \hlineB{1.0}
         \rowcolor{lightestgray}
         \textbf{Module} & \textbf{Description} \\
-        \hline
+        \hlineB{1.0}
         \textbf{Data Collection} & Gathers relevant text data from posts in platforms like Reddit via PRAW. \\
-        \hline
+        \hlineB{1.0}
         \textbf{Data Preprocessing} & Cleans and prepares text data using:
         \begin{itemize}
             \setlength{\itemsep}{0pt}  % Adjust spacing between items
@@ -170,7 +174,7 @@ The technical environment for the project "Multimodal AI Framework for Social Me
             \item Stop-word removal
             \item Lemmatization or stemming
         \end{itemize} \\
-        % \hline
+        % \hlineB{1.0}
         \textbf{} & Perform feature extraction to convert text into numerical features using:
         \begin{itemize}
             \setlength{\itemsep}{0pt}  % Adjust spacing between items
@@ -179,18 +183,18 @@ The technical environment for the project "Multimodal AI Framework for Social Me
             \item Bag of Words (BoW) model
             \item Word2Vec, LIWC (Linguistic Inquiry and Word Count) and N-Gram were also explored
         \end{itemize} \\
-        \hline
+        \hlineB{1.0}
         \textbf{Model Training and Validation} & Splits dataset into training/testing sets and trains models such as:
         \setlength{\itemsep}{0pt}  % Adjust spacing between items
         \setlength{\parskip}{0pt}
         \begin{itemize}
             \item Logistic Regression, Naive Bayes, SVM, XGBoost, KNN, LSTM, Transformer. These formed the base models for the ensemble model used in application where Random Forest was used as the meta-learner All were validated to assess performance.
         \end{itemize} \\
-        \hline
+        \hlineB{1.0}
         \textbf{Prediction} & Processes received and combined text input for classification using trained models. \\
-        \hline
+        \hlineB{1.0}
         \textbf{Testing and} \newline \textbf{Deployment} & Deploys models on Streamlit Cloud for real-time predictions and wellbeing insights using association matrix. Provides a user interface for easy access. \\
-        \hline
+        \hlineB{1.0}
     \end{tabularx}
     \caption*{\textbf{Hierarchy of Modules in the system}}
     \label{tab:modules_hierarchy}
