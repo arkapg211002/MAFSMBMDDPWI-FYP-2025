@@ -619,17 +619,17 @@
     \rowcolor{lightestgray}
     \textbf{Model} & \textbf{Accuracy (\%)} & \textbf{Key Observations} \\
     \hlineB{1.0}
-    Logistic Regression & 87.66 & High precision, recall, and F1 for the \textit{Normal} class; struggles with \textit{Bipolar} and \textit{Anxiety}. ROC AUC: Normal (1.00), Anxiety (0.99), Depression (0.99). \\
+    Logistic Regression & 87.66 & High precision, recall, and F1 for the \textit{Normal} class; struggles with \textit{Bipolar} and \textit{Anxiety}. ROC AUC: Normal (0.99), Anxiety (0.95), Depression (0.97). \\
     \hlineB{1.0}
-    Naive Bayes & 83.63 & Excellent for \textit{Normal} (Precision 0.96, Recall 0.92, F1 0.94) but poor for \textit{Bipolar} (Recall 0.45, F1 0.58). \newline ROC AUC: Normal (0.99), Depression/PTSD (0.98), Bipolar (0.97). \\
+    Naive Bayes & 83.63 & Excellent for \textit{Normal} (Precision 0.96, Recall 0.92, F1 0.94) but poor for \textit{Bipolar} (Recall 0.45, F1 0.58). \newline ROC AUC: Normal (0.99), Depression/PTSD (0.97), Bipolar (0.93). \\
     \hlineB{1.0}
-    SVM & 85.13 & Best for \textit{Normal} (Precision 0.94, Recall 0.95, F1 0.95); \textit{Bipolar} underperforms (Precision 0.62, Recall 0.61); \textit{Anxiety} is balanced (Recall 0.76, Precision 0.72). \newline ROC AUC: Normal (1.00), others ~0.99, Bipolar (0.98). \\
+    SVM & 85.13 & Best for \textit{Normal} (Precision 0.94, Recall 0.95, F1 0.95); \textit{Bipolar} underperforms (Precision 0.62, Recall 0.61); \textit{Anxiety} is balanced (Recall 0.76, Precision 0.72). \newline ROC AUC: Normal (0.98), others ~0.99, Bipolar (0.90). \\
     \hlineB{1.0}
     Random Forest & 86.00 & \textit{Normal} class achieves perfect recall (1.00) with high precision (0.88, F1 0.93); \textit{Bipolar} is weak (Recall 0.47, F1 0.62). \newline ROC AUC: For most classes it is greater than equal to 0.96; Bipolar (0.89). \\
     \hlineB{1.0}
-    XGBoost & 87.39 & Strong performance for \textit{Normal}; \textit{Anxiety} shows good metrics (Precision 0.81, Recall 0.74) while \textit{Bipolar} has lower recall (0.62). \newline ROC AUC: 0.99 for Anxiety; 1.00 for Normal, Depression, PTSD. \\
+    XGBoost & 87.39 & Strong performance for \textit{Normal}; \textit{Anxiety} shows good metrics (Precision 0.81, Recall 0.74) while \textit{Bipolar} has lower recall (0.62). \newline ROC AUC: 0.97 for Anxiety; 0.99 for Normal, Depression, PTSD. \\
     \hlineB{1.0}
-    KNN & 54.46 & Overall low performance; \textit{Normal} is moderate (Precision 0.79, Recall 0.69) but \textit{PTSD} has very low recall (0.09). \newline ROC AUC: Normal (0.79), indicating weak discrimination. \\
+    KNN & 54.46 & Overall low performance; \textit{Normal} is moderate (Precision 0.79, Recall 0.69) but \textit{PTSD} has very low recall (0.09). \newline ROC AUC: Normal (0.80), indicating weak discrimination. \\
     \hlineB{1.0}
     LSTM & 84.91 & High performance for \textit{Normal}; \textit{Anxiety} acceptable (Precision 0.74, Recall 0.72); \textit{Bipolar} (Precision 0.66, Recall 0.70) and \textit{PTSD} (Precision 0.72, Recall 0.78) are moderate. \newline Effective ROC AUC for Normal. \\
     \hlineB{1.0}
@@ -656,7 +656,7 @@
         \hlineB{1.0}
         Logistic Regression & \texttt{solver=liblinear, penalty=l2, C=1} & Accuracy: 87.72\%; Normal: 92\% accuracy; ROC AUC: Normal 0.98, Depression 0.96 & High precision, recall, and F1 for Normal; Bipolar shows lower F1 (64\%); overall robust performance, especially for Normal and Anxiety. \\
         \hlineB{1.0}
-        k-NN & \texttt{weights=distance, n\_neighbors=10, metric=euclidean} & Accuracy: 52.03\%; Normal F1: 0.69; ROC AUC: Bipolar 0.67, PTSD 0.72, Normal/Depression 0.79 & Struggles with minority classes: Anxiety (recall 0.23) and PTSD (recall 0.10); not suitable for this dataset. \\
+        k-NN & \texttt{weights=distance, n\_neighbors=10, metric=euclidean} & Accuracy: 52.03\%; Normal F1: 0.69; ROC AUC: Bipolar 0.67, PTSD 0.71, Normal/Depression 0.79 & Struggles with minority classes: Anxiety (recall 0.23) and PTSD (recall 0.10); not suitable for this dataset. \\
         \hlineB{1.0}
         SVM & \texttt{kernel=linear, gamma=scale, C=1} & Accuracy: 85.13\%; F1-scores: Normal 0.95, Depression 0.72, Anxiety 0.74, Bipolar 0.61; ROC AUC: Normal 0.98, Others \textgreater \ 0.90, Bipolar 0.88 & Solid overall performance; excellent for Normal and Anxiety, but slightly lower performance for Bipolar. \\
         \hlineB{1.0}
@@ -1126,7 +1126,7 @@ Ensemble Model 7 is applied on different subsets of a very large dataset to crea
 \pagebreak
 
 \noindent
-To determine \( n \), the number of subsets, based on the size of the original dataset, it is crucial to consider computational efficiency, memory constraints, and sequential execution. Given that the dataset has \( D = 167,229 \) records and is processed sequentially in Google Colab with 12GB of RAM per node, the number of subsets \( n \) must strike a balance between memory usage and model performance. In this case, you chose \( n = 6 \) subsets, which implies a subset size \( S \) of:
+To determine \( n \), the number of subsets, based on the size of the original dataset, it is crucial to consider computational efficiency, memory constraints, and sequential execution. Given that the dataset has \( D = 167,229 \) records and is processed sequentially in Google Colab with 12GB of RAM per node, the number of subsets \( n \) must strike a balance between memory usage and model performance. In this case, we chose \( n = 6 \) subsets, which implies a subset size \( S \) of:
 
 \vspace{-1cm}
 

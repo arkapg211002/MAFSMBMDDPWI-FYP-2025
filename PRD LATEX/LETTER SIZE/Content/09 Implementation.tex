@@ -104,7 +104,7 @@
 \end{figure}
 
 \noindent
-The dataset for mental health classification was compiled from subreddit communities, initially containing 385,80 records across five categories: anxiety (54 subreddits), PTSD (38), depression (80), bipolar disorder (60), and normal mental states (53). After data cleaning to ensure quality and relevance, the dataset was reduced to 167,279 records. A subset of 18,596 cleaned records was used for analysis to address computational constraints, such as memory and processing power, which would make training on the full dataset infeasible on standard hardware. This approach balances efficiency and performance, enabling faster experimentation and iterative model improvement while maintaining a representative sample.
+The dataset for mental health classification was compiled from subreddit communities, initially containing 385,800 records across five categories: anxiety (54 subreddits), PTSD (38), depression (80), bipolar disorder (60), and normal mental states (53). After data cleaning to ensure quality and relevance, the dataset was reduced to 167,279 records. A subset of 18,596 cleaned records was used for analysis to address computational constraints, such as memory and processing power, which would make training on the full dataset infeasible on standard hardware. This approach balances efficiency and performance, enabling faster experimentation and iterative model improvement while maintaining a representative sample.
 
 
 % ----------------- Data Preprocessing
@@ -221,7 +221,7 @@ The matrix dimensions for Bag of Words are determined by the number of records, 
 
 \subsection{Machine Learning Models}
 
-Algorithm like Logistic Regression, K-Nearest Neighbors, Support Vector Machine, Random Forest, XGBoost and Naive Bayes are implemented for the classification of mental health issues. The code algorithm below demonstrates the implementation. The models are evaluated on the test set using metrics like accuracy and classification reports. Hyperparameter Tuning is performed using RandomizedSearchCV to optimize the model performance. Naive Bayes model after hyperparamter tuning is selected along with the basic Logistic Regression, Support Vector Machine, XGboost for the final ensemble model for the web application. 
+Algorithms like Logistic Regression, K-Nearest Neighbors, Support Vector Machine, Random Forest, XGBoost and Naive Bayes are implemented for the classification of mental health issues. The code algorithm below demonstrates the implementation. The models are evaluated on the test set using metrics like accuracy and classification reports. Hyperparameter Tuning is performed using RandomizedSearchCV to optimize the model performance. Naive Bayes model after hyperparamter tuning is selected along with the basic Logistic Regression, Support Vector Machine, XGboost for the final ensemble model for the web application. 
 
 \begin{table}[H]
     \caption*{\textbf{Stepwise Algorithm for Machine Learning Models}}
@@ -430,16 +430,31 @@ Algorithm like Logistic Regression, K-Nearest Neighbors, Support Vector Machine,
     \end{tabularx}
 \end{table}
 
-\begin{figure}[h!]  
-    \centering
-    \includegraphics[width=0.9\textwidth]{Images/T EMBED.png}  
-    \caption{Transformer Model Random and Learned Embeddings}
-    \label{lstm t embed}  % Label for referencing the figure
-\end{figure}
+\vspace{-1cm}
+
+\begin{center}
+    \textbf{Transformer Model Summary} \\[0.5em]
+    \begin{tabular}{|l|c|c|}
+        \hline
+        \rowcolor{gray!20}
+        \textbf{Layer (type)} & \textbf{Output Shape} & \textbf{Param \#} \\ \hline
+        input\_layer (InputLayer) & (None, 300) & 0 \\ \hline
+        embedding\_layer (EmbeddingLayer) & (None, 300, 64) & \textcolor{green!50!black}{1,619,200} \\ \hline
+        encoder\_layer (EncoderLayer) & (None, 300, 64) & \textcolor{green!50!black}{41,148} \\ \hline
+        global\_average\_pooling1d (GlobalAveragePooling1D) & (None, 64) & 0 \\ \hline
+        dense\_2 (Dense) & (None, 60) & \textcolor{green!50!black}{3,900} \\ \hline
+        dense\_3 (Dense) & (None, 5) & \textcolor{green!50!black}{305} \\ \hline
+        \multicolumn{3}{|l|}{\textbf{Total params:} \textcolor{green!50!black}{1,664,553 (6.35 MB)}} \\ \hline
+        \multicolumn{3}{|l|}{\textbf{Trainable params:} \textcolor{green!50!black}{1,664,553 (6.35 MB)}} \\ \hline
+        \multicolumn{3}{|l|}{\textbf{Non-trainable params:} \textcolor{green!50!black}{0 (0.00 B)}} \\ \hline
+    \end{tabular}
+\end{center}
+
+\vspace{-0.5cm}
 
 \begin{figure}[h!]  
     \centering
-    \includegraphics[width=0.9\textwidth]{Images/T LOSS EPOCH.png}  
+    \includegraphics[width=0.85\textwidth]{Images/T LOSS EPOCH.png}  
     \caption{Transformer Epoch, Loss, Accuracy}
     \label{lstm t epch}  % Label for referencing the figure
 \end{figure}
@@ -447,8 +462,21 @@ Algorithm like Logistic Regression, K-Nearest Neighbors, Support Vector Machine,
 
 \pagebreak
 
+\vspace*{-1cm}
+
+\begin{figure}[h!]  
+    \centering
+    \includegraphics[width=0.7\textwidth]{Images/T EMBED.png}  
+    \caption{Transformer Model Random and Learned Embeddings}
+    \label{lstm t embed}  % Label for referencing the figure
+\end{figure}
+
+\vspace{-1cm}
+
 % --------- ENSEMBLE LEARNING 1----------
 \subsection{Ensemble Model}
+
+\vspace{-0.5cm}
 
 \begin{table}[H]
     \caption*{\textbf{General Stepwise Algorithm for Ensemble Models}}
