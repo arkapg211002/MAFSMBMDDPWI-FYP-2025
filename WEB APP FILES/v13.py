@@ -70,6 +70,8 @@ from transformers import VisionEncoderDecoderModel, ViTImageProcessor, AutoToken
 from transformers import VisionEncoderDecoderModel, ViTImageProcessor, AutoTokenizer
 from transformers import pipeline
 
+from transformers import BlipProcessor, BlipForConditionalGeneration
+
 import pytesseract
 # Configure Tesseract and FFMPEG
 pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
@@ -424,16 +426,16 @@ transformer_model = load_transformer_model()
 # ------------- ENSEMBLE LEARNING REQUIREMENTS -----------------
 
 # Initialize Reddit API
-reddit = praw.Reddit(client_id='DAOso5_7CHzXzdtd-070fg',
-                     client_secret='JtdGFRDM10avSQFYthzYUQNfLeI8rQ',
+reddit = praw.Reddit(client_id='<REDDIT CLIENT ID>',
+                     client_secret='<REDDIT CLIENT SECRET>',
                      user_agent='Mental Health')
 
 # Initialize Twitter API
-BEARER_TOKEN = "AAAAAAAAAAAAAAAAAAAAAP5ivAEAAAAAhk%2BBxS3W7EJbjNjUxgKEQ73xcUI%3DjnSuDwdvy0kqOoVpziGzD9LNVaMPCamGS2cf2OngdckiLZSZ1h"
+BEARER_TOKEN = "<TWITTER BEARER TOKEN>"
 client = tweepy.Client(bearer_token=BEARER_TOKEN)
 
 # Configure Gemini API for wellbeing insights
-genai.configure(api_key="AIzaSyDLMw8vdW36QV36LRLxZRMqgCqNt2czSug")
+genai.configure(api_key="<GEMINI API KEY>")
 generation_config = {
     "temperature": 1,
     "top_p": 0.95,
@@ -466,13 +468,13 @@ def rag_wellbeing_insight(input_text, issue, get_selected_ryff):
     with st.expander("RAG Steps..."):
         # Step 2: Initial Retrieval
         st.write("   Step 1: Initial Retrieval from Knowledge Base...")
-        
+
         query_embedding = np.array([embedding_model.encode(query)]).astype("float32")
         k_initial = min(INITIAL_RETRIEVAL_K, index.ntotal)
         distances, initial_indices = index.search(query_embedding, k_initial)
         initial_indices = initial_indices[0]; distances = distances[0]
         st.info(f" Retrieved {len(initial_indices)} candidates.")
-       
+
         # Step 3: Re-ranking
         st.write("   Step 2: Re-ranking candidates for relevance...")
         try:
@@ -483,7 +485,7 @@ def rag_wellbeing_insight(input_text, issue, get_selected_ryff):
             n_final = min(RE_RANKED_TOP_N, len(reranked_results))
             reranked_indices = [idx for idx, score in reranked_results[:n_final]]
             reranked_scores = [score for idx, score in reranked_results[:n_final]]
-            if not reranked_indices: 
+            if not reranked_indices:
               st.error("   -> ⚠️ Re-ranking resulted in zero candidates.")
             st.success(f"  Re-ranked and selected top {len(reranked_indices)} candidates.")
         except Exception as e:
@@ -548,7 +550,7 @@ def rag_wellbeing_insight(input_text, issue, get_selected_ryff):
 
     # --- Visualization Section (MODIFIED) ---
     st.subheader("📊 3D Match Visualization")
-    
+
     query_embedding_2d = query_embedding.reshape(1, -1)
     combined_embeddings = np.vstack([query_embedding_2d, embeddings])
     n_samples = combined_embeddings.shape[0]
@@ -565,14 +567,14 @@ def rag_wellbeing_insight(input_text, issue, get_selected_ryff):
         valid_reranked_indices = [i for i in reranked_indices if i < len(all_3d)]
         topk_3d = np.array([all_3d[i] for i in valid_reranked_indices]) if valid_reranked_indices else np.empty((0,3))
 
-        plot_traces = [] 
-        issues_in_plot = set() 
+        plot_traces = []
+        issues_in_plot = set()
         grouped_points = defaultdict(list)
-        
+
         for i in range(len(all_3d)):
             issue = metadatas[i].get("issue", "unknown") # Get issue from corresponding metadata
             grouped_points[issue].append(i) # Store original KB index 'i'
-      
+
         for issue, original_indices in grouped_points.items():
             if not original_indices: continue # Skip if somehow an issue has no points
 
@@ -1609,34 +1611,50 @@ def analyze_emotions_from_image(image):
 
 # ---------------------- Get Image Description
 # Function to load the model (cached for efficiency)
-@st.cache_resource
-def load_model_img():
-    model_name = "nlpconnect/vit-gpt2-image-captioning"
-    model = VisionEncoderDecoderModel.from_pretrained(model_name)
-    feature_extractor = ViTImageProcessor.from_pretrained(model_name)
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    return model, feature_extractor, tokenizer
+# @st.cache_resource
+# def load_model_img():
+#     model_name = "nlpconnect/vit-gpt2-image-captioning"
+#     model = VisionEncoderDecoderModel.from_pretrained(model_name)
+#     feature_extractor = ViTImageProcessor.from_pretrained(model_name)
+#     tokenizer = AutoTokenizer.from_pretrained(model_name)
+#     return model, feature_extractor, tokenizer
 
 # Load the model
-IDmodel, IDfeature_extractor, IDtokenizer = load_model_img()
+# IDmodel, IDfeature_extractor, IDtokenizer = load_model_img()
 
 # Set device to GPU if available
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-IDmodel.to(device)
+# device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# IDmodel.to(device)
 
 # Function to generate caption
-def generate_caption(image):
+# def generate_caption(image):
+#    # Convert the numpy array (video frame) to a PIL Image
+#    if isinstance(image, np.ndarray):
+#        image = Image.fromarray(image)
+#
+#    if image.mode != "RGB":
+#        image = image.convert(mode="RGB")
+#
     # Preprocess the image
-    if image.mode != "RGB":
-        image = image.convert(mode="RGB")
-    pixel_values = IDfeature_extractor(images=image, return_tensors="pt").pixel_values
-    pixel_values = pixel_values.to(device)
+#    pixel_values = Vfeature_extractor(images=image, return_tensors="pt").pixel_values
+#    pixel_values = pixel_values.to(device)
 
-    # Generate caption (you can adjust max_length and num_beams as needed)
-    with torch.no_grad():
-        output_ids = IDmodel.generate(pixel_values, max_length=16, num_beams=4)
-    caption = IDtokenizer.decode(output_ids[0], skip_special_tokens=True)
-    return caption
+    # Generate caption
+#    with torch.no_grad():
+#        output_ids = caption_model.generate(pixel_values, max_length=16, num_beams=4)
+#    caption = Vtokenizer.decode(output_ids[0], skip_special_tokens=True)
+#    return caption
+
+def generate_caption(image):
+    try:
+        chat_session = gemini_model.start_chat(history=[])
+        prompt = "You are given an image. Describe the image in one line."
+        response = gemini_model.generate_content([prompt, image])
+        return response.text
+    except Exception as e:
+        st.error(f"Error retrieving description: {e}")
+        return ""
+
 
 # ---------------- CHANGED AS PER ENSEMBLE MODEL -----------------
 def classify_text_with_desc(text,text2):
@@ -1817,54 +1835,101 @@ def classify_text_retrain_model_desc(text,text2):
 
 # ---------------------- Get Video Description
 # Function to load the model (cached for efficiency)
-@st.cache_resource
-def load_image_captioning_model():
-    model_name = "nlpconnect/vit-gpt2-image-captioning"
-    model = VisionEncoderDecoderModel.from_pretrained(model_name)
-    feature_extractor = ViTImageProcessor.from_pretrained(model_name)
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    return model, feature_extractor, tokenizer
+# @st.cache_resource
+# def load_image_captioning_model():
+#    model_name = "nlpconnect/vit-gpt2-image-captioning"
+#    model = VisionEncoderDecoderModel.from_pretrained(model_name)
+#    feature_extractor = ViTImageProcessor.from_pretrained(model_name)
+#    tokenizer = AutoTokenizer.from_pretrained(model_name)
+#    return model, feature_extractor, tokenizer
 
-@st.cache_resource
-def load_summary_pipeline():
-    return pipeline("summarization", model="facebook/bart-large-cnn")
+# @st.cache_resource
+# def load_summary_pipeline():
+#     return pipeline("summarization", model="facebook/bart-large-cnn")
 
 # Load models
-caption_model, Vfeature_extractor, Vtokenizer = load_image_captioning_model()
-summary_pipeline = load_summary_pipeline()
+# caption_model, Vfeature_extractor, Vtokenizer = load_image_captioning_model()
+# summary_pipeline = load_summary_pipeline()
 
 # Set device to GPU if available
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-caption_model.to(device)
+# device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# caption_model.to(device)
 
 # Function to generate captions for an image
-def generate_caption_video(image):
-    # Convert the numpy array (video frame) to a PIL Image
-    if isinstance(image, np.ndarray):
-        image = Image.fromarray(image)
+# def generate_caption_video(image):
+#    try:
+#        chat_session = gemini_model.start_chat(history=[])
+#        prompt = "You are given an image. Describe the image in one line."
+#        response = gemini_model.generate_content([prompt, image])
+#        return response.text
+#    except Exception as e:
+#        st.error(f"Error retrieving description: {e}")
+#        return ""
 
-    if image.mode != "RGB":
-        image = image.convert(mode="RGB")
-
-    # Preprocess the image
-    pixel_values = Vfeature_extractor(images=image, return_tensors="pt").pixel_values
-    pixel_values = pixel_values.to(device)
-
-    # Generate caption
-    with torch.no_grad():
-        output_ids = caption_model.generate(pixel_values, max_length=16, num_beams=4)
-    caption = Vtokenizer.decode(output_ids[0], skip_special_tokens=True)
-    return caption
 
 # Function to generate an overall description of the video
-def describe_video(frames):
-    # Generate captions for each frame
-    captions = [generate_caption_video(frame) for frame in frames]
-    combined_captions = " ".join(captions)
+# def describe_video(frames):
+#    # Generate captions for each frame
+#    captions = [generate_caption_video(frame) for frame in frames]
+#    combined_captions = " ".join(captions)
 
     # Summarize the captions to get an overall description
-    summary = summary_pipeline(combined_captions, max_length=50, min_length=25, do_sample=False)[0]["summary_text"]
-    return captions, summary
+#    summary = summary_pipeline(combined_captions, max_length=50, min_length=25, do_sample=False)[0]["summary_text"]
+#    return captions, summary
+
+# Load BLIP model and processor
+device = "cuda" if torch.cuda.is_available() else "cpu"
+# Fix: Load without lazy memory optimization (materialize all weights)
+Vmodel = BlipForConditionalGeneration.from_pretrained(
+    "Salesforce/blip-image-captioning-base",
+    low_cpu_mem_usage=False  # This prevents meta tensors
+).to(device)
+
+Vprocessor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
+
+def generate_video_caption(image):
+    inputs = Vprocessor(image, return_tensors="pt").to(device)
+    out = Vmodel.generate(**inputs)
+    caption = Vprocessor.decode(out[0], skip_special_tokens=True)
+    return caption
+
+def summarize_description(descriptions):
+    try:
+        chat_session = gemini_model.start_chat(history=[])
+        prompt = f"You are given a list of descriptions : {descriptions}. Generate a short summary using that list. The summary should not contain any numbers or bullets."
+        response = gemini_model.generate_content([prompt])
+        return response.text
+    except Exception as e:
+        st.error(f"Error retrieving description: {e}")
+        return ""
+
+def describe_video(video_path, frame_interval=30):
+    cap = cv2.VideoCapture(video_path)
+    frame_count = 0
+    descriptions = []
+
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            break
+
+        if frame_count % frame_interval == 0:
+            # Convert frame (OpenCV) to PIL format
+            frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            pil_image = Image.fromarray(frame_rgb)
+
+            try:
+                caption = generate_video_caption(pil_image)
+                descriptions.append((frame_count, caption))
+                print(f"Frame {frame_count}: {caption}")
+            except Exception as e:
+                print(f"Error at frame {frame_count}: {e}")
+
+        frame_count += 1
+
+    cap.release()
+    return summarize_description(descriptions)
+
 
 # ---------------------- Get Video Description
 def get_actual_issue(text,top_issue):
@@ -2444,7 +2509,8 @@ def run_app():
                     combined_text += text_from_frame + " "
 
             # Generate and display descriptions
-            frame_captions, overall_description = describe_video(frames)
+            # frame_captions, overall_description = describe_video(frames)
+            overall_description = describe_video(video_path, frame_interval=60)
             st.subheader("Overall Description")
             st.success(overall_description)
 
