@@ -113,7 +113,7 @@ This project leverages artificial intelligence to detect early signs of mental h
 </div>
 
 > Unzip the `Pickles and Required Files` and `Samples` <br>
-> Upload `WebAppV13-6.ipynb` in drive and open it in Google Colab <br>
+> Upload `WebAppV13-7.ipynb` in drive and open it in Google Colab <br>
 > Replace the API keys for `Reddit`, `Gemini`, `Twitter` and `Ngrok` 
 
 > ⚠️ **Warning:** The `cross_encoder_gpu.pkl` file inside the "Pickles and Required Files" may become **incompatible** if Google Colab updates its environment.
