@@ -5,8 +5,8 @@
         
         \noindent
         \makebox[\textwidth][c]{%  <-- center this box in the line
-        \scalebox{1.35}{%        <-- scale factor; tweak up/down
-            \parbox{0.8\textwidth}{%  <-- adjust 0.65 to taste so post-scale it ≤ \textwidth
+        \scalebox{1.45}{%        <-- scale factor; tweak up/down
+            \parbox{0.85\textwidth}{%  <-- adjust 0.65 to taste so post-scale it ≤ \textwidth
             \centering           % center the text inside the parbox
             \bfseries
             \begin{spacing}{0.8}
@@ -18,7 +18,7 @@
 
         \vspace{3\baselineskip}
         
-        {\Large \textls[90]{Submitted by}}\\
+        {\LARGE \fontfamily{bch}\textls[80]{Submitted by}}\\
         % {\LARGE \textit{requirements for the degree}} \par
         
         \vspace{\baselineskip}
@@ -38,7 +38,8 @@
         {
         % STUDENT NAMES
         \fontfamily{bch}\selectfont
-        \scalebox{1.14}{%
+        \scalebox{1.25}{%
+            \hspace{-0.75cm}
             \begin{minipage}{\textwidth}
                 \noindent\makebox[0.88\textwidth][l]{%
                 \Large\bfseries 
@@ -83,19 +84,29 @@
         \vspace{3\baselineskip}
         
         % DATE
-        {\Large \textls[90]{June, 2025}} \par
+        {\LARGE \fontfamily{bch}\textls[80]{June, 2025}} \par
         \vspace{1\baselineskip} 
+
+        \scalebox{1.05}{ % slightly less than 1.1
+        \hspace{-1.2cm}
+        {\bfseries\fontsize{16.8}{11}\selectfont \fontfamily{bch}Submitted for the partial fulfillment for the degree of Bachelor of}
+        \par
+        }
+
+
+        \scalebox{1.05}{%
+        {\bfseries\fontsize{16.8}{11}\selectfont \fontfamily{bch}Technology in Computer Science and Engineering} \par
+        }
+
         
 
-        {\fontsize{16.8}{11}\selectfont \fontfamily{cmr}Submitted for the partial fulfillment for the degree of Bachelor of} \par
-
-        {\fontsize{16.8}{11}\selectfont \fontfamily{cmr}Technology in Computer Science and Engineering} \par
+        
 
         \vspace{3\baselineskip}
 
         \begin{figure}[!h]
             \centering
-            \includegraphics[width=37mm]{./Images/tmsl.png}
+            \includegraphics[width=40mm]{./Images/tmsl.png}
         \end{figure}
         
         
@@ -115,13 +126,13 @@
         
             \noindent
             \makebox[\linewidth][c]{%
-              {\fontfamily{cmr}\selectfont\Large\bfseries\textls[90]{Techno Main Salt Lake,}}%
+              {\fontfamily{cmr}\selectfont\LARGE\bfseries\textls[90]{Techno Main Salt Lake,}}%
             }
             \\
             %\vspace{-0.05cm}
             \noindent
             \makebox[\linewidth][c]{%
-              {\fontfamily{cmr}\selectfont\Large\bfseries\textls[90]{EM 4/1, SaltLake, Sector V, Kolkata – 700 091}}%
+              {\fontfamily{cmr}\selectfont\LARGE\bfseries\textls[60]{EM 4/1, SaltLake, Sector V, Kolkata – 700 091}}%
             }
         \end{adjustwidth}
 
