@@ -143,6 +143,6 @@ This project leverages artificial intelligence to detect early signs of mental h
 
 ---
 
-> ⚠️ **Warning**
+> ⚠️ **Warning** <br>
 > Due to regular updates from google colab, there can be instances where the LSTM or Transformer based pickle files may lead to errors. It is recommended to rerun the model files, create new pickle files and rerun the `Ensemble Model 7 (Base model : LR, SVM, XGB, NB, LSTM, Transformer. Meta Learner : Random Forest)` again before running the web application. 
 
